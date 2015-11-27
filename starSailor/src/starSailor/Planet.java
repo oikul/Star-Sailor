@@ -13,6 +13,7 @@ public class Planet {
 	private Block[][] terrain;
 	private Block[][] decoration;
 	private Biome biome;
+	private int blurr;
 	
 	public Planet(int size, double distance, double angle){
 		this.size = size;
@@ -159,15 +160,12 @@ public class Planet {
 		case SURFACE:
 			for(int i = 0; i < noise.length; i++){
 				for(int j = 0; j < noise[0].length; j++){
-					g2d.setColor(new Color((int) (255 * noise[i][j]), (int) (255 * noise[i][j]), (int) (255 * noise[i][j])));
-					g2d.fillRect(i*16 + xDif, j*16 + yDif, 16, 16);
 					terrain[i][j].draw(g2d, i * 16 + xDif, j * 16 + yDif);
 					if(decoration[i][j] != null){
 						decoration[i][j].draw(g2d, i * 16 + xDif, j * 16 + yDif);
 					}
 				}
 			}
-			
 			break;
 		default:
 			break;
