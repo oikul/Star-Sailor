@@ -1,10 +1,10 @@
 package starSailor;
 
-public class BlockLiquid extends Block {
+public class BlockAnimated extends Block {
 	
 	private long time;
 
-	public BlockLiquid(String imagePath, boolean isSolid) {
+	public BlockAnimated(String imagePath, boolean isSolid) {
 		super(imagePath, isSolid);
 		time = System.currentTimeMillis();
 	}

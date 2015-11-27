@@ -34,7 +34,7 @@ public class Block {
 	private boolean isSolid;
 	
 	public Block(String imagePath, boolean isSolid){
-		image = ResourceLoader.getImage(imagePath);
+		//image = ResourceLoader.getImage(imagePath);
 		this.isSolid = isSolid;
 	}
 	
