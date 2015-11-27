@@ -82,13 +82,32 @@ public class Main extends JFrame {
 				}else if(input.isKeyDown(KeyEvent.VK_D)){
 					galaxy.panRight();
 				}
+				if(input.getMouseWheelUp()){
+					state = State.SOLAR;
+					input.stopMouseWheel();
+				}
 				galaxy.update();
 				break;
 			case SOLAR:
 				planet.incrementAngle();
+				if(input.getMouseWheelUp()){
+					state = State.PLANETRY;
+					input.stopMouseWheel();
+				}
+				if(input.getMouseWheelDown()){
+					state = State.GALACTIC;
+					input.stopMouseWheel();;
+				}
 				break;
 			case PLANETRY:
-				
+				if(input.getMouseWheelUp()){
+					state = State.SURFACE;
+					input.stopMouseWheel();
+				}
+				if(input.getMouseWheelDown()){
+					state = State.SOLAR;
+					input.stopMouseWheel();
+				}
 				break;
 			case SURFACE:
 				if(input.isKeyDown(KeyEvent.VK_W)){
@@ -111,7 +130,10 @@ public class Main extends JFrame {
 					player.stop();
 				}
 				planet.update();
-				
+				if(input.getMouseWheelDown()){
+					state = State.PLANETRY;
+					input.stopMouseWheel();
+				}
 				break;
 			}
 			time = newTime;
