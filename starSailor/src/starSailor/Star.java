@@ -69,6 +69,9 @@ public class Star {
 		case PLANETRY:
 			break;
 		case SOLAR:
+			if(!made){
+				createSystem();
+			}
 			system.update();
 			break;
 		case SURFACE:

@@ -59,7 +59,7 @@ public class Main extends JFrame {
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		setSize(width, height);
 		setVisible(running);
-		state = State.SOLAR;
+		state = State.GALACTIC;
 		random = new Random(1);
 		input = new InputHandler(this);
 		galaxy = new Galaxy(4096);
