@@ -8,6 +8,8 @@ public class Star {
 	private double distance, angle;
 	private int x, y, size;
 	private Color color;
+	private SolarSystem system;
+	private boolean made = false;
 	
 	public Star(double distance, double angle, int size){
 		this.distance = distance;
@@ -15,6 +17,11 @@ public class Star {
 		this.size = size;
 		chooseColor();
 		calculateXAndY();
+	}
+	
+	private void createSystem(){
+		system = new SolarSystem(size, Main.random.nextInt(8) + 2, Main.height/2 - size/2, Main.height/2, color);
+		made = true;
 	}
 	
 	private void chooseColor(){
@@ -54,13 +61,41 @@ public class Star {
 	}
 	
 	public void update(){
-		incrementAngle();
-		calculateXAndY();
+		switch (Main.state){
+		case GALACTIC:
+			incrementAngle();
+			calculateXAndY();
+			break;
+		case PLANETRY:
+			break;
+		case SOLAR:
+			system.update();
+			break;
+		case SURFACE:
+			break;
+		default:
+			break;
+		}
+		
 	}
 	
 	public void draw(Graphics g){
-		g.setColor(color);
-		g.fillOval(x - (size/30), y - (size/30), size / 15, size / 15);
+		switch (Main.state){
+		case GALACTIC:
+			g.setColor(color);
+			g.fillOval(x - (size/30), y - (size/30), size / 15, size / 15);
+			break;
+		case SOLAR:
+			system.draw(g);
+			break;
+		case PLANETRY:
+			break;
+		case SURFACE:
+			break;
+		default:
+			break;
+		}
+		
 	}
 
 }

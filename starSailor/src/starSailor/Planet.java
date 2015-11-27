@@ -13,7 +13,6 @@ public class Planet {
 	private Block[][] terrain;
 	private Block[][] decoration;
 	private Biome biome;
-	private int blurr;
 	
 	public Planet(int size, double distance, double angle){
 		this.size = size;
@@ -164,7 +163,6 @@ public class Planet {
 		Graphics2D g2d = (Graphics2D) g;
 		switch(Main.state){
 		case SOLAR:
-			
 			g.setColor(Color.cyan);
 			g.fillOval(x - size/2, y - size/2, size, size);
 			break;

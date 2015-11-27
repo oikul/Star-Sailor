@@ -59,8 +59,8 @@ public class Main extends JFrame {
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		setSize(width, height);
 		setVisible(running);
-		state = State.GALACTIC;
-		random = new Random();
+		state = State.SOLAR;
+		random = new Random(1);
 		input = new InputHandler(this);
 		galaxy = new Galaxy(4096);
 		planet = new Planet(16, 500, 40);
@@ -89,7 +89,6 @@ public class Main extends JFrame {
 				galaxy.update();
 				break;
 			case SOLAR:
-				planet.incrementAngle();
 				if(input.getMouseWheelUp()){
 					state = State.PLANETRY;
 					input.stopMouseWheel();
@@ -98,6 +97,7 @@ public class Main extends JFrame {
 					state = State.GALACTIC;
 					input.stopMouseWheel();;
 				}
+				galaxy.update();
 				break;
 			case PLANETRY:
 				if(input.getMouseWheelUp()){
@@ -152,7 +152,7 @@ public class Main extends JFrame {
 			galaxy.draw(offGraphics);
 			break;
 		case SOLAR:
-			
+			galaxy.draw(offGraphics);
 			break;
 		case PLANETRY:
 			planet.draw(offGraphics);
