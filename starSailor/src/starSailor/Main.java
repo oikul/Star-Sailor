@@ -17,11 +17,12 @@ public class Main extends JFrame {
 	public static Random random;
 	private InputHandler input;
 	private Planet planet;
+	private long time;
 	
 	public static enum State{
 		GALACTIC, SOLAR, PLANETRY, SURFACE;
 	}
-	private State state;
+	public static State state;
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -56,38 +57,44 @@ public class Main extends JFrame {
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		setSize(width, height);
 		setVisible(running);
-		state = State.SURFACE;
+		state = State.PLANETRY;
 		random = new Random();
 		input = new InputHandler(this);
-		planet = new Planet(5, 6);
+		planet = new Planet(30, 500, 40);
+		time = System.currentTimeMillis();
 	}
 	
 	private void update(){
-		switch (state){
-		case GALACTIC:
-			
-			break;
-		case SOLAR:
-			
-			break;
-		case PLANETRY:
-			
-			break;
-		case SURFACE:
-			if(input.isKeyDown(KeyEvent.VK_W)){
-				planet.panUp();
+		long newTime = System.currentTimeMillis();
+		if(newTime >= time + 10){
+			switch (state){
+			case GALACTIC:
+
+				break;
+			case SOLAR:
+
+				break;
+			case PLANETRY:
+				planet.incrementAngle();
+				break;
+			case SURFACE:
+				if(input.isKeyDown(KeyEvent.VK_W)){
+					planet.panUp();
+				}
+				if(input.isKeyDown(KeyEvent.VK_A)){
+					planet.panLeft();
+				}
+				if(input.isKeyDown(KeyEvent.VK_S)){
+					planet.panDown();
+				}
+				if(input.isKeyDown(KeyEvent.VK_D)){
+					planet.panRight();
+				}
+				break;
 			}
-			if(input.isKeyDown(KeyEvent.VK_A)){
-				planet.panLeft();
-			}
-			if(input.isKeyDown(KeyEvent.VK_S)){
-				planet.panDown();
-			}
-			if(input.isKeyDown(KeyEvent.VK_D)){
-				planet.panRight();
-			}
-			break;
+			time = newTime;
 		}
+		
 	}
 	
 	private void draw(){

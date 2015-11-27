@@ -5,29 +5,29 @@ import java.awt.Graphics;
 
 public class Planet {
 	
-	private int size, xDif, yDif;
-	private float distanceFromStar, temperature, precipitation;
+	private int size, x, y, xDif, yDif;
+	private double distance, temperature, precipitation, angle;
 	private NoiseGenerator generator;
-	private float[][] noise;
+	private double[][] noise;
 	private Block[][] terrain;
 	private Block[][] decoration;
 	private Biome biome;
 	
-	public Planet(int size, float distanceFromStar){
+	public Planet(int size, double distance, double angle){
 		this.size = size;
-		this.distanceFromStar = distanceFromStar;
+		this.distance = distance;
 		generator = new NoiseGenerator(size * 10, size * 10, 3, 4);
 		noise = generator.getNoise();
 		calculateTemperature();
 		calculatePrecipitation();
-		//calculateBiome();
+		calculateBiome();
 		biome = Biome.forest;
 		terrain = biome.buildTerrain(noise);
 		decoration = biome.buildDecoration(noise);
 	}
 	
 	private void calculateTemperature(){
-		temperature = (size / distanceFromStar);
+		temperature = (size / distance);
 	}
 	
 	private void calculatePrecipitation(){
@@ -119,17 +119,53 @@ public class Planet {
 		xDif --;
 	}
 	
-	public void draw(Graphics g){
-		for(int i = 0; i < noise.length; i++){
-			for(int j = 0; j < noise[0].length; j++){
-				//g.setColor(new Color((int) (255 * noise[i][j]), (int) (255 * noise[i][j]), (int) (255 * noise[i][j])));
-				//g.fillRect(i*16 + xDif, j*16 + yDif, 16, 16);
-				terrain[i][j].draw(g, i * 16 + xDif, j * 16 + yDif);
-				//if(decoration[i][j] != null){
-				//	decoration[i][j].draw(g, i * 16 + xDif, j * 16 + yDif);
-				//}
-			}
+	public void incrementAngle(){
+		if(angle < 360){
+			angle += 0.001;
+		}else{
+			angle = 0;
 		}
+	}
+	
+	private void calculateXAndY(){
+		if(angle >= 0 && angle < 90){
+			x = (int) (Main.width/2 + distance*Math.cos(angle));
+			y = (int) (Main.height/2 - distance*Math.sin(angle));
+		}else if(angle >= 90 && angle < 180){
+			x = (int) (Main.width/2 - distance*Math.sin(angle - 90));
+			y = (int) (Main.height/2 - distance*Math.cos(angle - 90));
+		}else if(angle >= 180 && angle < 270){
+			x = (int) (Main.width/2 - distance*Math.cos(angle - 180));
+			y = (int) (Main.height/2 + distance*Math.sin(angle - 180));
+		}else if(angle >= 270 && angle < 360){
+			x = (int) (Main.width/2 + distance*Math.sin(angle - 270));
+			y = (int) (Main.height/2 + distance*Math.cos(angle - 270));
+		}
+	}
+	
+	public void draw(Graphics g){
+		switch(Main.state){
+		case PLANETRY:
+			calculateXAndY();
+			g.setColor(Color.cyan);
+			g.fillOval(x - size/2, y - size/2, size, size);
+			break;
+		case SURFACE:
+			for(int i = 0; i < noise.length; i++){
+				for(int j = 0; j < noise[0].length; j++){
+					g.setColor(new Color((int) (255 * noise[i][j]), (int) (255 * noise[i][j]), (int) (255 * noise[i][j])));
+					g.fillRect(i*16 + xDif, j*16 + yDif, 16, 16);
+					terrain[i][j].draw(g, i * 16 + xDif, j * 16 + yDif);
+					if(decoration[i][j] != null){
+						decoration[i][j].draw(g, i * 16 + xDif, j * 16 + yDif);
+					}
+				}
+			}
+			break;
+		default:
+			break;
+		}
+		
 	}
 
 }

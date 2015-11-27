@@ -109,7 +109,7 @@ public class Biome {
 		return decoChance;
 	}
 	
-	public Block[][] buildTerrain(float[][] noise){
+	public Block[][] buildTerrain(double[][] noise){
 		Block[][] blocks = new Block[noise.length][noise[0].length];
 		for(int i = 0; i < noise.length; i++){
 			for(int j = 0; j < noise[0].length; j++){
@@ -126,7 +126,7 @@ public class Biome {
 		return blocks;
 	}
 	
-	public Block[][] buildDecoration(float[][] noise){
+	public Block[][] buildDecoration(double[][] noise){
 		Block[][] blocks = new Block[noise.length][noise[0].length];
 		for(int i = 0; i < noise.length; i++){
 			for(int j = 0; j < noise[0].length; j++){

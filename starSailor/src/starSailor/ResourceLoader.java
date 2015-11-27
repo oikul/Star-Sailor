@@ -10,8 +10,13 @@ public class ResourceLoader {
 	private static ResourceLoader rl = new ResourceLoader();
 	
 	public static Image getImage(String path){
-		URL url = rl.getClass().getClassLoader().getResource("resources/" + path);
-		return new ImageIcon(url).getImage();
+		try{
+			URL url = rl.getClass().getClassLoader().getResource("resources/" + path);
+			return new ImageIcon(url).getImage();
+		}catch (Exception e){
+			return null;
+		}
+		
 	}
 
 }
