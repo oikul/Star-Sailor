@@ -6,13 +6,57 @@ import java.awt.Graphics;
 public class Planet {
 	
 	private int size;
+	private float distanceFromStar, temperature, precipitation;
 	private NoiseGenerator generator;
 	private float[][] noise;
+	private Block[][] blocks;
+	private Biome biome;
 	
-	public Planet(int size){
+	public Planet(int size, float distanceFromStar){
 		this.size = size;
-		generator = new NoiseGenerator(size, size, 3, 4);
+		this.distanceFromStar = distanceFromStar;
+		generator = new NoiseGenerator(size * 10, size * 10, 3, 4);
 		noise = generator.getNoise();
+		calculateTemperature();
+		calculatePrecipitation();
+		calculateBiome();
+	}
+	
+	private void calculateTemperature(){
+		temperature = (size / distanceFromStar);
+	}
+	
+	private void calculatePrecipitation(){
+		float waterAmount = Main.random.nextFloat();
+		precipitation = waterAmount / size + temperature;
+	}
+	
+	private void calculateBiome(){
+		if(temperature >= 0 && temperature < 0.34){
+			if(precipitation >= 0 && precipitation < 0.34){
+				biome = Biome.forest;
+			}else if(precipitation >= 0.34 && precipitation < 0.67){
+				
+			}else if(precipitation >= 0.67 && precipitation <= 1){
+				
+			}
+		}else if(temperature >= 0.34 && temperature < 0.67){
+			if(precipitation >= 0 && precipitation < 0.34){
+				
+			}else if(precipitation >= 0.34 && precipitation < 0.67){
+				
+			}else if(precipitation >= 0.67 && precipitation <= 1){
+				
+			}
+		}else if(temperature >= 0.67 && temperature <= 1){
+			if(precipitation >= 0 && precipitation < 0.34){
+				
+			}else if(precipitation >= 0.34 && precipitation < 0.67){
+				
+			}else if(precipitation >= 0.67 && precipitation <= 1){
+				
+			}
+		}
 	}
 	
 	public int getSize(){

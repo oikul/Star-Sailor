@@ -49,7 +49,7 @@ public class Main extends JFrame {
 		setSize(width, height);
 		setVisible(running);
 		random = new Random();
-		planet = new Planet(500);
+		planet = new Planet(5, 6);
 	}
 	
 	private void update(){
