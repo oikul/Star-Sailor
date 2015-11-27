@@ -5,11 +5,26 @@ import java.awt.Image;
 
 public class Block {
 	
+	//grass blocks
 	public static final Block grass_forest = new Block("grass/grass_forest", false);
 	public static final Block grass_plains = new Block("grass/grass_plains", false);
 	public static final Block grass_tundra = new Block("grass/grass_tundra", false);
 	public static final Block grass_mountains = new Block("grass/grass_mountains", false);
 	public static final Block grass_jungle = new Block("grass/grass_jungle", false);
+	
+	//tree blocks
+	public static final Block tree_oak = new Block("tree/tree_oak", true);
+	public static final Block tree_jungle = new Block("tree/tree_jungle", true);
+	
+	//liquids
+	public static final Block lava = new Block("lava/lava", true);
+	
+	//stone
+	public static final Block stone = new Block("stone/stone", true);
+	
+	//ice
+	public static final Block ice = new Block("ice/ice", false);
+	
 	
 	private Image image;
 	private boolean isSolid;
