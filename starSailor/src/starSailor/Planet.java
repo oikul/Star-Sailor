@@ -2,6 +2,7 @@ package starSailor;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class Planet {
 	
@@ -144,23 +145,29 @@ public class Planet {
 	}
 	
 	public void draw(Graphics g){
+		Graphics2D g2d = (Graphics2D) g;
 		switch(Main.state){
-		case PLANETRY:
+		case SOLAR:
 			calculateXAndY();
 			g.setColor(Color.cyan);
 			g.fillOval(x - size/2, y - size/2, size, size);
 			break;
+		case PLANETRY:
+			g.setColor(Color.cyan);
+			g.fillOval((Main.width/2) - size * 10, (Main.height/2) - size * 10, size*20, size*20);
+			break;
 		case SURFACE:
 			for(int i = 0; i < noise.length; i++){
 				for(int j = 0; j < noise[0].length; j++){
-					g.setColor(new Color((int) (255 * noise[i][j]), (int) (255 * noise[i][j]), (int) (255 * noise[i][j])));
-					g.fillRect(i*16 + xDif, j*16 + yDif, 16, 16);
-					terrain[i][j].draw(g, i * 16 + xDif, j * 16 + yDif);
+					g2d.setColor(new Color((int) (255 * noise[i][j]), (int) (255 * noise[i][j]), (int) (255 * noise[i][j])));
+					g2d.fillRect(i*16 + xDif, j*16 + yDif, 16, 16);
+					terrain[i][j].draw(g2d, i * 16 + xDif, j * 16 + yDif);
 					if(decoration[i][j] != null){
-						decoration[i][j].draw(g, i * 16 + xDif, j * 16 + yDif);
+						decoration[i][j].draw(g2d, i * 16 + xDif, j * 16 + yDif);
 					}
 				}
 			}
+			
 			break;
 		default:
 			break;

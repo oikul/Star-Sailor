@@ -9,7 +9,7 @@ public class Biome {
 	//public static final Biome tundra = new Biome("tundra", Block.grass_tundra, 0.0f, 1.0f);
 	
 	//medium biomes
-	public static final Biome forest = new Biome("forest", Block.grass_forest, 0.0f, 1.0f);
+	public static final Biome forest = new Biome("forest", Block.grass_forest, 0.0, 1.0, Block.tree_oak, 0.4, 0.8, 0.4);
 	
 	//hot biomes
 	//public static final Biome jungle = new Biome("jungle", Block.grass_jungle, 0.0f, 1.0f, Block.tree_jungle, 0.4f, 0.8f, 0.4f);
@@ -20,26 +20,26 @@ public class Biome {
 	
 	private String name;
 	private Block main, secondary, deco;
-	private float mainStart, mainEnd, secondaryStart = -1, secondaryEnd = -1, decoStart = -1, decoEnd = -1, decoChance = 0;
+	private double mainStart, mainEnd, secondaryStart = -1, secondaryEnd = -1, decoStart = -1, decoEnd = -1, decoChance = 0;
 	
-	public Biome(String name, Block main, float mainStart, float mainEnd){
+	public Biome(String name, Block main, double mainStart, double mainEnd){
 		this.name = name;
 		setMain(main, mainStart, mainEnd);
 	}
 	
-	public Biome(String name, Block main, float mainStart, float mainEnd, Block secondary, float secondaryStart, float secondaryEnd){
+	public Biome(String name, Block main, double mainStart, double mainEnd, Block secondary, double secondaryStart, double secondaryEnd){
 		this.name = name;
 		setMain(main, mainStart, mainEnd);
 		setSecondary(secondary, secondaryStart, secondaryEnd);
 	}
 	
-	public Biome(String name, Block main, float mainStart, float mainEnd, Block deco, float decoStart, float decoEnd, float decoChance){
+	public Biome(String name, Block main, double mainStart, double mainEnd, Block deco, double decoStart, double decoEnd, double decoChance){
 		this.name = name;
 		setMain(main, mainStart, mainEnd);
 		setDeco(deco, decoStart, decoEnd, decoChance);
 	}
 	
-	public Biome(String name, Block main, float mainStart, float mainEnd, Block secondary, float secondaryStart, float secondaryEnd, Block deco, float decoStart, float decoEnd, float decoChance){
+	public Biome(String name, Block main, double mainStart, double mainEnd, Block secondary, double secondaryStart, double secondaryEnd, Block deco, double decoStart, double decoEnd, double decoChance){
 		this.name = name;
 		setMain(main, mainStart, mainEnd);
 		setSecondary(secondary, secondaryStart, secondaryEnd);
@@ -50,7 +50,7 @@ public class Biome {
 		return name;
 	}
 	
-	public void setMain(Block main, float start, float end){
+	public void setMain(Block main, double start, double end){
 		this.main = main;
 		this.mainStart = start;
 		this.mainEnd = end;
@@ -60,15 +60,15 @@ public class Biome {
 		return main;
 	}
 	
-	public float getMainStart(){
+	public double getMainStart(){
 		return mainStart;
 	}
 	
-	public float getMainEnd(){
+	public double getMainEnd(){
 		return mainEnd;
 	}
 	
-	public void setSecondary(Block secondary, float start, float end){
+	public void setSecondary(Block secondary, double start, double end){
 		this.secondary = secondary;
 		this.secondaryStart = start;
 		this.secondaryEnd = end;
@@ -78,15 +78,15 @@ public class Biome {
 		return secondary;
 	}
 	
-	public float getSecondaryStart(){
+	public double getSecondaryStart(){
 		return secondaryStart;
 	}
 	
-	public float getSecondaryEnd(){
+	public double getSecondaryEnd(){
 		return secondaryEnd;
 	}
 	
-	public void setDeco(Block deco, float start, float end, float decoChance){
+	public void setDeco(Block deco, double start, double end, double decoChance){
 		this.deco = deco;
 		this.decoStart = start;
 		this.decoEnd = end;
@@ -97,15 +97,15 @@ public class Biome {
 		return deco;
 	}
 	
-	public float getDecoStart(){
+	public double getDecoStart(){
 		return decoStart;
 	}
 	
-	public float getDecoEnd(){
+	public double getDecoEnd(){
 		return decoEnd;
 	}
 	
-	public float getDecoChance(){
+	public double getDecoChance(){
 		return decoChance;
 	}
 	
@@ -131,7 +131,7 @@ public class Biome {
 		for(int i = 0; i < noise.length; i++){
 			for(int j = 0; j < noise[0].length; j++){
 				if(noise[i][j] >= decoStart && noise[i][j] <= decoEnd){
-					if(Main.random.nextFloat() < decoChance){
+					if(Main.random.nextDouble() < decoChance){
 						blocks[i][j] = deco;
 					}
 				}

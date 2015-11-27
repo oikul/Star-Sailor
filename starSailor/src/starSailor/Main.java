@@ -57,10 +57,10 @@ public class Main extends JFrame {
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		setSize(width, height);
 		setVisible(running);
-		state = State.PLANETRY;
+		state = State.SURFACE;
 		random = new Random();
 		input = new InputHandler(this);
-		planet = new Planet(30, 500, 40);
+		planet = new Planet(3, 500, 40);
 		time = System.currentTimeMillis();
 	}
 	
@@ -72,10 +72,10 @@ public class Main extends JFrame {
 
 				break;
 			case SOLAR:
-
+				planet.incrementAngle();
 				break;
 			case PLANETRY:
-				planet.incrementAngle();
+				
 				break;
 			case SURFACE:
 				if(input.isKeyDown(KeyEvent.VK_W)){

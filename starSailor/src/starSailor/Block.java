@@ -13,7 +13,7 @@ public class Block {
 	public static final Block grass_jungle = new Block("grass/grass_jungle.png", false);
 	
 	//tree blocks
-	public static final Block tree_oak = new Block("tree/tree_oak", true);
+	public static final Block tree_oak = new Block("trees/tree_oak.png", true);
 	public static final Block tree_jungle = new Block("tree/tree_jungle", true);
 	
 	//liquids
