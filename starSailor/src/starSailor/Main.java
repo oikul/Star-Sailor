@@ -18,6 +18,7 @@ public class Main extends JFrame {
 	private InputHandler input;
 	private Galaxy galaxy;
 	private Planet planet;
+	private Player player;
 	private long time;
 	
 	public static enum State{
@@ -62,7 +63,8 @@ public class Main extends JFrame {
 		random = new Random();
 		input = new InputHandler(this);
 		galaxy = new Galaxy(4096);
-		planet = new Planet(6, 500, 40);
+		planet = new Planet(16, 500, 40);
+		player = new Player("character/charSprites.png");
 		time = System.currentTimeMillis();
 	}
 	
@@ -91,14 +93,25 @@ public class Main extends JFrame {
 			case SURFACE:
 				if(input.isKeyDown(KeyEvent.VK_W)){
 					planet.panUp();
+					player.setDirection(Player.Direction.UP);
+					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_A)){
 					planet.panLeft();
+					player.setDirection(Player.Direction.LEFT);
+					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_S)){
 					planet.panDown();
+					player.setDirection(Player.Direction.DOWN);
+					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_D)){
 					planet.panRight();
+					player.setDirection(Player.Direction.RIGHT);
+					player.update();
+				}else{
+					player.stop();
 				}
 				planet.update();
+				
 				break;
 			}
 			time = newTime;
@@ -124,6 +137,7 @@ public class Main extends JFrame {
 			break;
 		case SURFACE:
 			planet.draw(offGraphics);
+			player.draw(offGraphics);
 			break;
 		}
 		g2d.drawImage(offImage, 0, 0, width, height, null);

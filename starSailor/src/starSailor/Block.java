@@ -6,7 +6,7 @@ import java.awt.Image;
 public class Block {
 	
 	//grass blocks
-	public static final Block grass_forest = new Block("grass/grass_forest.png", false);
+	public static final Block grass_forest = new Block("stone/rock.png", false);
 	public static final Block grass_plains = new Block("grass/grass_plains.png", false);
 	public static final Block grass_tundra = new Block("grass/grass_tundra.png", false);
 	public static final Block grass_mountains = new Block("grass/grass_mountains.png", false);
