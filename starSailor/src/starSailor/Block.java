@@ -1,17 +1,16 @@
 package starSailor;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 
 public class Block {
 	
 	//grass blocks
-	public static final Block grass_forest = new Block("grass/grass_forest", false);
-	public static final Block grass_plains = new Block("grass/grass_plains", false);
-	public static final Block grass_tundra = new Block("grass/grass_tundra", false);
-	public static final Block grass_mountains = new Block("grass/grass_mountains", false);
-	public static final Block grass_jungle = new Block("grass/grass_jungle", false);
+	public static final Block grass_forest = new Block("grass/grass_forest.png", false);
+	public static final Block grass_plains = new Block("grass/grass_plains.png", false);
+	public static final Block grass_tundra = new Block("grass/grass_tundra.png", false);
+	public static final Block grass_mountains = new Block("grass/grass_mountains.png", false);
+	public static final Block grass_jungle = new Block("grass/grass_jungle.png", false);
 	
 	//tree blocks
 	public static final Block tree_oak = new Block("tree/tree_oak", true);
@@ -48,8 +47,7 @@ public class Block {
 	}
 	
 	public void draw(Graphics g, int x, int y){
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawImage(image, x, y, 16, 16, null);
+		g.drawImage(image, x, y, 16, 16, null);
 	}
 
 }
