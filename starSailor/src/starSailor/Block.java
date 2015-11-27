@@ -18,6 +18,10 @@ public class Block {
 	
 	//liquids
 	public static final Block lava = new Block("lava/lava", true);
+	public static final Block water_ocean = new Block("water/water_ocean", true);
+	public static final Block water_river = new Block("water/water_river", true);
+	public static final Block water_jungle = new Block("water/water_jungle", true);
+	public static final Block water_swamp = new Block("water/water_swamp", true);
 	
 	//stone
 	public static final Block stone = new Block("stone/stone", true);

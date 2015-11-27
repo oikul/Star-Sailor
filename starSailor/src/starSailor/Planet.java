@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 public class Planet {
 	
-	private int size;
+	private int size, xDif, yDif;
 	private float distanceFromStar, temperature, precipitation;
 	private NoiseGenerator generator;
 	private float[][] noise;
@@ -18,11 +18,11 @@ public class Planet {
 		this.distanceFromStar = distanceFromStar;
 		generator = new NoiseGenerator(size * 10, size * 10, 3, 4);
 		noise = generator.getNoise();
-		calculateTemperature();
-		calculatePrecipitation();
-		calculateBiome();
-		terrain = biome.buildTerrain(noise);
-		decoration = biome.buildDecoration(noise);
+		//calculateTemperature();
+		//calculatePrecipitation();
+		//calculateBiome();
+		//terrain = biome.buildTerrain(noise);
+		//decoration = biome.buildDecoration(noise);
 	}
 	
 	private void calculateTemperature(){
@@ -102,13 +102,31 @@ public class Planet {
 		return size;
 	}
 	
+	public void panUp(){
+		yDif ++;
+	}
+	
+	public void panLeft(){
+		xDif ++;
+	}
+	
+	public void panDown(){
+		yDif --;
+	}
+	
+	public void panRight(){
+		xDif --;
+	}
+	
 	public void draw(Graphics g){
 		for(int i = 0; i < noise.length; i++){
 			for(int j = 0; j < noise[0].length; j++){
-				terrain[i][j].draw(g, i * 16, i * 16);
+				g.setColor(new Color((int) (255 * noise[i][j]), (int) (255 * noise[i][j]), (int) (255 * noise[i][j])));
+				g.fillRect(i*16 + xDif, j*16 + yDif, 16, 16);
+				/*terrain[i][j].draw(g, i * 16 + xDif, i * 16 + yDif);
 				if(decoration[i][j] != null){
-					decoration[i][j].draw(g, i * 16, j * 16);
-				}
+					decoration[i][j].draw(g, i * 16 + xDif, j * 16 + yDif);
+				}*/
 			}
 		}
 	}

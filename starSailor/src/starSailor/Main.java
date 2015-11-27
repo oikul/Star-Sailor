@@ -4,16 +4,24 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.util.Random;
 
 import javax.swing.JFrame;
 
 public class Main extends JFrame {
 	
+	private static final long serialVersionUID = 1L;
 	private boolean running = false;
 	public static int width, height;
 	public static Random random;
+	private InputHandler input;
 	private Planet planet;
+	
+	public static enum State{
+		GALACTIC, SOLAR, PLANETRY, SURFACE;
+	}
+	private State state;
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -48,12 +56,38 @@ public class Main extends JFrame {
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		setSize(width, height);
 		setVisible(running);
+		state = State.SURFACE;
 		random = new Random();
+		input = new InputHandler(this);
 		planet = new Planet(5, 6);
 	}
 	
 	private void update(){
-		
+		switch (state){
+		case GALACTIC:
+			
+			break;
+		case SOLAR:
+			
+			break;
+		case PLANETRY:
+			
+			break;
+		case SURFACE:
+			if(input.isKeyDown(KeyEvent.VK_W)){
+				planet.panUp();
+			}
+			if(input.isKeyDown(KeyEvent.VK_A)){
+				planet.panLeft();
+			}
+			if(input.isKeyDown(KeyEvent.VK_S)){
+				planet.panDown();
+			}
+			if(input.isKeyDown(KeyEvent.VK_D)){
+				planet.panRight();
+			}
+			break;
+		}
 	}
 	
 	private void draw(){
@@ -61,12 +95,22 @@ public class Main extends JFrame {
 		Graphics2D g2d = (Graphics2D) g;
 		Image offImage = createImage(width, height);
 		Graphics offGraphics = offImage.getGraphics();
-		planet.draw(offGraphics);
+		offGraphics.fillRect(0, 0, width, height);
+		switch (state){
+		case GALACTIC:
+			
+			break;
+		case SOLAR:
+			
+			break;
+		case PLANETRY:
+			planet.draw(offGraphics);
+			break;
+		case SURFACE:
+			planet.draw(offGraphics);
+			break;
+		}
 		g2d.drawImage(offImage, 0, 0, width, height, null);
-	}
-	
-	public static void exit(){
-		
 	}
 
 }
