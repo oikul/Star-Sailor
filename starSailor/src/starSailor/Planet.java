@@ -1,5 +1,6 @@
 package starSailor;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 public class Planet {
@@ -19,7 +20,8 @@ public class Planet {
 		noise = generator.getNoise();
 		calculateTemperature();
 		calculatePrecipitation();
-		calculateBiome();
+		//calculateBiome();
+		biome = Biome.forest;
 		terrain = biome.buildTerrain(noise);
 		decoration = biome.buildDecoration(noise);
 	}
@@ -36,27 +38,27 @@ public class Planet {
 	private void calculateBiome(){
 		if(temperature >= 0 && temperature < 0.2){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}
 		}else if(temperature >= 0.2 && temperature < 0.4){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.tundra;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.tundra;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
-				biome = Biome.tundra;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.tundra;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.tundra;
+				biome = Biome.forest;
 			}
 		}else if(temperature >= 0.4 && temperature < 0.6){
 			if(precipitation >= 0 && precipitation < 0.2){
@@ -64,35 +66,35 @@ public class Planet {
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
 				biome = Biome.forest;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}
 		}else if(temperature >= 0.6 && temperature < 0.8){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.jungle;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}
 		}else if(temperature >= 0.8 && temperature <= 1.0){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.lava_ocean;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.ice_plains;
+				biome = Biome.forest;
 			}
 		}
 	}
@@ -120,12 +122,12 @@ public class Planet {
 	public void draw(Graphics g){
 		for(int i = 0; i < noise.length; i++){
 			for(int j = 0; j < noise[0].length; j++){
-				/*g.setColor(new Color((int) (255 * noise[i][j]), (int) (255 * noise[i][j]), (int) (255 * noise[i][j])));
-				g.fillRect(i*16 + xDif, j*16 + yDif, 16, 16);*/
+				//g.setColor(new Color((int) (255 * noise[i][j]), (int) (255 * noise[i][j]), (int) (255 * noise[i][j])));
+				//g.fillRect(i*16 + xDif, j*16 + yDif, 16, 16);
 				terrain[i][j].draw(g, i * 16 + xDif, i * 16 + yDif);
-				if(decoration[i][j] != null){
-					decoration[i][j].draw(g, i * 16 + xDif, j * 16 + yDif);
-				}
+				//if(decoration[i][j] != null){
+				//	decoration[i][j].draw(g, i * 16 + xDif, j * 16 + yDif);
+				//}
 			}
 		}
 	}

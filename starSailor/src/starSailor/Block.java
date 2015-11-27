@@ -1,6 +1,7 @@
 package starSailor;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 
 public class Block {
@@ -30,11 +31,11 @@ public class Block {
 	public static final Block ice = new Block("ice/ice", false);
 	
 	
-	private Image image;
+	protected Image image;
 	private boolean isSolid;
 	
 	public Block(String imagePath, boolean isSolid){
-		//image = ResourceLoader.getImage(imagePath);
+		image = ResourceLoader.getImage(imagePath);
 		this.isSolid = isSolid;
 	}
 	
@@ -42,8 +43,13 @@ public class Block {
 		return isSolid;
 	}
 	
+	public void update(){
+		
+	}
+	
 	public void draw(Graphics g, int x, int y){
-		g.drawImage(image, x, y, null);
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.drawImage(image, x, y, 16, 16, null);
 	}
 
 }

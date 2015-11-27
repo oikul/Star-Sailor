@@ -3,19 +3,19 @@ package starSailor;
 public class Biome {
 	
 	//very cold biomes
-	public static final Biome ice_plains = new Biome("ice plains", Block.ice, 0.0f, 1.0f);
+	//public static final Biome ice_plains = new Biome("ice plains", Block.ice, 0.0f, 1.0f);
 	
 	//cold biomes
-	public static final Biome tundra = new Biome("tundra", Block.grass_tundra, 0.0f, 1.0f);
+	//public static final Biome tundra = new Biome("tundra", Block.grass_tundra, 0.0f, 1.0f);
 	
 	//medium biomes
-	public static final Biome forest = new Biome("forest", Block.grass_forest, 0.0f, 1.0f, Block.tree_oak, 0.4f, 0.8f, 0.4f);
+	public static final Biome forest = new Biome("forest", Block.grass_forest, 0.0f, 1.0f);
 	
 	//hot biomes
-	public static final Biome jungle = new Biome("jungle", Block.grass_jungle, 0.0f, 1.0f, Block.tree_jungle, 0.4f, 0.8f, 0.4f);
+	//public static final Biome jungle = new Biome("jungle", Block.grass_jungle, 0.0f, 1.0f, Block.tree_jungle, 0.4f, 0.8f, 0.4f);
 	
 	//very hot biomes
-	public static final Biome lava_ocean = new Biome("lava ocean", Block.lava, 0.0f, 1.0f);
+	//public static final Biome lava_ocean = new Biome("lava ocean", Block.lava, 0.0f, 1.0f);
 	
 	
 	private String name;
@@ -113,12 +113,14 @@ public class Biome {
 		Block[][] blocks = new Block[noise.length][noise[0].length];
 		for(int i = 0; i < noise.length; i++){
 			for(int j = 0; j < noise[0].length; j++){
+				
 				if(noise[i][j] >= mainStart && noise[i][j] <= mainEnd){
 					blocks[i][j] = main;
 				}
 				if(noise[i][j] >= secondaryStart && noise[i][j] <= secondaryEnd){
 					blocks[i][j] = secondary;
 				}
+				blocks[i][j] = main;
 			}
 		}
 		return blocks;
