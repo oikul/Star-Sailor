@@ -124,7 +124,7 @@ public class Planet {
 			for(int j = 0; j < noise[0].length; j++){
 				//g.setColor(new Color((int) (255 * noise[i][j]), (int) (255 * noise[i][j]), (int) (255 * noise[i][j])));
 				//g.fillRect(i*16 + xDif, j*16 + yDif, 16, 16);
-				terrain[i][j].draw(g, i * 16 + xDif, i * 16 + yDif);
+				terrain[i][j].draw(g, i * 16 + xDif, j * 16 + yDif);
 				//if(decoration[i][j] != null){
 				//	decoration[i][j].draw(g, i * 16 + xDif, j * 16 + yDif);
 				//}
