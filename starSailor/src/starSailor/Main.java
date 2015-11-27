@@ -16,6 +16,7 @@ public class Main extends JFrame {
 	public static int width, height;
 	public static Random random;
 	private InputHandler input;
+	private Galaxy galaxy;
 	private Planet planet;
 	private long time;
 	
@@ -57,10 +58,11 @@ public class Main extends JFrame {
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		setSize(width, height);
 		setVisible(running);
-		state = State.SURFACE;
+		state = State.GALACTIC;
 		random = new Random();
 		input = new InputHandler(this);
-		planet = new Planet(3, 500, 40);
+		galaxy = new Galaxy(4096);
+		planet = new Planet(6, 500, 40);
 		time = System.currentTimeMillis();
 	}
 	
@@ -69,7 +71,16 @@ public class Main extends JFrame {
 		if(newTime >= time + 10){
 			switch (state){
 			case GALACTIC:
-
+				if(input.isKeyDown(KeyEvent.VK_W)){
+					galaxy.panUp();
+				}else if(input.isKeyDown(KeyEvent.VK_A)){
+					galaxy.panLeft();
+				}else if(input.isKeyDown(KeyEvent.VK_S)){
+					galaxy.panDown();
+				}else if(input.isKeyDown(KeyEvent.VK_D)){
+					galaxy.panRight();
+				}
+				galaxy.update();
 				break;
 			case SOLAR:
 				planet.incrementAngle();
@@ -80,16 +91,14 @@ public class Main extends JFrame {
 			case SURFACE:
 				if(input.isKeyDown(KeyEvent.VK_W)){
 					planet.panUp();
-				}
-				if(input.isKeyDown(KeyEvent.VK_A)){
+				}else if(input.isKeyDown(KeyEvent.VK_A)){
 					planet.panLeft();
-				}
-				if(input.isKeyDown(KeyEvent.VK_S)){
+				}else if(input.isKeyDown(KeyEvent.VK_S)){
 					planet.panDown();
-				}
-				if(input.isKeyDown(KeyEvent.VK_D)){
+				}else if(input.isKeyDown(KeyEvent.VK_D)){
 					planet.panRight();
 				}
+				planet.update();
 				break;
 			}
 			time = newTime;
@@ -105,7 +114,7 @@ public class Main extends JFrame {
 		offGraphics.fillRect(0, 0, width, height);
 		switch (state){
 		case GALACTIC:
-			
+			galaxy.draw(offGraphics);
 			break;
 		case SOLAR:
 			

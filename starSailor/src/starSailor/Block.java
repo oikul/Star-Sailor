@@ -17,11 +17,11 @@ public class Block {
 	public static final Block tree_jungle = new Block("tree/tree_jungle", true);
 	
 	//liquids
-	/*public static final BlockAnimated lava = new BlockAnimated("lava/lava", true);
-	public static final BlockAnimated water_ocean = new BlockAnimated("water/water_ocean", true);
-	public static final BlockAnimated water_river = new BlockAnimated("water/water_river", true);
-	public static final BlockAnimated water_jungle = new BlockAnimated("water/water_jungle", true);
-	public static final BlockAnimated water_swamp = new BlockAnimated("water/water_swamp", true);*/
+	//public static final BlockAnimated lava = new BlockAnimated("lava/lava", true);
+	public static final BlockAnimated water = new BlockAnimated("water/water.png", true);
+	//public static final BlockAnimated water_river = new BlockAnimated("water/water_river", true);
+	//public static final BlockAnimated water_jungle = new BlockAnimated("water/water_jungle", true);
+	//public static final BlockAnimated water_swamp = new BlockAnimated("water/water_swamp", true);
 	
 	//stone
 	public static final Block stone = new Block("stone/stone", true);
@@ -40,10 +40,6 @@ public class Block {
 	
 	public boolean isSolid(){
 		return isSolid;
-	}
-	
-	public void update(){
-		
 	}
 	
 	public void draw(Graphics g, int x, int y){

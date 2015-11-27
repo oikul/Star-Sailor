@@ -145,11 +145,26 @@ public class Planet {
 		}
 	}
 	
+	public void update(){
+		switch(Main.state){
+		case PLANETRY:
+			break;
+		case SOLAR:
+			calculateXAndY();
+			break;
+		case SURFACE:
+			BlockAnimated.update();
+			break;
+		default:
+			break;
+		}
+	}
+	
 	public void draw(Graphics g){
 		Graphics2D g2d = (Graphics2D) g;
 		switch(Main.state){
 		case SOLAR:
-			calculateXAndY();
+			
 			g.setColor(Color.cyan);
 			g.fillOval(x - size/2, y - size/2, size, size);
 			break;
