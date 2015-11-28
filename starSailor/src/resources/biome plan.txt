@@ -1,0 +1,43 @@
+biomes hot-cold
+
+very hot biomes, low rain - high rain
+
+lava ocean
+volcanic islands
+volcanic lakes
+volcanic mountains
+igneous desert
+
+hot biomes, low rain - high rain
+
+desert plains
+canyon
+savanna
+jungle
+tropical rainforest
+
+medium biomes, low rain - high rain
+
+steppe
+grass plains
+forest
+jungle
+islands
+
+cold biomes, low rain - high rain
+
+tundra
+mountain
+taiga
+mountain forest
+ocean
+
+very cold biomes, low rain - high rain
+
+polar desert
+ice spikes
+frozen lakes
+ice sheet
+ice bergs
+
+
