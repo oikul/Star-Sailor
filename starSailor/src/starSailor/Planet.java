@@ -13,18 +13,20 @@ public class Planet {
 	private Block[][] terrain;
 	private Block[][] decoration;
 	private Biome biome;
+	private Color color;
 	
 	public Planet(int size, double distance, double angle){
 		this.size = size;
 		this.distance = distance;
+		this.angle = angle;
 		generator = new NoiseGenerator(size * 10, size * 10, 3, 4);
 		noise = generator.getNoise();
 		calculateTemperature();
 		calculatePrecipitation();
 		calculateBiome();
-		biome = Biome.forest;
 		terrain = biome.buildTerrain(noise);
 		decoration = biome.buildDecoration(noise);
+		color = biome.getColor();
 	}
 	
 	private void calculateTemperature(){
@@ -120,7 +122,7 @@ public class Planet {
 		xDif --;
 	}
 	
-	public void incrementAngle(){
+	private void incrementAngle(){
 		if(angle < 360){
 			angle += 0.001;
 		}else{
@@ -149,6 +151,7 @@ public class Planet {
 		case PLANETRY:
 			break;
 		case SOLAR:
+			incrementAngle();
 			calculateXAndY();
 			break;
 		case SURFACE:
@@ -163,11 +166,11 @@ public class Planet {
 		Graphics2D g2d = (Graphics2D) g;
 		switch(Main.state){
 		case SOLAR:
-			g.setColor(Color.cyan);
+			g.setColor(color);
 			g.fillOval(x - size/2, y - size/2, size, size);
 			break;
 		case PLANETRY:
-			g.setColor(Color.cyan);
+			g.setColor(color);
 			g.fillOval((Main.width/2) - size * 10, (Main.height/2) - size * 10, size*20, size*20);
 			break;
 		case SURFACE:

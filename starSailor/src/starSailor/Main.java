@@ -17,7 +17,6 @@ public class Main extends JFrame {
 	public static Random random;
 	private InputHandler input;
 	private Galaxy galaxy;
-	private Planet planet;
 	private Player player;
 	private long time;
 	
@@ -60,10 +59,9 @@ public class Main extends JFrame {
 		setSize(width, height);
 		setVisible(running);
 		state = State.GALACTIC;
-		random = new Random(1);
+		random = new Random();
 		input = new InputHandler(this);
 		galaxy = new Galaxy(4096);
-		planet = new Planet(16, 500, 40);
 		player = new Player("character/charSprites.png");
 		time = System.currentTimeMillis();
 	}
@@ -108,32 +106,29 @@ public class Main extends JFrame {
 					state = State.SOLAR;
 					input.stopMouseWheel();
 				}
+				galaxy.update();
 				break;
 			case SURFACE:
 				if(input.isKeyDown(KeyEvent.VK_W)){
-					planet.panUp();
 					player.setDirection(Player.Direction.UP);
 					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_A)){
-					planet.panLeft();
 					player.setDirection(Player.Direction.LEFT);
 					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_S)){
-					planet.panDown();
 					player.setDirection(Player.Direction.DOWN);
 					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_D)){
-					planet.panRight();
 					player.setDirection(Player.Direction.RIGHT);
 					player.update();
 				}else{
 					player.stop();
 				}
-				planet.update();
 				if(input.getMouseWheelDown()){
 					state = State.PLANETRY;
 					input.stopMouseWheel();
 				}
+				galaxy.update();
 				break;
 			}
 			time = newTime;
@@ -147,21 +142,8 @@ public class Main extends JFrame {
 		Image offImage = createImage(width, height);
 		Graphics offGraphics = offImage.getGraphics();
 		offGraphics.fillRect(0, 0, width, height);
-		switch (state){
-		case GALACTIC:
-			galaxy.draw(offGraphics);
-			break;
-		case SOLAR:
-			galaxy.draw(offGraphics);
-			break;
-		case PLANETRY:
-			planet.draw(offGraphics);
-			break;
-		case SURFACE:
-			planet.draw(offGraphics);
-			player.draw(offGraphics);
-			break;
-		}
+		galaxy.draw(offGraphics);
+		player.draw(offGraphics);
 		g2d.drawImage(offImage, 0, 0, width, height, null);
 	}
 

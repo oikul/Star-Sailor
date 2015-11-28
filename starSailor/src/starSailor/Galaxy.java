@@ -41,11 +41,13 @@ public class Galaxy {
 			}
 			break;
 		case PLANETRY:
+			galaxy[selectedStar].update();
 			break;
 		case SOLAR:
 			galaxy[selectedStar].update();
 			break;
 		case SURFACE:
+			galaxy[selectedStar].update();
 			break;
 		default:
 			break;
@@ -65,11 +67,13 @@ public class Galaxy {
 			}
 			break;
 		case PLANETRY:
+			galaxy[selectedStar].draw(g);
 			break;
 		case SOLAR:
 			galaxy[selectedStar].draw(g);
 			break;
 		case SURFACE:
+			galaxy[selectedStar].draw(g);
 			break;
 		default:
 			break;

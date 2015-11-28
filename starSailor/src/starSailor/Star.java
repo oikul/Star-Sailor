@@ -20,7 +20,7 @@ public class Star {
 	}
 	
 	private void createSystem(){
-		system = new SolarSystem(size, Main.random.nextInt(8) + 2, Main.height/2 - size/2, Main.height/2, color);
+		system = new SolarSystem(size, Main.random.nextInt(8) + 2, size/2, Main.height/2, color);
 		made = true;
 	}
 	
@@ -67,6 +67,7 @@ public class Star {
 			calculateXAndY();
 			break;
 		case PLANETRY:
+			system.update();
 			break;
 		case SOLAR:
 			if(!made){
@@ -75,6 +76,7 @@ public class Star {
 			system.update();
 			break;
 		case SURFACE:
+			system.update();
 			break;
 		default:
 			break;
@@ -92,8 +94,10 @@ public class Star {
 			system.draw(g);
 			break;
 		case PLANETRY:
+			system.draw(g);
 			break;
 		case SURFACE:
+			system.draw(g);
 			break;
 		default:
 			break;
