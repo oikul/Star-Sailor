@@ -63,11 +63,11 @@ public class Player {
 			break;
 		case SURFACE:
 			long newTime = System.currentTimeMillis();
-			if(newTime >= time + 500){
+			if(newTime >= time + 300){
 				if(currentIFrame < playerImages.length - 1){
 					currentIFrame++;
 				}else{
-					currentIFrame = 0;
+					currentIFrame = 1;
 				}
 				time = newTime;
 			}

@@ -5,8 +5,8 @@ very hot biomes, low rain - high rain
 lava ocean
 volcanic islands
 volcanic lakes
-volcanic mountains
 igneous desert
+volcanic mountains
 
 hot biomes, low rain - high rain
 
@@ -21,7 +21,7 @@ medium biomes, low rain - high rain
 steppe
 grass plains
 forest
-jungle
+lakes
 islands
 
 cold biomes, low rain - high rain

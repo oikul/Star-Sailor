@@ -33,6 +33,10 @@ public class Galaxy {
 		xDif --;
 	}
 	
+	public void moveSurface(int dir){
+		galaxy[selectedStar].moveSurface(dir);
+	}
+	
 	public void update(){
 		switch (Main.state){
 		case GALACTIC:

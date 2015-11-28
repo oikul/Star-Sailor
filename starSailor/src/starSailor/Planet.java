@@ -10,8 +10,7 @@ public class Planet {
 	private double distance, temperature, precipitation, angle;
 	private NoiseGenerator generator;
 	private double[][] noise;
-	private Block[][] terrain;
-	private Block[][] decoration;
+	private Block[][] terrain, decoration;
 	private Biome biome;
 	private Color color;
 	
@@ -24,82 +23,85 @@ public class Planet {
 		calculateTemperature();
 		calculatePrecipitation();
 		calculateBiome();
+		biome = Biome.plains;
 		terrain = biome.buildTerrain(noise);
 		decoration = biome.buildDecoration(noise);
 		color = biome.getColor();
 	}
 	
 	private void calculateTemperature(){
-		temperature = (size / distance);
+		temperature = Main.random.nextDouble();
+		System.out.println("temp: " + temperature);
 	}
 	
 	private void calculatePrecipitation(){
-		float waterAmount = Main.random.nextFloat();
-		precipitation = waterAmount / size + temperature;
+		precipitation = Main.random.nextDouble();
+		System.out.println("precip: " + precipitation);
 	}
 	
 	private void calculateBiome(){
 		if(temperature >= 0 && temperature < 0.2){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.forest;
+				biome = Biome.polar_desert;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.forest;
+				biome = Biome.ice_spikes;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
-				biome = Biome.forest;
+				biome = Biome.frozen_lakes;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.forest;
-			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.forest;
+				biome = Biome.ice_sheet;
+			}else if(precipitation >= 0.8 && precipitation <= 1){
+				biome = Biome.ice_bergs;
 			}
 		}else if(temperature >= 0.2 && temperature < 0.4){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.forest;
+				biome = Biome.tundra;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.forest;
+				biome = Biome.mountain;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
-				biome = Biome.forest;
+				biome = Biome.taiga;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.forest;
-			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.forest;
+				biome = Biome.mountain_forest;
+			}else if(precipitation >= 0.8 && precipitation <= 1){
+				biome = Biome.ocean;
 			}
 		}else if(temperature >= 0.4 && temperature < 0.6){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.forest;
+				biome = Biome.steppe;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.forest;
+				biome = Biome.plains;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
 				biome = Biome.forest;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.forest;
-			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.forest;
+				biome = Biome.lakes;
+			}else if(precipitation >= 0.8 && precipitation <= 1){
+				biome = Biome.islands;
 			}
 		}else if(temperature >= 0.6 && temperature < 0.8){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.forest;
+				biome = Biome.desert_plains;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.forest;
+				biome = Biome.canyon;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
-				biome = Biome.forest;
+				biome = Biome.savannah;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.forest;
-			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.forest;
+				biome = Biome.jungle;
+			}else if(precipitation >= 0.8 && precipitation <= 1){
+				biome = Biome.rainforest;
 			}
-		}else if(temperature >= 0.8 && temperature <= 1.0){
+		}else if(temperature >= 0.8 && temperature <= 1){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.forest;
+				biome = Biome.volcanic_mountains;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.forest;
+				biome = Biome.volcanic_mountains;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
-				biome = Biome.forest;
+				biome = Biome.volcanic_mountains;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.forest;
-			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.forest;
+				biome = Biome.volcanic_mountains;
+			}else if(precipitation >= 0.8 && precipitation <= 1){
+				biome = Biome.volcanic_mountains;
 			}
 		}
+		System.out.println(biome.getName());
 	}
 	
 	public int getSize(){
@@ -177,6 +179,10 @@ public class Planet {
 			for(int i = 0; i < noise.length; i++){
 				for(int j = 0; j < noise[0].length; j++){
 					terrain[i][j].draw(g2d, i * 16 + xDif, j * 16 + yDif);
+				}
+			}
+			for(int i = 0; i < noise.length; i++){
+				for(int j = 0; j < noise[0].length; j++){
 					if(decoration[i][j] != null){
 						decoration[i][j].draw(g2d, i * 16 + xDif, j * 16 + yDif);
 					}

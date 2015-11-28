@@ -60,6 +60,12 @@ public class Star {
 		}
 	}
 	
+	public void moveSurface(int dir){
+		if(made){
+			system.moveSurface(dir);
+		}
+	}
+	
 	public void update(){
 		switch (Main.state){
 		case GALACTIC:

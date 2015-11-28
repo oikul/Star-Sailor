@@ -7,6 +7,7 @@ public class Block {
 	
 	//decoration
 	public static final Block flower = new Block("decoration/flower.png", false);
+	public static final Block flowers = new Block("decoration/flowers.png", false);
 	
 	//grass blocks
 	public static final Block grass_forest = new Block("grass/grass_forest.png", false);
@@ -22,7 +23,7 @@ public class Block {
 	
 	//ice
 	public static final Block ice = new Block("ice/ice.png", false);
-	public static final Block snow = new Block("snow/snow.png", false);
+	public static final Block snow = new Block("ice/snow.png", false);
 	public static final Block ice_spikes = new Block("ice/ice_spikes.png", true);
 	
 	//sand blocks
@@ -46,15 +47,16 @@ public class Block {
 	//tree blocks
 	public static final Block tree_baobab = new Block("trees/tree_baobab.png", true);
 	public static final Block tree_birch = new Block("trees/tree_birch.png", true);
-	public static final Block tree_birch_1 = new Block("trees/tree_birch1.png", true);
+	public static final Block tree_birch_1 = new Block("trees/tree_birch_1.png", true);
 	public static final Block tree_cactus = new Block("trees/tree_cactus.png", true);
 	public static final Block tree_oak = new Block("trees/tree_oak.png", true);
-	public static final Block tree_oak_1 = new Block("trees/tree_oak1.png", true);
+	public static final Block tree_oak_1 = new Block("trees/tree_oak_1.png", true);
 	public static final Block tree_palm = new Block("trees/tree_palm.png", true);
 	public static final Block tree_pine = new Block("trees/tree_pine.png", true);
 	public static final Block tree_rubber = new Block("trees/tree_rubber.png", true);
 	public static final Block tree_sequoia = new Block("trees/tree_sequoia.png", true);
 	public static final Block tree_shrub = new Block("trees/tree_shrub.png", true);
+	public static final Block tree_shrub_1 = new Block("trees/tree_shrub_1.png", true);
 	public static final Block tree_spruce = new Block("trees/tree_spruce.png", true);
 	
 	//liquids

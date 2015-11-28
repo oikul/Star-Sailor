@@ -61,6 +61,7 @@ public class Main extends JFrame {
 		state = State.GALACTIC;
 		random = new Random();
 		input = new InputHandler(this);
+		Biome.createBiomes();
 		galaxy = new Galaxy(4096);
 		player = new Player("character/charSprites.png");
 		time = System.currentTimeMillis();
@@ -110,15 +111,19 @@ public class Main extends JFrame {
 				break;
 			case SURFACE:
 				if(input.isKeyDown(KeyEvent.VK_W)){
+					galaxy.moveSurface(0);
 					player.setDirection(Player.Direction.UP);
 					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_A)){
+					galaxy.moveSurface(1);
 					player.setDirection(Player.Direction.LEFT);
 					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_S)){
+					galaxy.moveSurface(2);
 					player.setDirection(Player.Direction.DOWN);
 					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_D)){
+					galaxy.moveSurface(3);
 					player.setDirection(Player.Direction.RIGHT);
 					player.update();
 				}else{
@@ -133,7 +138,6 @@ public class Main extends JFrame {
 			}
 			time = newTime;
 		}
-		
 	}
 	
 	private void draw(){

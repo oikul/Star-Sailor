@@ -19,6 +19,18 @@ public class SolarSystem {
 		this.color = color;
 	}
 	
+	public void moveSurface(int dir){
+		if(dir == 0){
+			planets[selectedPlanet].panUp();
+		}else if(dir == 1){
+			planets[selectedPlanet].panLeft();
+		}else if(dir == 2){
+			planets[selectedPlanet].panDown();
+		}else if(dir == 3){
+			planets[selectedPlanet].panRight();
+		}
+	}
+	
 	public void update(){
 		switch (Main.state){
 		case GALACTIC:
