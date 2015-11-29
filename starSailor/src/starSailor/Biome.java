@@ -38,7 +38,7 @@ public class Biome {
 	public static Biome lava_islands = new Biome("lava islands", Color.red);
 	public static Biome lava_lakes = new Biome("lava lakes", Color.darkGray);
 	public static Biome igneous_desert = new Biome("igneous desert", Color.gray);
-	public static Biome volcanic_mountains = new Biome("volcanic_mountains", Color.orange);
+	public static Biome volcanic_mountains = new Biome("volcanic_mountains", Color.darkGray);
 	
 	private String name;
 	private Color color;
@@ -121,7 +121,7 @@ public class Biome {
 		desert_plains.addDecoration(Block.tree_shrub_1, 0.0, 1.0, 0.02);
 		desert_plains.addDecoration(Block.rocks, 0.4, 0.6, 0.05);
 		
-		//canyon.addBlock(Block.clay, 0.0, 0.1);
+		canyon.addBlock(Block.clay, 0.0, 1.0);
 		canyon.addDecoration(Block.tree_shrub_1, 0.0, 1.0, 0.01);
 		
 		savannah.addBlock(Block.grass_savannah, 0.0, 1.0);

@@ -8,28 +8,46 @@ import java.awt.image.BufferedImage;
 public class Player {
 
 	private BufferedImage spriteSheet;
-	private Image playerSprites;
-	private Image[][] playerImages;
+	private Image playerSprites, shipSprites;
+	private Image[][] playerImages, shipImages;
 	private int currentIFrame = 0, currentJFrame = 0;
+	private boolean isShip = true;
 	private long time;
 
 	public static enum Direction{
 		UP, LEFT, DOWN, RIGHT;
 	}
 
-	public Player(String path){
+	public Player(String playerPath, String shipPath){
 		playerImages = new Image[3][4];
-		playerSprites = ResourceLoader.getImage(path);
+		shipImages = new Image[3][4];
+		playerSprites = ResourceLoader.getImage(playerPath);
+		shipSprites = ResourceLoader.getImage(shipPath);
 		spriteSheet = new BufferedImage(playerSprites.getWidth(null), playerSprites.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D bGr = spriteSheet.createGraphics();
 		bGr.drawImage(playerSprites, 0, 0, null);
-		bGr.dispose();
 		for(int i = 0; i <= 2; i++){
 			for(int j = 0; j <= 3; j++){
 				playerImages[i][j] = spriteSheet.getSubimage(i * 32, j * 32, 32, 32);
 			}
 		}
+		spriteSheet = new BufferedImage(shipSprites.getWidth(null), shipSprites.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+		bGr = spriteSheet.createGraphics();
+		bGr.drawImage(shipSprites, 0, 0, null);
+		for(int i = 0; i <= 2; i++){
+			for(int j = 0; j <= 3; j++){
+				shipImages[i][j] = spriteSheet.getSubimage(i * 32, j * 32, 32, 32);
+			}
+		}
 		time = System.currentTimeMillis();
+	}
+	
+	public boolean isShip(){
+		return isShip;
+	}
+	
+	public void setIsShip(boolean isShip){
+		this.isShip = isShip;
 	}
 
 	public void setDirection(Direction direction){
@@ -81,13 +99,20 @@ public class Player {
 	public void draw(Graphics g){
 		switch (Main.state){
 		case GALACTIC:
+			//g.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
 			break;
 		case SOLAR:
+			//g.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
 			break;
 		case PLANETRY:
+			//g.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
 			break;
 		case SURFACE:
-			g.drawImage(playerImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
+			if(isShip){
+				g.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
+			}else{
+				g.drawImage(playerImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
+			}
 			break;
 		default:
 			break;

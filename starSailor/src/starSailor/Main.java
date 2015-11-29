@@ -64,7 +64,7 @@ public class Main extends JFrame {
 		input = new InputHandler(this);
 		Biome.createBiomes();
 		galaxy = new Galaxy(4096);
-		player = new Player("character/charSprites.png");
+		player = new Player("character/charSprites.png", "spaceship/shipSprites.png");
 		time = System.currentTimeMillis();
 	}
 	
