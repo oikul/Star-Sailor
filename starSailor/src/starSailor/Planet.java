@@ -189,8 +189,12 @@ public class Planet {
 			}else{
 				zoomOut();
 			}
-		}else{
-			
+		}else if(Main.state == Main.State.SURFACE){
+			if(in){
+				
+			}else{
+				Main.state = Main.State.PLANETRY;
+			}
 		}
 	}
 	
