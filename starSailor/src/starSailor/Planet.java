@@ -226,7 +226,10 @@ public class Planet {
 			calculateXAndY();
 			break;
 		case SURFACE:
-			BlockAnimated.update();
+			Block.water_murky.update();
+			Block.water_ocean.update();
+			Block.water_river.update();
+			Block.lava.update();
 			break;
 		default:
 			break;
@@ -245,6 +248,7 @@ public class Planet {
 			g2d.fillOval(x - size/2, y - size/2, size, size);
 			break;
 		case PLANETRY:
+			AffineTransform saveAt = g2d.getTransform();
 			AffineTransform at = new AffineTransform();
 			at.scale(zoom, zoom);
 			getXTrans();
@@ -253,6 +257,7 @@ public class Planet {
 			g2d.setTransform(at);
 			g2d.setColor(color);
 			g2d.fillOval((Main.width/2) - size * 10, (Main.height/2) - size * 10, size*20, size*20);
+			g2d.setTransform(saveAt);
 			break;
 		case SURFACE:
 			for(int i = 0; i < noise.length; i++){

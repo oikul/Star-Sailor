@@ -60,7 +60,7 @@ public class Block {
 	public static final Block tree_spruce = new Block("trees/tree_spruce.png", true);
 	
 	//liquids
-	//public static final BlockAnimated lava = new BlockAnimated("lava/lava.png", true);
+	public static final BlockAnimated lava = new BlockAnimated("lava/lava.png", true);
 	public static final BlockAnimated water_murky = new BlockAnimated("water/water_murky.png", true);
 	public static final BlockAnimated water_ocean = new BlockAnimated("water/water_ocean.png", true);
 	public static final BlockAnimated water_river = new BlockAnimated("water/water_river.png", true);

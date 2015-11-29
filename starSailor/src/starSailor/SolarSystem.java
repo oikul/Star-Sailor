@@ -144,6 +144,7 @@ public class SolarSystem {
 			break;
 		case SOLAR:
 			Graphics2D g2d = (Graphics2D) g;
+			AffineTransform saveAt = g2d.getTransform();
 			AffineTransform at = new AffineTransform();
 			at.scale(zoom, zoom);
 			getXTrans();
@@ -160,6 +161,7 @@ public class SolarSystem {
 			for(int i = 0; i < planets.length; i++){
 				planets[i].draw(g2d);
 			}
+			g2d.setTransform(saveAt);
 			break;
 		case SURFACE:
 			planets[selectedPlanet].draw(g);

@@ -72,40 +72,27 @@ public class Player {
 	}
 
 	public void update(){
-		switch (Main.state){
-		case GALACTIC:
-			break;
-		case SOLAR:
-			break;
-		case PLANETRY:
-			break;
-		case SURFACE:
-			long newTime = System.currentTimeMillis();
-			if(newTime >= time + 300){
-				if(currentIFrame < playerImages.length - 1){
-					currentIFrame++;
-				}else{
-					currentIFrame = 1;
-				}
-				time = newTime;
+		long newTime = System.currentTimeMillis();
+		if(newTime >= time + 300){
+			if(currentIFrame < playerImages.length - 1){
+				currentIFrame++;
+			}else{
+				currentIFrame = 1;
 			}
-			break;
-		default:
-			break;
+			time = newTime;
 		}
-
 	}
 
 	public void draw(Graphics g){
 		switch (Main.state){
 		case GALACTIC: 
-			//g.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
+			g.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
 			break;
 		case SOLAR:
-			//g.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
+			g.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
 			break;
 		case PLANETRY:
-			//g.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
+			g.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
 			break;
 		case SURFACE:
 			if(isShip){

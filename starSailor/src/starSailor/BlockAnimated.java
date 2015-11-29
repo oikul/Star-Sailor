@@ -7,10 +7,10 @@ import java.awt.image.BufferedImage;
 
 public class BlockAnimated extends Block {
 	
-	private static long time;
+	private long time;
 	private BufferedImage spriteSheet;
-	private static Image[] images;
-	private static int currentIndex = 0;
+	private Image[] images;
+	private int currentIndex = 0;
 
 	public BlockAnimated(String imagePath, boolean isSolid) {
 		super(imagePath, isSolid);
@@ -25,7 +25,7 @@ public class BlockAnimated extends Block {
 		time = System.currentTimeMillis();
 	}
 
-	public static void update(){
+	public void update(){
 		long newTime = System.currentTimeMillis();
 		if(newTime >= time + 500){
 			if(currentIndex < images.length - 1){

@@ -90,22 +90,20 @@ public class Main extends JFrame {
 			case SURFACE:
 				if(input.isKeyDown(KeyEvent.VK_W)){
 					galaxy.moveSurface(0);
-					player.setDirection(Player.Direction.UP);
-					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_A)){
 					galaxy.moveSurface(1);
-					player.setDirection(Player.Direction.LEFT);
-					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_S)){
 					galaxy.moveSurface(2);
-					player.setDirection(Player.Direction.DOWN);
-					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_D)){
 					galaxy.moveSurface(3);
-					player.setDirection(Player.Direction.RIGHT);
-					player.update();
-				}else{
-					player.stop();
+				}
+				if(input.isKeyDown(KeyEvent.VK_E)){
+					if(player.isShip()){
+						player.setIsShip(false);
+					}else{
+						player.setIsShip(true);
+					}
+					input.artificialKeyReleased(KeyEvent.VK_E);
 				}
 				break;
 			}
@@ -121,7 +119,19 @@ public class Main extends JFrame {
 				galaxy.zoom(false);
 				input.stopMouseWheel();
 			}
+			if(input.isKeyDown(KeyEvent.VK_W)){
+				player.setDirection(Player.Direction.UP);
+			}else if(input.isKeyDown(KeyEvent.VK_A)){
+				player.setDirection(Player.Direction.LEFT);
+			}else if(input.isKeyDown(KeyEvent.VK_S)){
+				player.setDirection(Player.Direction.DOWN);
+			}else if(input.isKeyDown(KeyEvent.VK_D)){
+				player.setDirection(Player.Direction.RIGHT);
+			}else{
+				player.stop();
+			}
 			galaxy.update();
+			player.update();
 			time = newTime;
 		}
 	}

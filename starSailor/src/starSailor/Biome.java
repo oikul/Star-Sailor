@@ -143,6 +143,8 @@ public class Biome {
 		rainforest.addDecoration(Block.tree_shrub, 0.55, 1.0, 0.03);
 		
 		volcanic_mountains.addBlock(Block.stone_volcanic, 0.0, 1.0);
+		volcanic_mountains.addBlock(Block.lava, 0.9, 1.0);
+		volcanic_mountains.addDecoration(Block.rocks, 0.6, 0.9, 0.1);
 	}
 	
 	public void addBlock(Block block, double start, double end){

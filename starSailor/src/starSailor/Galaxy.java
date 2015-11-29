@@ -24,19 +24,19 @@ public class Galaxy {
 	}
 	
 	public void panUp(){
-		yDif ++;
-	}
-
-	public void panLeft(){
-		xDif ++;
-	}
-
-	public void panDown(){
 		yDif --;
 	}
 
-	public void panRight(){
+	public void panLeft(){
 		xDif --;
+	}
+
+	public void panDown(){
+		yDif ++;
+	}
+
+	public void panRight(){
+		xDif ++;
 	}
 	
 	public void moveSurface(int dir){
@@ -138,6 +138,7 @@ public class Galaxy {
 		switch (Main.state){
 		case GALACTIC:
 			Graphics2D g2d = (Graphics2D) g;
+			AffineTransform saveAt = g2d.getTransform();
 			AffineTransform at = new AffineTransform();
 			at.scale(zoom, zoom);
 			getXTrans();
@@ -152,6 +153,7 @@ public class Galaxy {
 			for(int i = 0; i < galaxy.length; i++){
 				galaxy[i].draw(g2d);
 			}
+			g2d.setTransform(saveAt);
 			break;
 		case PLANETRY:
 			galaxy[selectedStar].draw(g);
