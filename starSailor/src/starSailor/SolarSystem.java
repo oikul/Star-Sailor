@@ -2,13 +2,20 @@ package starSailor;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 
 public class SolarSystem {
 	
 	private Planet[] planets;
 	private int size;
+	private double zoom = 1.0, xtrans, ytrans;
 	private Color color;
 	private int selectedPlanet = 0;
+	private AffineTransform transform;
 	
 	public SolarSystem(int size, int numOfPlanets, double min, double max, Color color){
 		this.size = size;
@@ -17,6 +24,51 @@ public class SolarSystem {
 			planets[i] = new Planet(Main.random.nextInt(16) + 4, (Main.random.nextDouble() * (max-min)) + min, (Main.random.nextDouble() * 360));
 		}
 		this.color = color;
+	}
+	
+	public void checkForClick(int x, int y){
+		if(Main.state == Main.State.SOLAR){
+			Point2D point = new Point2D.Double(x, y);
+			transform.transform(point, point);
+			for(int i = 0; i < planets.length; i ++){
+				if(planets[i].getRect().intersects(new Rectangle((int) (point.getX()), (int) (point.getY()), 16, 16))){
+					planets[i].setSelected(true);
+					
+					selectedPlanet = i;
+				}else{
+					planets[i].setSelected(false);
+				}
+			}
+			planets[selectedPlanet].setSelected(true);
+		}
+	}
+	
+	public void zoomIn(){
+		if(zoom < 3){
+			zoom += 0.3;
+		}else{
+			Main.state = Main.State.PLANETRY;
+		}
+	}
+	
+	public void zoomOut(){
+		if(zoom > 0.7){
+			zoom -= 0.3;
+		}else{
+			Main.state = Main.State.GALACTIC;
+		}
+	}
+	
+	public void zoom(boolean in){
+		if(Main.state == Main.State.SOLAR){
+			if(in){
+				zoomIn();
+			}else{
+				zoomOut();
+			}
+		}else{
+			planets[selectedPlanet].zoom(in);
+		}
 	}
 	
 	public void moveSurface(int dir){
@@ -29,6 +81,24 @@ public class SolarSystem {
 		}else if(dir == 3){
 			planets[selectedPlanet].panRight();
 		}
+	}
+	
+	private void getXTrans(){
+		double x = planets[selectedPlanet].getX();
+		if(x > Main.width/(zoom*2)){
+				xtrans = -(x - Main.width/(zoom*2));
+			}else{
+				xtrans = Main.width/(zoom*2) - x;
+			}
+	}
+	
+	private void getYTrans(){
+		double y = planets[selectedPlanet].getY();
+		if(y > Main.height/(zoom*2)){
+				ytrans = -(y - Main.height/(zoom*2));
+			}else{
+				ytrans = Main.height/(zoom*2) - y;
+			}
 	}
 	
 	public void update(){
@@ -59,6 +129,18 @@ public class SolarSystem {
 			planets[selectedPlanet].draw(g);
 			break;
 		case SOLAR:
+			Graphics2D g2d = (Graphics2D) g;
+			AffineTransform at = new AffineTransform();
+			at.scale(zoom, zoom);
+			getXTrans();
+			getYTrans();
+			at.translate(xtrans, ytrans);
+			try {
+				transform = at.createInverse();
+			} catch (NoninvertibleTransformException e) {
+				e.printStackTrace();
+			}
+			g2d.setTransform(at);
 			g.setColor(color);
 			g.fillOval(Main.width/2 - size/2, Main.height/2 - size/2, size, size);
 			for(int i = 0; i < planets.length; i++){

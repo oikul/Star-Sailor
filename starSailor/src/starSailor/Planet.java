@@ -3,27 +3,28 @@ package starSailor;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
 public class Planet {
 	
 	private int size, x, y, xDif, yDif;
-	private double distance, temperature, precipitation, angle;
+	private double distance, temperature, precipitation, angle, zoom = 1.0;
 	private NoiseGenerator generator;
 	private double[][] noise;
 	private Block[][] terrain, decoration;
 	private Biome biome;
 	private Color color;
+	private boolean selected = false;
 	
 	public Planet(int size, double distance, double angle){
 		this.size = size;
 		this.distance = distance;
 		this.angle = angle;
-		generator = new NoiseGenerator(size * 10, size * 10, 3, 4);
+		generator = new NoiseGenerator(size * 10, size * 10, 4, 5);
 		noise = generator.getNoise();
 		calculateTemperature();
 		calculatePrecipitation();
 		calculateBiome();
-		biome = Biome.plains;
 		terrain = biome.buildTerrain(noise);
 		decoration = biome.buildDecoration(noise);
 		color = biome.getColor();
@@ -31,12 +32,10 @@ public class Planet {
 	
 	private void calculateTemperature(){
 		temperature = Main.random.nextDouble();
-		System.out.println("temp: " + temperature);
 	}
 	
 	private void calculatePrecipitation(){
 		precipitation = Main.random.nextDouble();
-		System.out.println("precip: " + precipitation);
 	}
 	
 	private void calculateBiome(){
@@ -101,7 +100,6 @@ public class Planet {
 				biome = Biome.volcanic_mountains;
 			}
 		}
-		System.out.println(biome.getName());
 	}
 	
 	public int getSize(){
@@ -145,6 +143,54 @@ public class Planet {
 		}else if(angle >= 270 && angle < 360){
 			x = (int) (Main.width/2 + distance*Math.sin(angle - 270));
 			y = (int) (Main.height/2 + distance*Math.cos(angle - 270));
+		}
+	}
+	
+	public void setSelected(boolean selected){
+		this.selected = selected;
+	}
+	
+	public int getX(){
+		return x;
+	}
+	
+	public int getY(){
+		return y;
+	}
+	
+	public Rectangle getRect(){
+		return new Rectangle(x, y, size, size);
+	}
+	
+	public void zoomIn(){
+		if(zoom < 3){
+			xDif = 0;
+			yDif = 0;
+			zoom += 0.3;
+		}else{
+			Main.state = Main.State.SURFACE;
+		}
+	}
+	
+	public void zoomOut(){
+		if(zoom > 0.7){
+			xDif = 0;
+			yDif = 0;
+			zoom -= 0.3;
+		}else{
+			Main.state = Main.State.SOLAR;
+		}
+	}
+	
+	public void zoom(boolean in){
+		if(Main.state == Main.State.PLANETRY){
+			if(in){
+				zoomIn();
+			}else{
+				zoomOut();
+			}
+		}else{
+			
 		}
 	}
 	

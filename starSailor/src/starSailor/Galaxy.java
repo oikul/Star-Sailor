@@ -2,13 +2,18 @@ package starSailor;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 
 public class Galaxy {
 	
 	private Star[] galaxy;
 	private int xDif = 0, yDif = 0;
 	private int selectedStar = 0;
+	private double zoom = 1.0, xtrans, ytrans;
+	private AffineTransform transform;
 	
 	public Galaxy(int numOfStars){
 		galaxy = new Star[numOfStars];
@@ -37,6 +42,77 @@ public class Galaxy {
 		galaxy[selectedStar].moveSurface(dir);
 	}
 	
+	public void zoomIn(){
+		if(zoom < 3){
+			xDif = 0;
+			yDif = 0;
+			zoom += 0.3;
+		}else{
+			Main.state = Main.State.SOLAR;
+		}
+	}
+	
+	public void zoomOut(){
+		if(zoom > 0.7){
+			xDif = 0;
+			yDif = 0;
+			zoom -= 0.3;
+		}else{
+			
+		}
+	}
+	
+	public void zoom(boolean in){
+		if(Main.state == Main.State.GALACTIC){
+			if(in){
+				zoomIn();
+			}else{
+				zoomOut();
+			}
+		}else{
+			galaxy[selectedStar].zoom(in);
+		}
+	}
+	
+	private void getXTrans(){
+		double x = galaxy[selectedStar].getX() + xDif;
+		if(x > Main.width/(zoom*2)){
+				xtrans = -(x - Main.width/(zoom*2));
+			}else{
+				xtrans = Main.width/(zoom*2) - x;
+			}
+	}
+	
+	private void getYTrans(){
+		double y = galaxy[selectedStar].getY() + yDif;
+		if(y > Main.height/(zoom*2)){
+				ytrans = -(y - Main.height/(zoom*2));
+			}else{
+				ytrans = Main.height/(zoom*2) - y;
+			}
+	}
+	
+	public void checkForClick(int xCoord, int yCoord){
+		int x = (int) (xCoord - 8), y = (int) (yCoord - 8);
+		if(Main.state == Main.State.GALACTIC){
+			Point2D point = new Point2D.Double(x, y);
+			transform.transform(point, point);
+			for(int i = 0; i < galaxy.length; i ++){
+				if(galaxy[i].getRect().intersects(new Rectangle((int) (point.getX()), (int) (point.getY()), 16, 16))){
+					galaxy[i].setSelected(true);
+					xDif = 0;
+					yDif = 0;
+					selectedStar = i;
+				}else{
+					galaxy[i].setSelected(false);
+				}
+			}
+			galaxy[selectedStar].setSelected(true);
+		}else{
+			galaxy[selectedStar].checkForClick(x, y);
+		}
+	}
+	
 	public void update(){
 		switch (Main.state){
 		case GALACTIC:
@@ -56,7 +132,6 @@ public class Galaxy {
 		default:
 			break;
 		}
-		
 	}
 	
 	public void draw(Graphics g){
@@ -64,7 +139,15 @@ public class Galaxy {
 		case GALACTIC:
 			Graphics2D g2d = (Graphics2D) g;
 			AffineTransform at = new AffineTransform();
-			at.translate(xDif, yDif);
+			at.scale(zoom, zoom);
+			getXTrans();
+			getYTrans();
+			at.translate(xtrans, ytrans);
+			try {
+				transform = at.createInverse();
+			} catch (NoninvertibleTransformException e) {
+				e.printStackTrace();
+			}
 			g2d.setTransform(at);
 			for(int i = 0; i < galaxy.length; i++){
 				galaxy[i].draw(g);

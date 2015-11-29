@@ -2,6 +2,7 @@ package starSailor;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 public class Star {
 	
@@ -9,7 +10,7 @@ public class Star {
 	private int x, y, size;
 	private Color color;
 	private SolarSystem system;
-	private boolean made = false;
+	private boolean made = false, selected = false;
 	
 	public Star(double distance, double angle, int size){
 		this.distance = distance;
@@ -17,6 +18,22 @@ public class Star {
 		this.size = size;
 		chooseColor();
 		calculateXAndY();
+	}
+	
+	public int getX(){
+		return x;
+	}
+	
+	public int getY(){
+		return y;
+	}
+	
+	public Rectangle getRect(){
+		return new Rectangle(x, y, size, size);
+	}
+	
+	public void setSelected(boolean selected){
+		this.selected = selected;
 	}
 	
 	private void createSystem(){
@@ -57,6 +74,16 @@ public class Star {
 			angle += 0.0005;
 		}else{
 			angle = 0;
+		}
+	}
+	
+	public void checkForClick(int x, int y){
+		system.checkForClick(x, y);
+	}
+	
+	public void zoom(boolean in){
+		if(made){
+			system.zoom(in);
 		}
 	}
 	

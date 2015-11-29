@@ -52,26 +52,26 @@ public class Biome {
 	}
 	
 	public static void createBiomes(){
-		polar_desert.addBlock(Block.sand_cracked, 0.0, 0.7);
+		polar_desert.addBlock(Block.sand_cracked, 0.0, 1.0);
 		polar_desert.addBlock(Block.snow, 0.7, 1.0);
 		
-		ice_spikes.addBlock(Block.snow, 0.0, 0.6);
+		ice_spikes.addBlock(Block.snow, 0.0, 1.0);
 		ice_spikes.addBlock(Block.ice, 0.6, 1.0);
 		ice_spikes.addDecoration(Block.ice_spikes, 0.7, 1.0, 0.1);
 		
-		frozen_lakes.addBlock(Block.snow, 0.0, 0.7);
+		frozen_lakes.addBlock(Block.snow, 0.0, 1.0);
 		frozen_lakes.addBlock(Block.ice, 0.7, 1.0);
 		
 		ice_sheet.addBlock(Block.ice, 0.0, 1.0);
 		
-		ice_bergs.addBlock(Block.water_ocean, 0.0, 0.5);
+		ice_bergs.addBlock(Block.water_ocean, 0.0, 1.0);
 		ice_bergs.addBlock(Block.snow, 0.55, 1.0);
 		ice_bergs.addBlock(Block.ice, 0.5, 0.55);
 		
-		tundra.addBlock(Block.grass_tundra, 0.0, 0.7);
+		tundra.addBlock(Block.grass_tundra, 0.0, 1.0);
 		tundra.addBlock(Block.water_murky, 0.7, 1.0);
 		
-		mountain.addBlock(Block.grass_mountains, 0.0, 0.6);
+		mountain.addBlock(Block.grass_mountains, 0.0, 1.0);
 		mountain.addBlock(Block.stone_volcanic, 0.6, 0.85);
 		mountain.addBlock(Block.snow, 0.85, 1.0);
 		mountain.addDecoration(Block.tree_spruce, 0.2, 0.4, 0.3);
@@ -99,7 +99,50 @@ public class Biome {
 		plains.addBlock(Block.grass_plains, 0.0, 1.0);
 		plains.addDecoration(Block.tree_oak_1, 0.0, 1.0, 0.001);
 		plains.addDecoration(Block.tree_shrub_1, 0.0, 1.0, 0.1);
+		plains.addDecoration(Block.tree_shrub, 0.0, 1.0, 0.05);
 		plains.addDecoration(Block.flowers, 0.0, 1.0, 0.01);
+		
+		forest.addBlock(Block.grass_forest, 0.0, 1.0);
+		forest.addDecoration(Block.tree_oak_1, 0.0, 0.5, 0.5);
+		forest.addDecoration(Block.tree_birch, 0.3, 0.7, 0.4);
+		forest.addDecoration(Block.tree_shrub, 0.0, 1.0, 0.1);
+		
+		lakes.addBlock(Block.grass_plains, 0.0, 1.0);
+		lakes.addBlock(Block.water_murky, 0.65, 1.0);
+		lakes.addDecoration(Block.tree_shrub_1, 0.0, 0.55, 0.2);
+		
+		islands.addBlock(Block.water_ocean, 0.0, 1.0);
+		islands.addBlock(Block.sand_beach, 0.7, 1.0);
+		islands.addBlock(Block.grass_jungle, 0.85, 1.0);
+		islands.addDecoration(Block.tree_palm, 0.9, 1.0, 0.3);
+		
+		desert_plains.addBlock(Block.sand_dunes, 0.0, 1.0);
+		desert_plains.addDecoration(Block.tree_cactus, 0.0, 0.6, 0.2);
+		desert_plains.addDecoration(Block.tree_shrub_1, 0.0, 1.0, 0.02);
+		desert_plains.addDecoration(Block.rocks, 0.4, 0.6, 0.05);
+		
+		//canyon.addBlock(Block.clay, 0.0, 0.1);
+		canyon.addDecoration(Block.tree_shrub_1, 0.0, 1.0, 0.01);
+		
+		savannah.addBlock(Block.grass_savannah, 0.0, 1.0);
+		savannah.addDecoration(Block.tree_baobab, 0.2, 1.0, 0.02);
+		savannah.addDecoration(Block.tree_shrub_1, 0.0, 0.4, 0.05);
+		
+		jungle.addBlock(Block.grass_jungle, 0.0, 1.0);
+		jungle.addDecoration(Block.tree_palm, 0.0, 1.0, 0.2);
+		jungle.addDecoration(Block.tree_rubber, 0.0, 1.0, 0.2);
+		jungle.addDecoration(Block.tree_shrub, 0.3, 0.7, 0.03);
+		
+		rainforest.addBlock(Block.grass_rainforest, 0.0, 1.0);
+		rainforest.addBlock(Block.water_river, 0.45, 0.55);
+		rainforest.addDecoration(Block.tree_palm, 0.0, 0.45, 0.2);
+		rainforest.addDecoration(Block.tree_rubber, 0.0, 0.45, 0.2);
+		rainforest.addDecoration(Block.tree_shrub, 0.0, 0.45, 0.03);
+		rainforest.addDecoration(Block.tree_palm, 0.55, 1.0, 0.2);
+		rainforest.addDecoration(Block.tree_rubber, 0.55, 1.0, 0.2);
+		rainforest.addDecoration(Block.tree_shrub, 0.55, 1.0, 0.03);
+		
+		volcanic_mountains.addBlock(Block.stone_volcanic, 0.0, 1.0);
 	}
 	
 	public void addBlock(Block block, double start, double end){

@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -81,33 +82,13 @@ public class Main extends JFrame {
 				}else if(input.isKeyDown(KeyEvent.VK_D)){
 					galaxy.panRight();
 				}
-				if(input.getMouseWheelUp()){
-					state = State.SOLAR;
-					input.stopMouseWheel();
+				if(input.isMouseDown(MouseEvent.BUTTON1)){
+					galaxy.checkForClick(input.getMousePositionRelativeToComponent().x, input.getMousePositionRelativeToComponent().y);
 				}
-				galaxy.update();
 				break;
 			case SOLAR:
-				if(input.getMouseWheelUp()){
-					state = State.PLANETRY;
-					input.stopMouseWheel();
-				}
-				if(input.getMouseWheelDown()){
-					state = State.GALACTIC;
-					input.stopMouseWheel();;
-				}
-				galaxy.update();
 				break;
 			case PLANETRY:
-				if(input.getMouseWheelUp()){
-					state = State.SURFACE;
-					input.stopMouseWheel();
-				}
-				if(input.getMouseWheelDown()){
-					state = State.SOLAR;
-					input.stopMouseWheel();
-				}
-				galaxy.update();
 				break;
 			case SURFACE:
 				if(input.isKeyDown(KeyEvent.VK_W)){
@@ -129,13 +110,17 @@ public class Main extends JFrame {
 				}else{
 					player.stop();
 				}
-				if(input.getMouseWheelDown()){
-					state = State.PLANETRY;
-					input.stopMouseWheel();
-				}
-				galaxy.update();
 				break;
 			}
+			if(input.getMouseWheelUp()){
+				galaxy.zoom(true);
+				input.stopMouseWheel();
+			}
+			if(input.getMouseWheelDown()){
+				galaxy.zoom(false);
+				input.stopMouseWheel();
+			}
+			galaxy.update();
 			time = newTime;
 		}
 	}
