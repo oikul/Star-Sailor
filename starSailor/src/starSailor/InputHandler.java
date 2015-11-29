@@ -7,18 +7,21 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
-public class InputHandler implements KeyListener, MouseListener{
+public class InputHandler implements KeyListener, MouseListener, MouseWheelListener{
 	
 	private boolean[] keyArray = new boolean[256];
 	private boolean[] mouseArray = new boolean[MouseInfo.getNumberOfButtons()];
-	private boolean overComp;
+	private boolean overComp, mouseWheelUp = false, mouseWheelDown = false;
 	private String typedAcum = "";
 	private Component c;
 	
 	public InputHandler(Component c){
 		c.addKeyListener(this);
 		c.addMouseListener(this);
+		c.addMouseWheelListener(this);
 		this.c = c;
 	}
 	
@@ -104,6 +107,33 @@ public class InputHandler implements KeyListener, MouseListener{
 	
 	public void artificalMouseReleased(int mouseButton) {
 		mouseArray[mouseButton] = false;
+	}
+	
+	public boolean getMouseWheelUp(){
+		return mouseWheelUp;
+	}
+	
+	public boolean getMouseWheelDown(){
+		return mouseWheelDown;
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		if(e.getWheelRotation() < 0){
+			mouseWheelUp = true;
+			mouseWheelDown = false;
+		}else if (e.getWheelRotation() > 0){
+			mouseWheelUp = false;
+			mouseWheelDown = true;
+		}else{
+			mouseWheelUp = false;
+			mouseWheelDown = false;
+		}
+	}
+	
+	public void stopMouseWheel(){
+		mouseWheelUp = false;
+		mouseWheelDown = false;
 	}
 
 }

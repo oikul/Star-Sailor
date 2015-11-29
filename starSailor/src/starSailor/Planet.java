@@ -3,100 +3,102 @@ package starSailor;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 
 public class Planet {
 	
 	private int size, x, y, xDif, yDif;
-	private double distance, temperature, precipitation, angle;
+	private double distance, temperature, precipitation, angle, zoom = 1.0, xtrans, ytrans;
 	private NoiseGenerator generator;
 	private double[][] noise;
-	private Block[][] terrain;
-	private Block[][] decoration;
+	private Block[][] terrain, decoration;
 	private Biome biome;
-	private int blurr;
+	private Color color;
+	private boolean selected = false;
 	
 	public Planet(int size, double distance, double angle){
 		this.size = size;
 		this.distance = distance;
-		generator = new NoiseGenerator(size * 10, size * 10, 3, 4);
+		this.angle = angle;
+		generator = new NoiseGenerator(size * 10, size * 10, 4, 5);
 		noise = generator.getNoise();
 		calculateTemperature();
 		calculatePrecipitation();
 		calculateBiome();
-		biome = Biome.forest;
 		terrain = biome.buildTerrain(noise);
 		decoration = biome.buildDecoration(noise);
+		color = biome.getColor();
 	}
 	
 	private void calculateTemperature(){
-		temperature = (size / distance);
+		temperature = Main.random.nextDouble();
 	}
 	
 	private void calculatePrecipitation(){
-		float waterAmount = Main.random.nextFloat();
-		precipitation = waterAmount / size + temperature;
+		precipitation = Main.random.nextDouble();
 	}
 	
 	private void calculateBiome(){
 		if(temperature >= 0 && temperature < 0.2){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.forest;
+				biome = Biome.polar_desert;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.forest;
+				biome = Biome.ice_spikes;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
-				biome = Biome.forest;
+				biome = Biome.frozen_lakes;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.forest;
-			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.forest;
+				biome = Biome.ice_sheet;
+			}else if(precipitation >= 0.8 && precipitation <= 1){
+				biome = Biome.ice_bergs;
 			}
 		}else if(temperature >= 0.2 && temperature < 0.4){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.forest;
+				biome = Biome.tundra;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.forest;
+				biome = Biome.mountain;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
-				biome = Biome.forest;
+				biome = Biome.taiga;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.forest;
-			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.forest;
+				biome = Biome.mountain_forest;
+			}else if(precipitation >= 0.8 && precipitation <= 1){
+				biome = Biome.ocean;
 			}
 		}else if(temperature >= 0.4 && temperature < 0.6){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.forest;
+				biome = Biome.steppe;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.forest;
+				biome = Biome.plains;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
 				biome = Biome.forest;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.forest;
-			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.forest;
+				biome = Biome.lakes;
+			}else if(precipitation >= 0.8 && precipitation <= 1){
+				biome = Biome.islands;
 			}
 		}else if(temperature >= 0.6 && temperature < 0.8){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.forest;
+				biome = Biome.desert_plains;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.forest;
+				biome = Biome.canyon;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
-				biome = Biome.forest;
+				biome = Biome.savannah;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.forest;
-			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.forest;
+				biome = Biome.jungle;
+			}else if(precipitation >= 0.8 && precipitation <= 1){
+				biome = Biome.rainforest;
 			}
-		}else if(temperature >= 0.8 && temperature <= 1.0){
+		}else if(temperature >= 0.8 && temperature <= 1){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.forest;
+				biome = Biome.volcanic_mountains;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.forest;
+				biome = Biome.volcanic_mountains;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
-				biome = Biome.forest;
+				biome = Biome.volcanic_mountains;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.forest;
-			}else if(precipitation >= 0.8 && precipitation <= 1.0){
-				biome = Biome.forest;
+				biome = Biome.volcanic_mountains;
+			}else if(precipitation >= 0.8 && precipitation <= 1){
+				biome = Biome.volcanic_mountains;
 			}
 		}
 	}
@@ -121,7 +123,7 @@ public class Planet {
 		xDif --;
 	}
 	
-	public void incrementAngle(){
+	private void incrementAngle(){
 		if(angle < 360){
 			angle += 0.001;
 		}else{
@@ -145,11 +147,82 @@ public class Planet {
 		}
 	}
 	
+	public void setSelected(boolean selected){
+		this.selected = selected;
+	}
+	
+	public int getX(){
+		return x;
+	}
+	
+	public int getY(){
+		return y;
+	}
+	
+	public Rectangle getRect(){
+		return new Rectangle(x, y, size, size);
+	}
+	
+	public void zoomIn(){
+		if(zoom < 3){
+			xDif = 0;
+			yDif = 0;
+			zoom += 0.3;
+		}else{
+			Main.state = Main.State.SURFACE;
+		}
+	}
+	
+	public void zoomOut(){
+		if(zoom > 0.7){
+			xDif = 0;
+			yDif = 0;
+			zoom -= 0.3;
+		}else{
+			Main.state = Main.State.SOLAR;
+		}
+	}
+	
+	public void zoom(boolean in){
+		if(Main.state == Main.State.PLANETRY){
+			if(in){
+				zoomIn();
+			}else{
+				zoomOut();
+			}
+		}else if(Main.state == Main.State.SURFACE){
+			if(in){
+				
+			}else{
+				Main.state = Main.State.PLANETRY;
+			}
+		}
+	}
+	
+	private void getXTrans(){
+		double x = (Main.width/2);
+		if(x > Main.width/(zoom*2)){
+				xtrans = -(x - Main.width/(zoom*2));
+			}else{
+				xtrans = Main.width/(zoom*2) - x;
+			}
+	}
+	
+	private void getYTrans(){
+		double y = (Main.height/2);
+		if(y > Main.height/(zoom*2)){
+				ytrans = -(y - Main.height/(zoom*2));
+			}else{
+				ytrans = Main.height/(zoom*2) - y;
+			}
+	}
+	
 	public void update(){
 		switch(Main.state){
 		case PLANETRY:
 			break;
 		case SOLAR:
+			incrementAngle();
 			calculateXAndY();
 			break;
 		case SURFACE:
@@ -164,18 +237,32 @@ public class Planet {
 		Graphics2D g2d = (Graphics2D) g;
 		switch(Main.state){
 		case SOLAR:
-			
-			g.setColor(Color.cyan);
-			g.fillOval(x - size/2, y - size/2, size, size);
+			if(selected){
+				g2d.setColor(Color.cyan);
+				g2d.drawRect(x - size/2, y - size/2, size, size);
+			}
+			g2d.setColor(color);
+			g2d.fillOval(x - size/2, y - size/2, size, size);
 			break;
 		case PLANETRY:
-			g.setColor(Color.cyan);
-			g.fillOval((Main.width/2) - size * 10, (Main.height/2) - size * 10, size*20, size*20);
+			AffineTransform at = new AffineTransform();
+			at.scale(zoom, zoom);
+			getXTrans();
+			getYTrans();
+			at.translate(xtrans, ytrans);
+			g2d.setTransform(at);
+			
+			g2d.setColor(color);
+			g2d.fillOval((Main.width/2) - size * 10, (Main.height/2) - size * 10, size*20, size*20);
 			break;
 		case SURFACE:
 			for(int i = 0; i < noise.length; i++){
 				for(int j = 0; j < noise[0].length; j++){
 					terrain[i][j].draw(g2d, i * 16 + xDif, j * 16 + yDif);
+				}
+			}
+			for(int i = 0; i < noise.length; i++){
+				for(int j = 0; j < noise[0].length; j++){
 					if(decoration[i][j] != null){
 						decoration[i][j].draw(g2d, i * 16 + xDif, j * 16 + yDif);
 					}

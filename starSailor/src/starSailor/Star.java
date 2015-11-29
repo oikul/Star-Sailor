@@ -2,12 +2,15 @@ package starSailor;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 public class Star {
 	
 	private double distance, angle;
 	private int x, y, size;
 	private Color color;
+	private SolarSystem system;
+	private boolean made = false, selected = false;
 	
 	public Star(double distance, double angle, int size){
 		this.distance = distance;
@@ -15,6 +18,27 @@ public class Star {
 		this.size = size;
 		chooseColor();
 		calculateXAndY();
+	}
+	
+	public int getX(){
+		return x;
+	}
+	
+	public int getY(){
+		return y;
+	}
+	
+	public Rectangle getRect(){
+		return new Rectangle(x, y, size, size);
+	}
+	
+	public void setSelected(boolean selected){
+		this.selected = selected;
+	}
+	
+	private void createSystem(){
+		system = new SolarSystem(size, Main.random.nextInt(8) + 2, size/2, Main.height/2, color);
+		made = true;
 	}
 	
 	private void chooseColor(){
@@ -53,14 +77,69 @@ public class Star {
 		}
 	}
 	
+	public void checkForClick(int x, int y){
+		system.checkForClick(x, y);
+	}
+	
+	public void zoom(boolean in){
+		if(made){
+			system.zoom(in);
+		}
+	}
+	
+	public void moveSurface(int dir){
+		if(made){
+			system.moveSurface(dir);
+		}
+	}
+	
 	public void update(){
-		incrementAngle();
-		calculateXAndY();
+		switch (Main.state){
+		case GALACTIC:
+			incrementAngle();
+			calculateXAndY();
+			break;
+		case PLANETRY:
+			system.update();
+			break;
+		case SOLAR:
+			if(!made){
+				createSystem();
+			}
+			system.update();
+			break;
+		case SURFACE:
+			system.update();
+			break;
+		default:
+			break;
+		}
+		
 	}
 	
 	public void draw(Graphics g){
-		g.setColor(color);
-		g.fillOval(x - (size/30), y - (size/30), size / 15, size / 15);
+		switch (Main.state){
+		case GALACTIC:
+			if(selected){
+				g.setColor(Color.cyan);
+				g.drawRect(x - (size/30), y - (size/30), size / 15, size / 15);
+			}
+			g.setColor(color);
+			g.fillOval(x - (size/30), y - (size/30), size / 15, size / 15);
+			break;
+		case SOLAR:
+			system.draw(g);
+			break;
+		case PLANETRY:
+			system.draw(g);
+			break;
+		case SURFACE:
+			system.draw(g);
+			break;
+		default:
+			break;
+		}
+		
 	}
 
 }

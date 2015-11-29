@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -17,7 +18,7 @@ public class Main extends JFrame {
 	public static Random random;
 	private InputHandler input;
 	private Galaxy galaxy;
-	private Planet planet;
+	private Player player;
 	private long time;
 	
 	public static enum State{
@@ -61,8 +62,9 @@ public class Main extends JFrame {
 		state = State.GALACTIC;
 		random = new Random();
 		input = new InputHandler(this);
+		Biome.createBiomes();
 		galaxy = new Galaxy(4096);
-		planet = new Planet(6, 500, 40);
+		player = new Player("character/charSprites.png");
 		time = System.currentTimeMillis();
 	}
 	
@@ -80,30 +82,48 @@ public class Main extends JFrame {
 				}else if(input.isKeyDown(KeyEvent.VK_D)){
 					galaxy.panRight();
 				}
-				galaxy.update();
 				break;
 			case SOLAR:
-				planet.incrementAngle();
 				break;
 			case PLANETRY:
-				
 				break;
 			case SURFACE:
 				if(input.isKeyDown(KeyEvent.VK_W)){
-					planet.panUp();
+					galaxy.moveSurface(0);
+					player.setDirection(Player.Direction.UP);
+					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_A)){
-					planet.panLeft();
+					galaxy.moveSurface(1);
+					player.setDirection(Player.Direction.LEFT);
+					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_S)){
-					planet.panDown();
+					galaxy.moveSurface(2);
+					player.setDirection(Player.Direction.DOWN);
+					player.update();
 				}else if(input.isKeyDown(KeyEvent.VK_D)){
-					planet.panRight();
+					galaxy.moveSurface(3);
+					player.setDirection(Player.Direction.RIGHT);
+					player.update();
+				}else{
+					player.stop();
 				}
-				planet.update();
 				break;
 			}
+			if(input.isMouseDown(MouseEvent.BUTTON1)){
+				galaxy.checkForClick(input.getMousePositionRelativeToComponent().x, input.getMousePositionRelativeToComponent().y);
+				input.artificalMouseReleased(MouseEvent.BUTTON1);
+			}
+			if(input.getMouseWheelUp()){
+				galaxy.zoom(true);
+				input.stopMouseWheel();
+			}
+			if(input.getMouseWheelDown()){
+				galaxy.zoom(false);
+				input.stopMouseWheel();
+			}
+			galaxy.update();
 			time = newTime;
 		}
-		
 	}
 	
 	private void draw(){
@@ -112,20 +132,8 @@ public class Main extends JFrame {
 		Image offImage = createImage(width, height);
 		Graphics offGraphics = offImage.getGraphics();
 		offGraphics.fillRect(0, 0, width, height);
-		switch (state){
-		case GALACTIC:
-			galaxy.draw(offGraphics);
-			break;
-		case SOLAR:
-			
-			break;
-		case PLANETRY:
-			planet.draw(offGraphics);
-			break;
-		case SURFACE:
-			planet.draw(offGraphics);
-			break;
-		}
+		galaxy.draw(offGraphics);
+		player.draw(offGraphics);
 		g2d.drawImage(offImage, 0, 0, width, height, null);
 	}
 
