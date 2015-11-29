@@ -98,7 +98,7 @@ public class Player {
 
 	public void draw(Graphics g){
 		switch (Main.state){
-		case GALACTIC:
+		case GALACTIC: 
 			//g.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
 			break;
 		case SOLAR:
