@@ -251,7 +251,6 @@ public class Planet {
 			getYTrans();
 			at.translate(xtrans, ytrans);
 			g2d.setTransform(at);
-			
 			g2d.setColor(color);
 			g2d.fillOval((Main.width/2) - size * 10, (Main.height/2) - size * 10, size*20, size*20);
 			break;
