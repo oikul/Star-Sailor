@@ -14,7 +14,7 @@ public class SolarSystem {
 	private int size;
 	private double zoom = 1.0, xtrans, ytrans;
 	private Color color;
-	private int selectedPlanet = 0;
+	private int selectedPlanet = -1;
 	private AffineTransform transform;
 	
 	public SolarSystem(int size, int numOfPlanets, double min, double max, Color color){
@@ -28,13 +28,13 @@ public class SolarSystem {
 	
 	public void checkForClick(int x, int y){
 		if(Main.state == Main.State.SOLAR){
-			Point2D point = new Point2D.Double(x, y);
+			Point2D point = new Point2D.Double(x - 8, y - 8);
 			transform.transform(point, point);
 			for(int i = 0; i < planets.length; i ++){
 				if(planets[i].getRect().intersects(new Rectangle((int) (point.getX()), (int) (point.getY()), 16, 16))){
 					planets[i].setSelected(true);
-					
 					selectedPlanet = i;
+					System.out.println(selectedPlanet);
 				}else{
 					planets[i].setSelected(false);
 				}
@@ -84,7 +84,12 @@ public class SolarSystem {
 	}
 	
 	private void getXTrans(){
-		double x = planets[selectedPlanet].getX();
+		double x;
+		if(selectedPlanet == -1){
+			x = Main.width/2;
+		}else{
+			x = planets[selectedPlanet].getX();
+		}
 		if(x > Main.width/(zoom*2)){
 				xtrans = -(x - Main.width/(zoom*2));
 			}else{
@@ -93,7 +98,12 @@ public class SolarSystem {
 	}
 	
 	private void getYTrans(){
-		double y = planets[selectedPlanet].getY();
+		double y;
+		if(selectedPlanet == -1){
+			y = Main.height/2;
+		}else{
+			y = planets[selectedPlanet].getY();
+		}
 		if(y > Main.height/(zoom*2)){
 				ytrans = -(y - Main.height/(zoom*2));
 			}else{
@@ -106,7 +116,9 @@ public class SolarSystem {
 		case GALACTIC:
 			break;
 		case PLANETRY:
-			planets[selectedPlanet].update();
+			if(selectedPlanet >= 0){
+				planets[selectedPlanet].update();
+			}
 			break;
 		case SOLAR:
 			for(int i = 0; i < planets.length; i++){
@@ -126,7 +138,9 @@ public class SolarSystem {
 		case GALACTIC:
 			break;
 		case PLANETRY:
-			planets[selectedPlanet].draw(g);
+			if(selectedPlanet >= 0){
+				planets[selectedPlanet].draw(g);
+			}
 			break;
 		case SOLAR:
 			Graphics2D g2d = (Graphics2D) g;
@@ -141,10 +155,10 @@ public class SolarSystem {
 				e.printStackTrace();
 			}
 			g2d.setTransform(at);
-			g.setColor(color);
-			g.fillOval(Main.width/2 - size/2, Main.height/2 - size/2, size, size);
+			g2d.setColor(color);
+			g2d.fillOval(Main.width/2 - size/2, Main.height/2 - size/2, size, size);
 			for(int i = 0; i < planets.length; i++){
-				planets[i].draw(g);
+				planets[i].draw(g2d);
 			}
 			break;
 		case SURFACE:

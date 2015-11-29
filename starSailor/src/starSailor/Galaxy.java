@@ -92,10 +92,9 @@ public class Galaxy {
 			}
 	}
 	
-	public void checkForClick(int xCoord, int yCoord){
-		int x = (int) (xCoord - 8), y = (int) (yCoord - 8);
+	public void checkForClick(int x, int y){
 		if(Main.state == Main.State.GALACTIC){
-			Point2D point = new Point2D.Double(x, y);
+			Point2D point = new Point2D.Double(x - 8, y - 8);
 			transform.transform(point, point);
 			for(int i = 0; i < galaxy.length; i ++){
 				if(galaxy[i].getRect().intersects(new Rectangle((int) (point.getX()), (int) (point.getY()), 16, 16))){
@@ -150,7 +149,7 @@ public class Galaxy {
 			}
 			g2d.setTransform(at);
 			for(int i = 0; i < galaxy.length; i++){
-				galaxy[i].draw(g);
+				galaxy[i].draw(g2d);
 			}
 			break;
 		case PLANETRY:

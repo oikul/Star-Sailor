@@ -4,11 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 
 public class Planet {
 	
 	private int size, x, y, xDif, yDif;
-	private double distance, temperature, precipitation, angle, zoom = 1.0;
+	private double distance, temperature, precipitation, angle, zoom = 1.0, xtrans, ytrans;
 	private NoiseGenerator generator;
 	private double[][] noise;
 	private Block[][] terrain, decoration;
@@ -198,6 +199,24 @@ public class Planet {
 		}
 	}
 	
+	private void getXTrans(){
+		double x = (Main.width/2);
+		if(x > Main.width/(zoom*2)){
+				xtrans = -(x - Main.width/(zoom*2));
+			}else{
+				xtrans = Main.width/(zoom*2) - x;
+			}
+	}
+	
+	private void getYTrans(){
+		double y = (Main.height/2);
+		if(y > Main.height/(zoom*2)){
+				ytrans = -(y - Main.height/(zoom*2));
+			}else{
+				ytrans = Main.height/(zoom*2) - y;
+			}
+	}
+	
 	public void update(){
 		switch(Main.state){
 		case PLANETRY:
@@ -218,12 +237,18 @@ public class Planet {
 		Graphics2D g2d = (Graphics2D) g;
 		switch(Main.state){
 		case SOLAR:
-			g.setColor(color);
-			g.fillOval(x - size/2, y - size/2, size, size);
+			g2d.setColor(color);
+			g2d.fillOval(x - size/2, y - size/2, size, size);
 			break;
 		case PLANETRY:
-			g.setColor(color);
-			g.fillOval((Main.width/2) - size * 10, (Main.height/2) - size * 10, size*20, size*20);
+			AffineTransform at = new AffineTransform();
+			at.scale(zoom, zoom);
+			getXTrans();
+			getYTrans();
+			at.translate(xtrans, ytrans);
+			g2d.setTransform(at);
+			g2d.setColor(color);
+			g2d.fillOval((Main.width/2) - size * 10, (Main.height/2) - size * 10, size*20, size*20);
 			break;
 		case SURFACE:
 			for(int i = 0; i < noise.length; i++){
