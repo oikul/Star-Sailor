@@ -20,9 +20,11 @@ public class Main extends JFrame {
 	private Galaxy galaxy;
 	private Player player;
 	private long time;
+	private State saveState;
+	private ShipInterior ship;
 	
 	public static enum State{
-		GALACTIC, SOLAR, PLANETRY, SURFACE;
+		GALACTIC, SOLAR, PLANETRY, SURFACE, SHIP;
 	}
 	public static State state;
 
@@ -65,6 +67,7 @@ public class Main extends JFrame {
 		Biome.createBiomes();
 		galaxy = new Galaxy(4096);
 		player = new Player("character/charSprites.png", "spaceship/shipSprites.png");
+		ship = new ShipInterior();
 		time = System.currentTimeMillis();
 	}
 	
@@ -97,19 +100,37 @@ public class Main extends JFrame {
 				}else if(input.isKeyDown(KeyEvent.VK_D)){
 					galaxy.moveSurface(3);
 				}
-				if(input.isKeyDown(KeyEvent.VK_E)){
-					if(player.isShip()){
-						player.setIsShip(false);
+				if(input.isKeyDown(KeyEvent.VK_Q)){
+					if(Player.isShip()){
+						Player.setIsShip(false);
 					}else{
-						player.setIsShip(true);
+						Player.setIsShip(true);
 					}
+					input.artificialKeyReleased(KeyEvent.VK_Q);
+				}
+				break;
+			case SHIP:
+				if(input.isKeyDown(KeyEvent.VK_W)){
+					ship.panUp();
+				}else if(input.isKeyDown(KeyEvent.VK_A)){
+					ship.panLeft();
+				}else if(input.isKeyDown(KeyEvent.VK_S)){
+					ship.panDown();
+				}else if(input.isKeyDown(KeyEvent.VK_D)){
+					ship.panRight();
+				}
+				if(input.isKeyDown(KeyEvent.VK_E)){
+					state = saveState;
+					Player.setIsShip(true);
 					input.artificialKeyReleased(KeyEvent.VK_E);
 				}
+				break;
+			default:
 				break;
 			}
 			if(input.isMouseDown(MouseEvent.BUTTON1)){
 				galaxy.checkForClick(input.getMousePositionRelativeToComponent().x, input.getMousePositionRelativeToComponent().y);
-				input.artificalMouseReleased(MouseEvent.BUTTON1);
+				input.artificialMouseReleased(MouseEvent.BUTTON1);
 			}
 			if(input.getMouseWheelUp()){
 				galaxy.zoom(true);
@@ -121,17 +142,26 @@ public class Main extends JFrame {
 			}
 			if(input.isKeyDown(KeyEvent.VK_W)){
 				player.setDirection(Player.Direction.UP);
+				player.update();
 			}else if(input.isKeyDown(KeyEvent.VK_A)){
 				player.setDirection(Player.Direction.LEFT);
+				player.update();
 			}else if(input.isKeyDown(KeyEvent.VK_S)){
 				player.setDirection(Player.Direction.DOWN);
+				player.update();
 			}else if(input.isKeyDown(KeyEvent.VK_D)){
 				player.setDirection(Player.Direction.RIGHT);
+				player.update();
 			}else{
 				player.stop();
 			}
+			if(input.isKeyDown(KeyEvent.VK_E) && Player.isShip()){
+				saveState = state;
+				state = State.SHIP;
+				Player.setIsShip(false);
+				input.artificialKeyReleased(KeyEvent.VK_E);
+			}
 			galaxy.update();
-			player.update();
 			time = newTime;
 		}
 	}
@@ -143,6 +173,9 @@ public class Main extends JFrame {
 		Graphics offGraphics = offImage.getGraphics();
 		offGraphics.fillRect(0, 0, width, height);
 		galaxy.draw(offGraphics);
+		if(state == State.SHIP){
+			ship.draw(offGraphics);
+		}
 		player.draw(offGraphics);
 		g2d.drawImage(offImage, 0, 0, width, height, null);
 	}

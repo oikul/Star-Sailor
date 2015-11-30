@@ -96,7 +96,7 @@ public class InputHandler implements KeyListener, MouseListener, MouseWheelListe
 		mouseArray[e.getButton()] = true;
 	}
 	
-	public void artificalMousePressed(int mouseButton) {
+	public void artificialMousePressed(int mouseButton) {
 		mouseArray[mouseButton] = true;
 	}
 
@@ -105,7 +105,7 @@ public class InputHandler implements KeyListener, MouseListener, MouseWheelListe
 		mouseArray[e.getButton()] = false;
 	}
 	
-	public void artificalMouseReleased(int mouseButton) {
+	public void artificialMouseReleased(int mouseButton) {
 		mouseArray[mouseButton] = false;
 	}
 	

@@ -65,6 +65,13 @@ public class Block {
 	public static final BlockAnimated water_ocean = new BlockAnimated("water/water_ocean.png", true);
 	public static final BlockAnimated water_river = new BlockAnimated("water/water_river.png", true);
 	
+	//ship_interior
+	public static final Block iron = new Block("ship_interior/iron.png", false);
+	public static final Block engine_fire = new Block("ship_interior/engine_fire_1.png", false);
+	public static final Block engine = new Block("ship_interior/engine.png", true);
+	public static final Block ship_walls = new Block("ship_interior/ship_walls.png", true);
+	public static final Block glass = new Block("ship_interior/glass.png", true);
+	
 	protected Image image;
 	private boolean isSolid;
 	
@@ -79,7 +86,7 @@ public class Block {
 	
 	public void draw(Graphics g, int x, int y){
 		if(image != null){
-			g.drawImage(image, x, y, 16, 16, null);
+			g.drawImage(image, x, y, null);
 		}
 	}
 

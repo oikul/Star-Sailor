@@ -3,65 +3,62 @@ package starSailor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 public class Player {
+	
+	public static enum Direction{
+		UP, LEFT, DOWN, RIGHT;
+	}
 
 	private BufferedImage spriteSheet;
 	private Image playerSprites, shipSprites;
 	private Image[][] playerImages, shipImages;
 	private int currentIFrame = 0, currentJFrame = 0;
-	private boolean isShip = true;
+	private static Point lastLocation;
+	private int lastDir;
+	private static boolean isShip = true;
 	private long time;
 
-	public static enum Direction{
-		UP, LEFT, DOWN, RIGHT;
-	}
-
 	public Player(String playerPath, String shipPath){
-		playerImages = new Image[3][4];
-		shipImages = new Image[3][4];
-		playerSprites = ResourceLoader.getImage(playerPath);
-		shipSprites = ResourceLoader.getImage(shipPath);
-		spriteSheet = new BufferedImage(playerSprites.getWidth(null), playerSprites.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D bGr = spriteSheet.createGraphics();
-		bGr.drawImage(playerSprites, 0, 0, null);
-		for(int i = 0; i <= 2; i++){
-			for(int j = 0; j <= 3; j++){
-				playerImages[i][j] = spriteSheet.getSubimage(i * 32, j * 32, 32, 32);
-			}
-		}
-		spriteSheet = new BufferedImage(shipSprites.getWidth(null), shipSprites.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-		bGr = spriteSheet.createGraphics();
-		bGr.drawImage(shipSprites, 0, 0, null);
-		for(int i = 0; i <= 2; i++){
-			for(int j = 0; j <= 3; j++){
-				shipImages[i][j] = spriteSheet.getSubimage(i * 32, j * 32, 32, 32);
-			}
-		}
+		playerImages = ResourceLoader.getSprites(playerPath, 32);
+		shipImages = ResourceLoader.getSprites(shipPath, 32);
 		time = System.currentTimeMillis();
 	}
 	
-	public boolean isShip(){
+	public static boolean isShip(){
 		return isShip;
 	}
 	
-	public void setIsShip(boolean isShip){
-		this.isShip = isShip;
+	public static void setIsShip(boolean isShip){
+		Player.isShip = isShip;
 	}
 
 	public void setDirection(Direction direction){
 		switch (direction){
 		case UP:
+			if(isShip){
+				lastDir = 1;
+			}
 			currentJFrame = 1;
 			break;
 		case LEFT:
+			if(isShip){
+				lastDir = 3;
+			}
 			currentJFrame = 3;
 			break;
 		case DOWN:
+			if(isShip){
+				lastDir = 0;
+			}
 			currentJFrame = 0;
 			break;
 		case RIGHT:
+			if(isShip){
+				lastDir = 2;
+			}
 			currentJFrame = 2;
 			break;
 		}
@@ -69,6 +66,10 @@ public class Player {
 
 	public void stop(){
 		currentIFrame = 0;
+	}
+	
+	public static void pan(int x, int y){
+		lastLocation.translate(x, y);
 	}
 
 	public void update(){
@@ -97,9 +98,14 @@ public class Player {
 		case SURFACE:
 			if(isShip){
 				g.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
+				lastLocation = new Point(Main.width/2 - 16, Main.height /2 - 16);
 			}else{
 				g.drawImage(playerImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
+				g.drawImage(shipImages[0][lastDir], lastLocation.x, lastLocation.y, null);
 			}
+			break;
+		case SHIP:
+			g.drawImage(playerImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
 			break;
 		default:
 			break;

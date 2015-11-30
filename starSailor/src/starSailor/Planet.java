@@ -109,18 +109,22 @@ public class Planet {
 	
 	public void panUp(){
 		yDif ++;
+		Player.pan(0, 1);
 	}
 	
 	public void panLeft(){
 		xDif ++;
+		Player.pan(1, 0);
 	}
 	
 	public void panDown(){
 		yDif --;
+		Player.pan(0, -1);
 	}
 	
 	public void panRight(){
 		xDif --;
+		Player.pan(-1, 0);
 	}
 	
 	private void incrementAngle(){
@@ -194,7 +198,9 @@ public class Planet {
 			if(in){
 				
 			}else{
-				Main.state = Main.State.PLANETRY;
+				if(Player.isShip()){
+					Main.state = Main.State.PLANETRY;
+				}
 			}
 		}
 	}
