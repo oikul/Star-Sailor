@@ -1,19 +1,15 @@
 package starSailor;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 
 public class Player {
 	
 	public static enum Direction{
 		UP, LEFT, DOWN, RIGHT;
 	}
-
-	private BufferedImage spriteSheet;
-	private Image playerSprites, shipSprites;
+	
 	private Image[][] playerImages, shipImages;
 	private int currentIFrame = 0, currentJFrame = 0;
 	private static Point lastLocation;
