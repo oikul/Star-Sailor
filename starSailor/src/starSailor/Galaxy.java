@@ -10,10 +10,11 @@ import java.awt.geom.Point2D;
 public class Galaxy {
 	
 	private Star[] galaxy;
-	private int xDif = 0, yDif = 0;
+	private double xDif = 0, yDif = 0;
 	private int selectedStar = 0;
 	private double zoom = 1.0, xtrans, ytrans;
 	private AffineTransform transform;
+	private final double root2 = Math.sqrt(2.0);
 	
 	public Galaxy(int numOfStars){
 		galaxy = new Star[numOfStars];
@@ -37,6 +38,22 @@ public class Galaxy {
 
 	public void panRight(){
 		xDif ++;
+	}
+	public void panUR(){
+		xDif += 1/root2;
+		yDif -= 1/root2;
+	}
+	public void panUL(){
+		xDif -= 1/root2;
+		yDif -= 1/root2;
+	}
+	public void panDR(){
+		xDif += 1/root2;
+		yDif += 1/root2;
+	}
+	public void panDL(){
+		xDif -= 1/root2;
+		yDif += 1/root2;
 	}
 	
 	public void moveSurface(int dir){

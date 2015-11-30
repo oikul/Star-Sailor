@@ -78,7 +78,9 @@ public class Star {
 	}
 	
 	public void checkForClick(int x, int y){
-		system.checkForClick(x, y);
+		if(made){
+			system.checkForClick(x, y);
+		}
 	}
 	
 	public void zoom(boolean in){

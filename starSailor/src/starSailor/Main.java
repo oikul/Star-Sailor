@@ -1,8 +1,10 @@
 package starSailor;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -22,9 +24,10 @@ public class Main extends JFrame {
 	private long time;
 	private State saveState;
 	private ShipInterior ship;
+	private SpaceBattle sb;
 	
 	public static enum State{
-		GALACTIC, SOLAR, PLANETRY, SURFACE, SHIP;
+		GALACTIC, SOLAR, PLANETRY, SURFACE, SHIP, SPACEBATTLE;
 	}
 	public static State state;
 
@@ -61,13 +64,16 @@ public class Main extends JFrame {
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		setSize(width, height);
 		setVisible(running);
-		state = State.GALACTIC;
+		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(ResourceLoader.getImage("cursor/cursor.png"), new Point(getX(), getY()), "c");
+		this.setCursor(cursor);
+		state = State.SPACEBATTLE;
 		random = new Random();
 		input = new InputHandler(this);
 		Biome.createBiomes();
 		galaxy = new Galaxy(4096);
 		player = new Player("character/charSprites.png", "spaceship/shipSprites.png");
 		ship = new ShipInterior();
+		sb = new SpaceBattle();
 		time = System.currentTimeMillis();
 	}
 	
@@ -76,16 +82,21 @@ public class Main extends JFrame {
 		if(newTime >= time + 10){
 			switch (state){
 			case GALACTIC:
-				if(input.isKeyDown(KeyEvent.VK_W)){
+				if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_A)){
+					galaxy.panUL();
+				}else if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_D)){
+					galaxy.panUR();
+				}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_A)){
+					galaxy.panDL();
+				}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_D)){
+					galaxy.panDR();
+				}else if(input.isKeyDown(KeyEvent.VK_W)){
 					galaxy.panUp();
-				}
-				if(input.isKeyDown(KeyEvent.VK_A)){
+				}else if(input.isKeyDown(KeyEvent.VK_A)){
 					galaxy.panLeft();
-				}
-				if(input.isKeyDown(KeyEvent.VK_S)){
+				}else if(input.isKeyDown(KeyEvent.VK_S)){
 					galaxy.panDown();
-				}
-				if(input.isKeyDown(KeyEvent.VK_D)){
+				}else if(input.isKeyDown(KeyEvent.VK_D)){
 					galaxy.panRight();
 				}
 				break;
@@ -96,17 +107,13 @@ public class Main extends JFrame {
 			case SURFACE:
 				if(input.isKeyDown(KeyEvent.VK_W)){
 					galaxy.moveSurface(0);
-				}
-				if(input.isKeyDown(KeyEvent.VK_A)){
+				}else if(input.isKeyDown(KeyEvent.VK_A)){
 					galaxy.moveSurface(1);
-				}
-				if(input.isKeyDown(KeyEvent.VK_S)){
+				}else if(input.isKeyDown(KeyEvent.VK_S)){
 					galaxy.moveSurface(2);
-				}
-				if(input.isKeyDown(KeyEvent.VK_D)){
+				}else if(input.isKeyDown(KeyEvent.VK_D)){
 					galaxy.moveSurface(3);
-				}
-				if(input.isKeyDown(KeyEvent.VK_Q)){
+				}else if(input.isKeyDown(KeyEvent.VK_Q)){
 					if(Player.isShip()){
 						Player.setIsShip(false);
 					}else{
@@ -133,6 +140,12 @@ public class Main extends JFrame {
 					Player.setIsShip(true);
 					input.artificialKeyReleased(KeyEvent.VK_E);
 				}
+				break;
+			case SPACEBATTLE:
+				if(input.isMouseDown(MouseEvent.BUTTON1)){
+					sb.shoot(input.getMousePositionRelativeToComponent());
+				}
+				sb.update();
 				break;
 			default:
 				break;
@@ -184,6 +197,7 @@ public class Main extends JFrame {
 			ship.draw(offGraphics);
 		}
 		player.draw(offGraphics);
+		sb.draw(offGraphics);
 		g2d.drawImage(offImage, 0, 0, width, height, null);
 	}
 
