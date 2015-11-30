@@ -8,8 +8,8 @@ import java.awt.geom.AffineTransform;
 
 public class Planet {
 	
-	private int size, x, y, xDif, yDif;
-	private double distance, temperature, precipitation, angle, zoom = 1.0, xtrans, ytrans;
+	private int size, x, y;
+	private double distance, temperature, precipitation, angle, zoom = 1.0, xtrans, ytrans, xDif, yDif;
 	private NoiseGenerator generator;
 	private double[][] noise;
 	private Block[][] terrain, decoration;
@@ -262,18 +262,20 @@ public class Planet {
 			g2d.setTransform(saveAt);
 			break;
 		case SURFACE:
+			g2d.translate(xDif, yDif);
 			for(int i = 0; i < noise.length; i++){
 				for(int j = 0; j < noise[0].length; j++){
-					terrain[i][j].draw(g2d, i * 16 + xDif, j * 16 + yDif);
+					terrain[i][j].draw(g2d, i * 16, j * 16);
 				}
 			}
 			for(int i = 0; i < noise.length; i++){
 				for(int j = 0; j < noise[0].length; j++){
 					if(decoration[i][j] != null){
-						decoration[i][j].draw(g2d, i * 16 + xDif, j * 16 + yDif);
+						decoration[i][j].draw(g2d, i * 16, j * 16);
 					}
 				}
 			}
+			g2d.translate(-xDif, -yDif);
 			break;
 		default:
 			break;

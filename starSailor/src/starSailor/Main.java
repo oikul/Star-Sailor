@@ -78,11 +78,14 @@ public class Main extends JFrame {
 			case GALACTIC:
 				if(input.isKeyDown(KeyEvent.VK_W)){
 					galaxy.panUp();
-				}else if(input.isKeyDown(KeyEvent.VK_A)){
+				}
+				if(input.isKeyDown(KeyEvent.VK_A)){
 					galaxy.panLeft();
-				}else if(input.isKeyDown(KeyEvent.VK_S)){
+				}
+				if(input.isKeyDown(KeyEvent.VK_S)){
 					galaxy.panDown();
-				}else if(input.isKeyDown(KeyEvent.VK_D)){
+				}
+				if(input.isKeyDown(KeyEvent.VK_D)){
 					galaxy.panRight();
 				}
 				break;
@@ -93,11 +96,14 @@ public class Main extends JFrame {
 			case SURFACE:
 				if(input.isKeyDown(KeyEvent.VK_W)){
 					galaxy.moveSurface(0);
-				}else if(input.isKeyDown(KeyEvent.VK_A)){
+				}
+				if(input.isKeyDown(KeyEvent.VK_A)){
 					galaxy.moveSurface(1);
-				}else if(input.isKeyDown(KeyEvent.VK_S)){
+				}
+				if(input.isKeyDown(KeyEvent.VK_S)){
 					galaxy.moveSurface(2);
-				}else if(input.isKeyDown(KeyEvent.VK_D)){
+				}
+				if(input.isKeyDown(KeyEvent.VK_D)){
 					galaxy.moveSurface(3);
 				}
 				if(input.isKeyDown(KeyEvent.VK_Q)){
@@ -112,11 +118,14 @@ public class Main extends JFrame {
 			case SHIP:
 				if(input.isKeyDown(KeyEvent.VK_W)){
 					ship.panUp();
-				}else if(input.isKeyDown(KeyEvent.VK_A)){
+				}
+				if(input.isKeyDown(KeyEvent.VK_A)){
 					ship.panLeft();
-				}else if(input.isKeyDown(KeyEvent.VK_S)){
+				}
+				if(input.isKeyDown(KeyEvent.VK_S)){
 					ship.panDown();
-				}else if(input.isKeyDown(KeyEvent.VK_D)){
+				}
+				if(input.isKeyDown(KeyEvent.VK_D)){
 					ship.panRight();
 				}
 				if(input.isKeyDown(KeyEvent.VK_E)){
