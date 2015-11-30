@@ -71,6 +71,7 @@ public class Block {
 	public static final Block engine = new Block("ship_interior/engine.png", true);
 	public static final Block ship_walls = new Block("ship_interior/ship_walls.png", true);
 	public static final Block glass = new Block("ship_interior/glass.png", true);
+	public static final Block ship_lights = new Block("ship_interior/ship_lights.png", true);
 	
 	protected Image image;
 	private boolean isSolid;
