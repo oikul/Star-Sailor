@@ -127,7 +127,7 @@ public class Player {
 			}
 			break;
 		case SHIP:
-			currentIFrame = 0;
+			if(currentIFrame > 2){currentIFrame = 0;}
 			g.drawImage(playerImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
 			break;
 		default:
