@@ -3,6 +3,7 @@ package starSailor;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.geom.Point2D;
 
 public class Player {
 	
@@ -12,7 +13,7 @@ public class Player {
 	
 	private Image[][] playerImages, shipImages;
 	private int currentIFrame = 0, currentJFrame = 0;
-	private static Point lastLocation;
+	private static Point2D.Double lastLocation;
 	private int lastDir;
 	private static boolean isShip = true;
 	private static boolean isMoving = false;
@@ -74,8 +75,8 @@ public class Player {
 		}
 	}
 	
-	public static void pan(int x, int y){
-		lastLocation.translate(x, y);
+	public static void pan(double x, double y){
+		lastLocation.setLocation(lastLocation.getX() + x,lastLocation.getY() + y);
 	}
 
 	public void update(){
@@ -119,11 +120,11 @@ public class Player {
 		case SURFACE:
 			if(isShip){
 				g.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
-				lastLocation = new Point(Main.width/2 - 16, Main.height /2 - 16);
+				lastLocation = new Point2D.Double(Main.width/2 - 16, Main.height /2 - 16);
 			}else{
 				if(currentIFrame > 2){currentIFrame = 1;}
 				g.drawImage(playerImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
-				g.drawImage(shipImages[0][lastDir], lastLocation.x, lastLocation.y, null);
+				g.drawImage(shipImages[0][lastDir],(int) lastLocation.x,(int) lastLocation.y, null);
 			}
 			break;
 		case SHIP:
