@@ -169,8 +169,6 @@ public class Planet {
 	
 	public void zoomIn(){
 		if(zoom < 3){
-			xDif = 0;
-			yDif = 0;
 			zoom += 0.3;
 		}else{
 			Main.state = Main.State.SURFACE;
@@ -179,8 +177,6 @@ public class Planet {
 	
 	public void zoomOut(){
 		if(zoom > 0.7){
-			xDif = 0;
-			yDif = 0;
 			zoom -= 0.3;
 		}else{
 			Main.state = Main.State.SOLAR;

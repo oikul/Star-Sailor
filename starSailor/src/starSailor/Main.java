@@ -142,16 +142,12 @@ public class Main extends JFrame {
 			}
 			if(input.isKeyDown(KeyEvent.VK_W)){
 				player.setDirection(Player.Direction.UP);
-				player.update();
 			}else if(input.isKeyDown(KeyEvent.VK_A)){
 				player.setDirection(Player.Direction.LEFT);
-				player.update();
 			}else if(input.isKeyDown(KeyEvent.VK_S)){
 				player.setDirection(Player.Direction.DOWN);
-				player.update();
 			}else if(input.isKeyDown(KeyEvent.VK_D)){
 				player.setDirection(Player.Direction.RIGHT);
-				player.update();
 			}else{
 				player.stop();
 			}
@@ -161,8 +157,10 @@ public class Main extends JFrame {
 				Player.setIsShip(false);
 				input.artificialKeyReleased(KeyEvent.VK_E);
 			}
+			player.update();
 			galaxy.update();
 			time = newTime;
+			if(input.isKeyDown(KeyEvent.VK_ESCAPE)){System.exit(0);}
 		}
 	}
 	

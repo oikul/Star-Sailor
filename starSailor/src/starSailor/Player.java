@@ -15,6 +15,7 @@ public class Player {
 	private static Point lastLocation;
 	private int lastDir;
 	private static boolean isShip = true;
+	private static boolean isMoving = false;
 	private long time;
 
 	public Player(String playerPath, String shipPath){
@@ -38,30 +39,39 @@ public class Player {
 				lastDir = 1;
 			}
 			currentJFrame = 1;
+			isMoving = true;
 			break;
 		case LEFT:
 			if(isShip){
 				lastDir = 3;
 			}
 			currentJFrame = 3;
+			isMoving = true;
 			break;
 		case DOWN:
 			if(isShip){
 				lastDir = 0;
 			}
 			currentJFrame = 0;
+			isMoving = true;
 			break;
 		case RIGHT:
 			if(isShip){
 				lastDir = 2;
 			}
 			currentJFrame = 2;
+			isMoving = true;
 			break;
 		}
 	}
 
 	public void stop(){
-		currentIFrame = 0;
+		isMoving = false;
+		if(isShip && currentIFrame != 4){
+			currentIFrame = 3;
+		}else if(!isShip&&!isMoving){
+			currentIFrame = 0;
+		}
 	}
 	
 	public static void pan(int x, int y){
@@ -71,10 +81,25 @@ public class Player {
 	public void update(){
 		long newTime = System.currentTimeMillis();
 		if(newTime >= time + 300){
-			if(currentIFrame < playerImages.length - 1){
-				currentIFrame++;
-			}else{
+			switch (currentIFrame){
+			case 0:
+				if(isMoving){currentIFrame = 1;}
+				else{currentIFrame = 0;}
+				break;
+			case 1:
+				currentIFrame = 2;
+				break;
+			case 2:
 				currentIFrame = 1;
+				break;
+			case 3:
+				if(isMoving){currentIFrame = 1;}
+				else{currentIFrame = 4;}
+				break;
+			case 4:
+				if(isMoving){currentIFrame = 2;}
+				else{currentIFrame = 3;}
+				break;
 			}
 			time = newTime;
 		}
@@ -96,11 +121,13 @@ public class Player {
 				g.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
 				lastLocation = new Point(Main.width/2 - 16, Main.height /2 - 16);
 			}else{
+				if(currentIFrame > 2){currentIFrame = 1;}
 				g.drawImage(playerImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
 				g.drawImage(shipImages[0][lastDir], lastLocation.x, lastLocation.y, null);
 			}
 			break;
 		case SHIP:
+			currentIFrame = 0;
 			g.drawImage(playerImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
 			break;
 		default:
