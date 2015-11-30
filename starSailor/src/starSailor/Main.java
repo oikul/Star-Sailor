@@ -76,16 +76,21 @@ public class Main extends JFrame {
 		if(newTime >= time + 10){
 			switch (state){
 			case GALACTIC:
-				if(input.isKeyDown(KeyEvent.VK_W)){
+				if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_A)){
+					galaxy.panUL();
+				}else if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_D)){
+					galaxy.panUR();
+				}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_A)){
+					galaxy.panDL();
+				}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_D)){
+					galaxy.panDR();
+				}else if(input.isKeyDown(KeyEvent.VK_W)){
 					galaxy.panUp();
-				}
-				if(input.isKeyDown(KeyEvent.VK_A)){
+				}else if(input.isKeyDown(KeyEvent.VK_A)){
 					galaxy.panLeft();
-				}
-				if(input.isKeyDown(KeyEvent.VK_S)){
+				}else if(input.isKeyDown(KeyEvent.VK_S)){
 					galaxy.panDown();
-				}
-				if(input.isKeyDown(KeyEvent.VK_D)){
+				}else if(input.isKeyDown(KeyEvent.VK_D)){
 					galaxy.panRight();
 				}
 				break;
@@ -96,17 +101,13 @@ public class Main extends JFrame {
 			case SURFACE:
 				if(input.isKeyDown(KeyEvent.VK_W)){
 					galaxy.moveSurface(0);
-				}
-				if(input.isKeyDown(KeyEvent.VK_A)){
+				}else if(input.isKeyDown(KeyEvent.VK_A)){
 					galaxy.moveSurface(1);
-				}
-				if(input.isKeyDown(KeyEvent.VK_S)){
+				}else if(input.isKeyDown(KeyEvent.VK_S)){
 					galaxy.moveSurface(2);
-				}
-				if(input.isKeyDown(KeyEvent.VK_D)){
+				}else if(input.isKeyDown(KeyEvent.VK_D)){
 					galaxy.moveSurface(3);
-				}
-				if(input.isKeyDown(KeyEvent.VK_Q)){
+				}else if(input.isKeyDown(KeyEvent.VK_Q)){
 					if(Player.isShip()){
 						Player.setIsShip(false);
 					}else{

@@ -16,6 +16,7 @@ public class Planet {
 	private Biome biome;
 	private Color color;
 	private boolean selected = false;
+	private final double root2 = Math.sqrt(2.0);
 	
 	public Planet(int size, double distance, double angle){
 		this.size = size;
@@ -125,6 +126,27 @@ public class Planet {
 	public void panRight(){
 		xDif --;
 		Player.pan(-1, 0);
+	}
+	
+	public void panUR(){
+		xDif -= root2;
+		yDif += root2;
+		Player.pan(1/-root2,1/root2);
+	}
+	public void panUL(){
+		xDif += root2;
+		yDif += root2;
+		Player.pan(1/root2,1/root2);
+	}
+	public void panDR(){
+		xDif += root2;
+		yDif -= root2;
+		Player.pan(1/root2,1/-root2);
+	}
+	public void panDL(){
+		xDif -= root2;
+		yDif -= root2;
+		Player.pan(1/-root2,1/-root2);
 	}
 	
 	private void incrementAngle(){
