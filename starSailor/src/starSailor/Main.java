@@ -1,8 +1,10 @@
 package starSailor;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -22,9 +24,10 @@ public class Main extends JFrame {
 	private long time;
 	private State saveState;
 	private ShipInterior ship;
+	private SpaceBattle sb;
 	
 	public static enum State{
-		GALACTIC, SOLAR, PLANETRY, SURFACE, SHIP;
+		GALACTIC, SOLAR, PLANETRY, SURFACE, SHIP, SPACEBATTLE;
 	}
 	public static State state;
 
@@ -48,6 +51,7 @@ public class Main extends JFrame {
 				}
 			}catch (Exception e){
 				e.printStackTrace();
+				break;
 			}
 		}
 		dispose();
@@ -61,13 +65,16 @@ public class Main extends JFrame {
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		setSize(width, height);
 		setVisible(running);
-		state = State.GALACTIC;
+		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(ResourceLoader.getImage("cursor/cursor.png"), new Point(getX(), getY()), "c");
+		this.setCursor(cursor);
+		state = State.SPACEBATTLE;
 		random = new Random();
 		input = new InputHandler(this);
 		Biome.createBiomes();
 		galaxy = new Galaxy(4096);
 		player = new Player("character/charSprites.png", "spaceship/shipSprites.png");
 		ship = new ShipInterior();
+		sb = new SpaceBattle();
 		time = System.currentTimeMillis();
 	}
 	
@@ -107,7 +114,8 @@ public class Main extends JFrame {
 					galaxy.moveSurface(2);
 				}else if(input.isKeyDown(KeyEvent.VK_D)){
 					galaxy.moveSurface(3);
-				}else if(input.isKeyDown(KeyEvent.VK_Q)){
+				}
+				if(input.isKeyDown(KeyEvent.VK_Q)){
 					if(Player.isShip()){
 						Player.setIsShip(false);
 					}else{
@@ -134,6 +142,12 @@ public class Main extends JFrame {
 					Player.setIsShip(true);
 					input.artificialKeyReleased(KeyEvent.VK_E);
 				}
+				break;
+			case SPACEBATTLE:
+				if(input.isMouseDown(MouseEvent.BUTTON1)){
+					sb.shoot(input.getMousePositionRelativeToComponent());
+				}
+				sb.update();
 				break;
 			default:
 				break;
@@ -185,6 +199,7 @@ public class Main extends JFrame {
 			ship.draw(offGraphics);
 		}
 		player.draw(offGraphics);
+		sb.draw(offGraphics);
 		g2d.drawImage(offImage, 0, 0, width, height, null);
 	}
 
