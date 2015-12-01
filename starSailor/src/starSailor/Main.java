@@ -112,27 +112,31 @@ public class Main extends JFrame {
 			}
 			if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_A)){
 				galaxy.panUL();
+				ship.panUL();
 			}else if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_D)){
 				galaxy.panUR();
+				ship.panUR();
 			}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_A)){
 				galaxy.panDL();
+				ship.panDL();
 			}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_D)){
 				galaxy.panDR();
+				ship.panDR();
 			}else if(input.isKeyDown(KeyEvent.VK_W)){
 				galaxy.panUp();
-				player.setDirection(Player.Direction.UP);
+				player.setMoving();
 				ship.panUp();
 			}else if(input.isKeyDown(KeyEvent.VK_A)){
 				galaxy.panLeft();
-				player.setDirection(Player.Direction.LEFT);
+				player.setMoving();
 				ship.panLeft();
 			}else if(input.isKeyDown(KeyEvent.VK_S)){
 				galaxy.panDown();
-				player.setDirection(Player.Direction.DOWN);
+				player.setMoving();
 				ship.panDown();
 			}else if(input.isKeyDown(KeyEvent.VK_D)){
 				galaxy.panRight();
-				player.setDirection(Player.Direction.RIGHT);
+				player.setMoving();
 				ship.panRight();
 			}else{
 				player.stop();
@@ -155,10 +159,16 @@ public class Main extends JFrame {
 				Player.setIsShip(false);
 				input.artificialKeyReleased(KeyEvent.VK_E);
 			}
+			if(input.isKeyDown(KeyEvent.VK_F)){
+				state = State.SPACEBATTLE;
+			}
+			player.calculateRotation(input.getMousePositionOnScreen());
 			player.update();
 			galaxy.update();
 			time = newTime;
-			if(input.isKeyDown(KeyEvent.VK_ESCAPE)){System.exit(0);}
+			if(input.isKeyDown(KeyEvent.VK_ESCAPE)){
+				System.exit(0);
+			}
 		}
 	}
 	

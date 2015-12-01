@@ -145,6 +145,8 @@ public class Biome {
 		volcanic_mountains.addBlock(Block.stone_volcanic, 0.0, 1.0);
 		volcanic_mountains.addBlock(Block.lava, 0.9, 1.0);
 		volcanic_mountains.addDecoration(Block.rocks, 0.6, 0.9, 0.1);
+		
+		lava_ocean.addBlock(Block.solid, 0.0, 1.0);
 	}
 	
 	public void addBlock(Block block, double start, double end){

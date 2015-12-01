@@ -138,6 +138,31 @@ public class ShipInterior {
 		}
 	}
 	
+	public void panUR(){
+		if(Main.state == Main.State.SHIP){
+			xDif += 1/Main.root2;
+			yDif -= 1/Main.root2;
+		}
+	}
+	public void panUL(){
+		if(Main.state == Main.State.SHIP){
+			xDif -= 1/Main.root2;
+			yDif -= 1/Main.root2;
+		}
+	}
+	public void panDR(){
+		if(Main.state == Main.State.SHIP){
+			xDif += 1/Main.root2;
+			yDif += 1/Main.root2;
+		}
+	}
+	public void panDL(){
+		if(Main.state == Main.State.SHIP){
+			xDif -= 1/Main.root2;
+			yDif += 1/Main.root2;
+		}
+	}
+	
 	public void draw(Graphics g){
 		for(int i = 0; i < ship.length; i++){
 			for(int j = 0; j < ship[0].length; j++){
