@@ -26,11 +26,13 @@ public class InputHandler implements KeyListener, MouseListener, MouseWheelListe
 	}
 	
 	public Point getMousePositionOnScreen(){
-		return MouseInfo.getPointerInfo().getLocation();
+		Point point = new Point(MouseInfo.getPointerInfo().getLocation().x + 17, MouseInfo.getPointerInfo().getLocation().y - 9);
+		return point;
 	}
 	
 	public Point getMousePositionRelativeToComponent(){
-		return c.getMousePosition();
+		Point point = new Point(c.getMousePosition().x + 17, c.getMousePosition().y - 9);
+		return point;
 	}
 	
 	public boolean isKeyDown(int keyCode){

@@ -89,7 +89,9 @@ public class SolarSystem {
 		if(Main.state == Main.State.SOLAR){
 			yDif --;
 		}else{
-			planets[selectedPlanet].panUp();
+			if(selectedPlanet != -1){
+				planets[selectedPlanet].panUp();
+			}
 		}
 	}
 
@@ -97,7 +99,9 @@ public class SolarSystem {
 		if(Main.state == Main.State.SOLAR){
 			xDif --;
 		}else{
-			planets[selectedPlanet].panLeft();
+			if(selectedPlanet != -1){
+				planets[selectedPlanet].panLeft();
+			};
 		}
 	}
 
@@ -105,7 +109,9 @@ public class SolarSystem {
 		if(Main.state == Main.State.SOLAR){
 			yDif ++;
 		}else{
-			planets[selectedPlanet].panDown();
+			if(selectedPlanet != -1){
+				planets[selectedPlanet].panDown();
+			}
 		}
 	}
 
@@ -113,7 +119,9 @@ public class SolarSystem {
 		if(Main.state == Main.State.SOLAR){
 			xDif ++;
 		}else{
-			planets[selectedPlanet].panRight();
+			if(selectedPlanet != -1){
+				planets[selectedPlanet].panRight();
+			}
 		}
 	}
 	
@@ -122,7 +130,9 @@ public class SolarSystem {
 			xDif += 1/Main.root2;
 			yDif -= 1/Main.root2;
 		}else{
-			planets[selectedPlanet].panUR();
+			if(selectedPlanet != -1){
+				planets[selectedPlanet].panUR();
+			}
 		}
 	}
 	
@@ -131,7 +141,9 @@ public class SolarSystem {
 			xDif -= 1/Main.root2;
 			yDif -= 1/Main.root2;
 		}else{
-			planets[selectedPlanet].panUL();
+			if(selectedPlanet != -1){
+				planets[selectedPlanet].panUL();
+			}
 		}
 	}
 	
@@ -140,7 +152,9 @@ public class SolarSystem {
 			xDif += 1/Main.root2;
 			yDif += 1/Main.root2;
 		}else{
-			planets[selectedPlanet].panDR();
+			if(selectedPlanet != -1){
+				planets[selectedPlanet].panDR();
+			}
 		}
 	}
 	
@@ -149,7 +163,9 @@ public class SolarSystem {
 			xDif -= 1/Main.root2;
 			yDif += 1/Main.root2;
 		}else{
-			planets[selectedPlanet].panDL();
+			if(selectedPlanet != -1){
+				planets[selectedPlanet].panDL();
+			}
 		}
 	}
 	

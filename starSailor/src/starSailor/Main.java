@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -31,6 +32,29 @@ public class Main extends JFrame {
 	}
 	public static State state;
 	private State saveState = State.GALACTIC;
+	
+	public static Point2D.Double getPoint(Point2D.Double p1,Point2D.Double p2,double speed){
+		double xdif = (p2.getX() - p1.getX());
+		double ydif = (p2.getY() - p1.getY());
+		double angle = 0;		// in radians
+		
+		angle = -Math.atan(ydif/xdif);
+		if(xdif<0){
+			if(ydif<0){
+				angle += Math.PI;
+			} else {
+				angle -= +Math.PI;
+			}
+		}
+
+		double xgain = 0;
+		double ygain = 0;
+		xgain = Math.cos(angle) * speed;
+		ygain = -Math.sin(angle) * speed;
+		
+		return new Point2D.Double(xgain,ygain);
+		
+	}
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -112,27 +136,31 @@ public class Main extends JFrame {
 			}
 			if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_A)){
 				galaxy.panUL();
+				ship.panUL();
 			}else if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_D)){
 				galaxy.panUR();
+				ship.panUR();
 			}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_A)){
 				galaxy.panDL();
+				ship.panDL();
 			}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_D)){
 				galaxy.panDR();
+				ship.panDR();
 			}else if(input.isKeyDown(KeyEvent.VK_W)){
 				galaxy.panUp();
-				player.setDirection(Player.Direction.UP);
+				player.setMoving();
 				ship.panUp();
 			}else if(input.isKeyDown(KeyEvent.VK_A)){
 				galaxy.panLeft();
-				player.setDirection(Player.Direction.LEFT);
+				player.setMoving();
 				ship.panLeft();
 			}else if(input.isKeyDown(KeyEvent.VK_S)){
 				galaxy.panDown();
-				player.setDirection(Player.Direction.DOWN);
+				player.setMoving();
 				ship.panDown();
 			}else if(input.isKeyDown(KeyEvent.VK_D)){
 				galaxy.panRight();
-				player.setDirection(Player.Direction.RIGHT);
+				player.setMoving();
 				ship.panRight();
 			}else{
 				player.stop();
@@ -155,10 +183,16 @@ public class Main extends JFrame {
 				Player.setIsShip(false);
 				input.artificialKeyReleased(KeyEvent.VK_E);
 			}
+			if(input.isKeyDown(KeyEvent.VK_F)){
+				state = State.SPACEBATTLE;
+			}
+			player.calculateRotation(input.getMousePositionOnScreen());
 			player.update();
 			galaxy.update();
 			time = newTime;
-			if(input.isKeyDown(KeyEvent.VK_ESCAPE)){System.exit(0);}
+			if(input.isKeyDown(KeyEvent.VK_ESCAPE)){
+				System.exit(0);
+			}
 		}
 	}
 	
