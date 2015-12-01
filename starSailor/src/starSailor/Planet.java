@@ -199,7 +199,7 @@ public class Planet {
 			zoom += 0.3;
 		}else{
 			if(isMoon){
-				Main.state = Main.State.MOONSURFACE;
+				Main.state = Main.State.MOON;
 			}else{
 				Main.state = Main.State.SURFACE;
 			}
@@ -225,7 +225,7 @@ public class Planet {
 			}else{
 				zoomOut();
 			}
-		}else if(Main.state == Main.State.SURFACE || Main.state == Main.State.MOONSURFACE){
+		}else if(Main.state == Main.State.SURFACE || Main.state == Main.State.MOON){
 			if(in){
 				
 			}else{

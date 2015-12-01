@@ -26,7 +26,7 @@ public class Main extends JFrame {
 	private SpaceBattle sb;
 	
 	public static enum State{
-		GALACTIC, SOLAR, PLANETRY, SURFACE, SHIP, SPACEBATTLE, MOON, MOONSURFACE, DUNGEON, VILLAGE, SPACESTATION;
+		GALACTIC, SOLAR, PLANETRY, SURFACE, SHIP, SPACEBATTLE, MOON, DUNGEON, VILLAGE, SPACESTATION;
 	}
 	public static State state;
 	private State saveState = State.GALACTIC;
