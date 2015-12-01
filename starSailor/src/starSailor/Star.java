@@ -102,6 +102,9 @@ public class Star {
 			calculateXAndY();
 			break;
 		case PLANETRY:
+			if(!made){
+				createSystem();
+			}
 			system.update();
 			break;
 		case SOLAR:
@@ -111,6 +114,9 @@ public class Star {
 			system.update();
 			break;
 		case SURFACE:
+			if(!made){
+				createSystem();
+			}
 			system.update();
 			break;
 		default:
@@ -130,12 +136,21 @@ public class Star {
 			g.fillOval(x - (size/30), y - (size/30), size / 15, size / 15);
 			break;
 		case SOLAR:
+			if(!made){
+				createSystem();
+			}
 			system.draw(g);
 			break;
 		case PLANETRY:
+			if(!made){
+				createSystem();
+			}
 			system.draw(g);
 			break;
 		case SURFACE:
+			if(!made){
+				createSystem();
+			}
 			system.draw(g);
 			break;
 		default:

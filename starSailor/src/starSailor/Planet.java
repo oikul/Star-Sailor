@@ -8,20 +8,25 @@ import java.awt.geom.AffineTransform;
 
 public class Planet {
 	
-	private int size, x, y;
+	private int size, x, y, numOfMoons;
 	private double distance, temperature, precipitation, angle, zoom = 1.0, xtrans, ytrans, xDif, yDif;
 	private NoiseGenerator generator;
 	private double[][] noise;
 	private Block[][] terrain, decoration;
+	private Planet[] moons;
 	private Biome biome;
 	private Color color;
-	private boolean selected = false;
+	private boolean selected = false, made = false, isMoon;
 	private final double root2 = Math.sqrt(2.0);
 	
-	public Planet(int size, double distance, double angle){
+	public Planet(int size, double distance, double angle, boolean isMoon){
 		this.size = size;
 		this.distance = distance;
 		this.angle = angle;
+		this.isMoon = isMoon;
+		if(!isMoon){
+			numOfMoons = Main.random.nextInt(5);
+		}
 		generator = new NoiseGenerator(size * 10, size * 10, 4, 5);
 		noise = generator.getNoise();
 		calculateTemperature();
@@ -193,7 +198,11 @@ public class Planet {
 		if(zoom < 3){
 			zoom += 0.3;
 		}else{
-			Main.state = Main.State.SURFACE;
+			if(isMoon){
+				Main.state = Main.State.MOONSURFACE;
+			}else{
+				Main.state = Main.State.SURFACE;
+			}
 		}
 	}
 	
@@ -201,23 +210,31 @@ public class Planet {
 		if(zoom > 0.7){
 			zoom -= 0.3;
 		}else{
-			Main.state = Main.State.SOLAR;
+			if(isMoon){
+				Main.state = Main.State.PLANETRY;
+			}else{
+				Main.state = Main.State.SOLAR;
+			}
 		}
 	}
 	
 	public void zoom(boolean in){
-		if(Main.state == Main.State.PLANETRY){
+		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.MOON){
 			if(in){
 				zoomIn();
 			}else{
 				zoomOut();
 			}
-		}else if(Main.state == Main.State.SURFACE){
+		}else if(Main.state == Main.State.SURFACE || Main.state == Main.State.MOONSURFACE){
 			if(in){
 				
 			}else{
 				if(Player.isShip()){
-					Main.state = Main.State.PLANETRY;
+					if(isMoon){
+						Main.state = Main.State.MOON;
+					}else{
+						Main.state = Main.State.PLANETRY;
+					}
 				}
 			}
 		}
@@ -241,9 +258,19 @@ public class Planet {
 			}
 	}
 	
+	private void createMoons(){
+		moons = new Planet[numOfMoons];
+		for(int i = 0; i < numOfMoons; i++){
+			moons[i] = new Planet(Main.random.nextInt(7) + 2, Main.random.nextDouble() * Main.height/2, Main.random.nextDouble() * 360, true);
+		}
+	}
+	
 	public void update(){
 		switch(Main.state){
 		case PLANETRY:
+			if(!made){
+				createMoons();
+			}
 			break;
 		case SOLAR:
 			incrementAngle();

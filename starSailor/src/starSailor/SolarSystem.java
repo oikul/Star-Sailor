@@ -14,16 +14,18 @@ public class SolarSystem {
 	private int size;
 	private double zoom = 1.0, xtrans, ytrans;
 	private Color color;
-	private int selectedPlanet = 0;
+	private int selectedPlanet = -1;
 	private AffineTransform transform;
 	
 	public SolarSystem(int size, int numOfPlanets, double min, double max, Color color){
 		this.size = size;
 		planets = new Planet[numOfPlanets];
 		for(int i = 0; i < numOfPlanets; i++){
-			planets[i] = new Planet(Main.random.nextInt(16) + 4, (Main.random.nextDouble() * (max-min)) + min, (Main.random.nextDouble() * 360));
+			planets[i] = new Planet(Main.random.nextInt(13) + 8, (Main.random.nextDouble() * (max-min)) + min, (Main.random.nextDouble() * 360), false);
 		}
-		planets[selectedPlanet].setSelected(true);
+		if(selectedPlanet != -1){
+			planets[selectedPlanet].setSelected(true);
+		}
 		this.color = color;
 	}
 	
@@ -39,7 +41,9 @@ public class SolarSystem {
 					planets[i].setSelected(false);
 				}
 			}
-			planets[selectedPlanet].setSelected(true);
+			if(new Rectangle(Main.width/2 - size/2, Main.height/2 - size/2, size, size).contains(point.getX(), point.getY())){
+				selectedPlanet = -1;
+			}
 		}
 	}
 	
@@ -47,7 +51,9 @@ public class SolarSystem {
 		if(zoom < 3){
 			zoom += 0.3;
 		}else{
-			Main.state = Main.State.PLANETRY;
+			if(selectedPlanet != -1){
+				Main.state = Main.State.PLANETRY;
+			}
 		}
 	}
 	
@@ -67,7 +73,9 @@ public class SolarSystem {
 				zoomOut();
 			}
 		}else{
-			planets[selectedPlanet].zoom(in);
+			if(selectedPlanet != -1){
+				planets[selectedPlanet].zoom(in);
+			}
 		}
 	}
 	
@@ -156,6 +164,10 @@ public class SolarSystem {
 				e.printStackTrace();
 			}
 			g2d.setTransform(at);
+			if(selectedPlanet == -1){
+				g2d.setColor(Color.cyan);
+				g2d.drawRect(Main.width/2 - size/2, Main.height/2 - size/2, size, size);
+			}
 			g2d.setColor(color);
 			g2d.fillOval(Main.width/2 - size/2, Main.height/2 - size/2, size, size);
 			for(int i = 0; i < planets.length; i++){

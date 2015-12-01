@@ -126,7 +126,7 @@ public class Galaxy {
 			}
 			galaxy[selectedStar].setSelected(true);
 		}else{
-			galaxy[selectedStar].checkForClick(x, y);
+			galaxy[selectedStar].checkForClick(x + 16, y + 16);
 		}
 	}
 	

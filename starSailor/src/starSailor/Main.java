@@ -26,7 +26,7 @@ public class Main extends JFrame {
 	private SpaceBattle sb;
 	
 	public static enum State{
-		GALACTIC, SOLAR, PLANETRY, SURFACE, SHIP, SPACEBATTLE;
+		GALACTIC, SOLAR, PLANETRY, SURFACE, SHIP, SPACEBATTLE, MOON, MOONSURFACE, DUNGEON, VILLAGE, SPACESTATION;
 	}
 	public static State state;
 	private State saveState = State.GALACTIC;
@@ -66,7 +66,7 @@ public class Main extends JFrame {
 		setVisible(running);
 		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(ResourceLoader.getImage("cursor/cursor.png"), new Point(getX(), getY()), "c");
 		this.setCursor(cursor);
-		state = State.SHIP;
+		state = State.SOLAR;
 		random = new Random();
 		input = new InputHandler(this);
 		Biome.createBiomes();
