@@ -18,6 +18,7 @@ public class Main extends JFrame {
 	private boolean running = false;
 	public static int width, height;
 	public static Random random;
+	public static final double root2 = Math.sqrt(2.0);
 	private InputHandler input;
 	private Galaxy galaxy;
 	private Player player;
@@ -26,7 +27,7 @@ public class Main extends JFrame {
 	private SpaceBattle sb;
 	
 	public static enum State{
-		GALACTIC, SOLAR, PLANETRY, SURFACE, SHIP, SPACEBATTLE, MOON, MOONSURFACE, DUNGEON, VILLAGE, SPACESTATION;
+		GALACTIC, SOLAR, PLANETRY, SURFACE, SHIP, SPACEBATTLE, MOON, DUNGEON, VILLAGE, SPACESTATION;
 	}
 	public static State state;
 	private State saveState = State.GALACTIC;
@@ -66,7 +67,7 @@ public class Main extends JFrame {
 		setVisible(running);
 		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(ResourceLoader.getImage("cursor/cursor.png"), new Point(getX(), getY()), "c");
 		this.setCursor(cursor);
-		state = State.SOLAR;
+		state = State.GALACTIC;
 		random = new Random();
 		input = new InputHandler(this);
 		Biome.createBiomes();
@@ -81,39 +82,7 @@ public class Main extends JFrame {
 		long newTime = System.currentTimeMillis();
 		if(newTime >= time + 10){
 			switch (state){
-			case GALACTIC:
-				if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_A)){
-					galaxy.panUL();
-				}else if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_D)){
-					galaxy.panUR();
-				}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_A)){
-					galaxy.panDL();
-				}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_D)){
-					galaxy.panDR();
-				}else if(input.isKeyDown(KeyEvent.VK_W)){
-					galaxy.panUp();
-				}else if(input.isKeyDown(KeyEvent.VK_A)){
-					galaxy.panLeft();
-				}else if(input.isKeyDown(KeyEvent.VK_S)){
-					galaxy.panDown();
-				}else if(input.isKeyDown(KeyEvent.VK_D)){
-					galaxy.panRight();
-				}
-				break;
-			case SOLAR:
-				break;
-			case PLANETRY:
-				break;
 			case SURFACE:
-				if(input.isKeyDown(KeyEvent.VK_W)){
-					galaxy.moveSurface(0);
-				}else if(input.isKeyDown(KeyEvent.VK_A)){
-					galaxy.moveSurface(1);
-				}else if(input.isKeyDown(KeyEvent.VK_S)){
-					galaxy.moveSurface(2);
-				}else if(input.isKeyDown(KeyEvent.VK_D)){
-					galaxy.moveSurface(3);
-				}
 				if(input.isKeyDown(KeyEvent.VK_Q)){
 					if(Player.isShip()){
 						Player.setIsShip(false);
@@ -124,18 +93,6 @@ public class Main extends JFrame {
 				}
 				break;
 			case SHIP:
-				if(input.isKeyDown(KeyEvent.VK_W)){
-					ship.panUp();
-				}
-				if(input.isKeyDown(KeyEvent.VK_A)){
-					ship.panLeft();
-				}
-				if(input.isKeyDown(KeyEvent.VK_S)){
-					ship.panDown();
-				}
-				if(input.isKeyDown(KeyEvent.VK_D)){
-					ship.panRight();
-				}
 				if(input.isKeyDown(KeyEvent.VK_E)){
 					state = saveState;
 					Player.setIsShip(true);
@@ -153,6 +110,33 @@ public class Main extends JFrame {
 			default:
 				break;
 			}
+			if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_A)){
+				galaxy.panUL();
+			}else if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_D)){
+				galaxy.panUR();
+			}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_A)){
+				galaxy.panDL();
+			}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_D)){
+				galaxy.panDR();
+			}else if(input.isKeyDown(KeyEvent.VK_W)){
+				galaxy.panUp();
+				player.setDirection(Player.Direction.UP);
+				ship.panUp();
+			}else if(input.isKeyDown(KeyEvent.VK_A)){
+				galaxy.panLeft();
+				player.setDirection(Player.Direction.LEFT);
+				ship.panLeft();
+			}else if(input.isKeyDown(KeyEvent.VK_S)){
+				galaxy.panDown();
+				player.setDirection(Player.Direction.DOWN);
+				ship.panDown();
+			}else if(input.isKeyDown(KeyEvent.VK_D)){
+				galaxy.panRight();
+				player.setDirection(Player.Direction.RIGHT);
+				ship.panRight();
+			}else{
+				player.stop();
+			}
 			if(input.isMouseDown(MouseEvent.BUTTON1)){
 				galaxy.checkForClick(input.getMousePositionRelativeToComponent().x, input.getMousePositionRelativeToComponent().y);
 				input.artificialMouseReleased(MouseEvent.BUTTON1);
@@ -164,17 +148,6 @@ public class Main extends JFrame {
 			if(input.getMouseWheelDown()){
 				galaxy.zoom(false);
 				input.stopMouseWheel();
-			}
-			if(input.isKeyDown(KeyEvent.VK_W)){
-				player.setDirection(Player.Direction.UP);
-			}else if(input.isKeyDown(KeyEvent.VK_A)){
-				player.setDirection(Player.Direction.LEFT);
-			}else if(input.isKeyDown(KeyEvent.VK_S)){
-				player.setDirection(Player.Direction.DOWN);
-			}else if(input.isKeyDown(KeyEvent.VK_D)){
-				player.setDirection(Player.Direction.RIGHT);
-			}else{
-				player.stop();
 			}
 			if(input.isKeyDown(KeyEvent.VK_E) && Player.isShip()){
 				saveState = state;

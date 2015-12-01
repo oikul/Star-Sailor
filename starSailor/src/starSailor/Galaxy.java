@@ -14,7 +14,6 @@ public class Galaxy {
 	private int selectedStar = 0;
 	private double zoom = 1.0, xtrans, ytrans;
 	private AffineTransform transform;
-	private final double root2 = Math.sqrt(2.0);
 	
 	public Galaxy(int numOfStars){
 		galaxy = new Star[numOfStars];
@@ -25,39 +24,71 @@ public class Galaxy {
 	}
 	
 	public void panUp(){
-		yDif --;
+		if(Main.state == Main.State.GALACTIC){
+			yDif --;
+		}else{
+			galaxy[selectedStar].panUp();
+		}
 	}
 
 	public void panLeft(){
-		xDif --;
+		if(Main.state == Main.State.GALACTIC){
+			xDif --;
+		}else{
+			galaxy[selectedStar].panLeft();
+		}
 	}
 
 	public void panDown(){
-		yDif ++;
+		if(Main.state == Main.State.GALACTIC){
+			yDif ++;
+		}else{
+			galaxy[selectedStar].panDown();
+		}
 	}
 
 	public void panRight(){
-		xDif ++;
-	}
-	public void panUR(){
-		xDif += 1/root2;
-		yDif -= 1/root2;
-	}
-	public void panUL(){
-		xDif -= 1/root2;
-		yDif -= 1/root2;
-	}
-	public void panDR(){
-		xDif += 1/root2;
-		yDif += 1/root2;
-	}
-	public void panDL(){
-		xDif -= 1/root2;
-		yDif += 1/root2;
+		if(Main.state == Main.State.GALACTIC){
+			xDif ++;
+		}else{
+			galaxy[selectedStar].panRight();
+		}
 	}
 	
-	public void moveSurface(int dir){
-		galaxy[selectedStar].moveSurface(dir);
+	public void panUR(){
+		if(Main.state == Main.State.GALACTIC){
+			xDif += 1/Main.root2;
+			yDif -= 1/Main.root2;
+		}else{
+			galaxy[selectedStar].panUR();
+		}
+	}
+	
+	public void panUL(){
+		if(Main.state == Main.State.GALACTIC){
+			xDif -= 1/Main.root2;
+			yDif -= 1/Main.root2;
+		}else{
+			galaxy[selectedStar].panUL();
+		}
+	}
+	
+	public void panDR(){
+		if(Main.state == Main.State.GALACTIC){
+			xDif += 1/Main.root2;
+			yDif += 1/Main.root2;
+		}else{
+			galaxy[selectedStar].panDR();
+		}
+	}
+	
+	public void panDL(){
+		if(Main.state == Main.State.GALACTIC){
+			xDif -= 1/Main.root2;
+			yDif += 1/Main.root2;
+		}else{
+			galaxy[selectedStar].panDL();
+		}
 	}
 	
 	public void zoomIn(){
@@ -95,19 +126,19 @@ public class Galaxy {
 	private void getXTrans(){
 		double x = galaxy[selectedStar].getX() + xDif;
 		if(x > Main.width/(zoom*2)){
-				xtrans = -(x - Main.width/(zoom*2));
-			}else{
-				xtrans = Main.width/(zoom*2) - x;
-			}
+			xtrans = -(x - Main.width/(zoom*2));
+		}else{
+			xtrans = Main.width/(zoom*2) - x;
+		}
 	}
 	
 	private void getYTrans(){
 		double y = galaxy[selectedStar].getY() + yDif;
 		if(y > Main.height/(zoom*2)){
-				ytrans = -(y - Main.height/(zoom*2));
-			}else{
-				ytrans = Main.height/(zoom*2) - y;
-			}
+			ytrans = -(y - Main.height/(zoom*2));
+		}else{
+			ytrans = Main.height/(zoom*2) - y;
+		}
 	}
 	
 	public void checkForClick(int x, int y){

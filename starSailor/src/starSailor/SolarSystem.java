@@ -12,7 +12,7 @@ public class SolarSystem {
 	
 	private Planet[] planets;
 	private int size;
-	private double zoom = 1.0, xtrans, ytrans;
+	private double zoom = 1.0, xtrans, ytrans, xDif, yDif;
 	private Color color;
 	private int selectedPlanet = -1;
 	private AffineTransform transform;
@@ -36,6 +36,8 @@ public class SolarSystem {
 			for(int i = 0; i < planets.length; i ++){
 				if(planets[i].getRect().intersects(new Rectangle((int) (point.getX()), (int) (point.getY()), 16, 16))){
 					planets[i].setSelected(true);
+					xDif = 0;
+					yDif = 0;
 					selectedPlanet = i;
 				}else{
 					planets[i].setSelected(false);
@@ -50,6 +52,8 @@ public class SolarSystem {
 	public void zoomIn(){
 		if(zoom < 3){
 			zoom += 0.3;
+			xDif = 0;
+			yDif = 0;
 		}else{
 			if(selectedPlanet != -1){
 				Main.state = Main.State.PLANETRY;
@@ -60,6 +64,8 @@ public class SolarSystem {
 	public void zoomOut(){
 		if(zoom > 0.7){
 			zoom -= 0.3;
+			xDif = 0;
+			yDif = 0;
 		}else{
 			Main.state = Main.State.GALACTIC;
 		}
@@ -79,44 +85,100 @@ public class SolarSystem {
 		}
 	}
 	
-	public void moveSurface(int dir){
-		if(dir == 0){
+	public void panUp(){
+		if(Main.state == Main.State.SOLAR){
+			yDif --;
+		}else{
 			planets[selectedPlanet].panUp();
-		}else if(dir == 1){
+		}
+	}
+
+	public void panLeft(){
+		if(Main.state == Main.State.SOLAR){
+			xDif --;
+		}else{
 			planets[selectedPlanet].panLeft();
-		}else if(dir == 2){
+		}
+	}
+
+	public void panDown(){
+		if(Main.state == Main.State.SOLAR){
+			yDif ++;
+		}else{
 			planets[selectedPlanet].panDown();
-		}else if(dir == 3){
+		}
+	}
+
+	public void panRight(){
+		if(Main.state == Main.State.SOLAR){
+			xDif ++;
+		}else{
 			planets[selectedPlanet].panRight();
+		}
+	}
+	
+	public void panUR(){
+		if(Main.state == Main.State.SOLAR){
+			xDif += 1/Main.root2;
+			yDif -= 1/Main.root2;
+		}else{
+			planets[selectedPlanet].panUR();
+		}
+	}
+	
+	public void panUL(){
+		if(Main.state == Main.State.SOLAR){
+			xDif -= 1/Main.root2;
+			yDif -= 1/Main.root2;
+		}else{
+			planets[selectedPlanet].panUL();
+		}
+	}
+	
+	public void panDR(){
+		if(Main.state == Main.State.SOLAR){
+			xDif += 1/Main.root2;
+			yDif += 1/Main.root2;
+		}else{
+			planets[selectedPlanet].panDR();
+		}
+	}
+	
+	public void panDL(){
+		if(Main.state == Main.State.SOLAR){
+			xDif -= 1/Main.root2;
+			yDif += 1/Main.root2;
+		}else{
+			planets[selectedPlanet].panDL();
 		}
 	}
 	
 	private void getXTrans(){
 		double x;
 		if(selectedPlanet == -1){
-			x = Main.width/2;
+			x = Main.width/2 + xDif;
 		}else{
-			x = planets[selectedPlanet].getX();
+			x = planets[selectedPlanet].getX() + xDif;
 		}
 		if(x > Main.width/(zoom*2)){
-				xtrans = -(x - Main.width/(zoom*2));
-			}else{
-				xtrans = Main.width/(zoom*2) - x;
-			}
+			xtrans = -(x - Main.width/(zoom*2));
+		}else{
+			xtrans = Main.width/(zoom*2) - x;
+		}
 	}
-	
+
 	private void getYTrans(){
 		double y;
 		if(selectedPlanet == -1){
-			y = Main.height/2;
+			y = Main.height/2 + yDif;
 		}else{
-			y = planets[selectedPlanet].getY();
+			y = planets[selectedPlanet].getY() + yDif;
 		}
 		if(y > Main.height/(zoom*2)){
-				ytrans = -(y - Main.height/(zoom*2));
-			}else{
-				ytrans = Main.height/(zoom*2) - y;
-			}
+			ytrans = -(y - Main.height/(zoom*2));
+		}else{
+			ytrans = Main.height/(zoom*2) - y;
+		}
 	}
 	
 	public void update(){

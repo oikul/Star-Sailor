@@ -17,7 +17,6 @@ public class Planet {
 	private Biome biome;
 	private Color color;
 	private boolean selected = false, made = false, isMoon;
-	private final double root2 = Math.sqrt(2.0);
 	
 	public Planet(int size, double distance, double angle, boolean isMoon){
 		this.size = size;
@@ -134,24 +133,24 @@ public class Planet {
 	}
 	
 	public void panUR(){
-		xDif -= root2;
-		yDif += root2;
-		Player.pan(1/-root2,1/root2);
+		xDif -= Main.root2;
+		yDif += Main.root2;
+		Player.pan(1/-Main.root2,1/Main.root2);
 	}
 	public void panUL(){
-		xDif += root2;
-		yDif += root2;
-		Player.pan(1/root2,1/root2);
+		xDif += Main.root2;
+		yDif += Main.root2;
+		Player.pan(1/Main.root2,1/Main.root2);
 	}
 	public void panDR(){
-		xDif += root2;
-		yDif -= root2;
-		Player.pan(1/root2,1/-root2);
+		xDif -= Main.root2;
+		yDif -= Main.root2;
+		Player.pan(1/Main.root2,1/-Main.root2);
 	}
 	public void panDL(){
-		xDif -= root2;
-		yDif -= root2;
-		Player.pan(1/-root2,1/-root2);
+		xDif += Main.root2;
+		yDif -= Main.root2;
+		Player.pan(1/-Main.root2,1/-Main.root2);
 	}
 	
 	private void incrementAngle(){
@@ -199,7 +198,7 @@ public class Planet {
 			zoom += 0.3;
 		}else{
 			if(isMoon){
-				Main.state = Main.State.MOONSURFACE;
+				Main.state = Main.State.MOON;
 			}else{
 				Main.state = Main.State.SURFACE;
 			}
@@ -219,22 +218,16 @@ public class Planet {
 	}
 	
 	public void zoom(boolean in){
-		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.MOON){
+		if(Main.state == Main.State.PLANETRY){
 			if(in){
 				zoomIn();
 			}else{
 				zoomOut();
 			}
-		}else if(Main.state == Main.State.SURFACE || Main.state == Main.State.MOONSURFACE){
-			if(in){
-				
-			}else{
+		}else if(Main.state == Main.State.SURFACE || Main.state == Main.State.MOON){
+			if(!in){
 				if(Player.isShip()){
-					if(isMoon){
-						Main.state = Main.State.MOON;
-					}else{
-						Main.state = Main.State.PLANETRY;
-					}
+					Main.state = Main.State.PLANETRY;
 				}
 			}
 		}

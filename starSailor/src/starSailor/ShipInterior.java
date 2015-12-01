@@ -115,19 +115,27 @@ public class ShipInterior {
 	}
 	
 	public void panUp(){
-		yDif ++;
+		if(Main.state == Main.State.SHIP){
+			yDif ++;
+		}
 	}
 	
 	public void panLeft(){
-		xDif ++;
+		if(Main.state == Main.State.SHIP){
+			xDif ++;
+		}
 	}
 	
 	public void panDown(){
-		yDif --;
+		if(Main.state == Main.State.SHIP){
+			yDif --;
+		}
 	}
 	
 	public void panRight(){
-		xDif --;
+		if(Main.state == Main.State.SHIP){
+			xDif --;
+		}
 	}
 	
 	public void draw(Graphics g){

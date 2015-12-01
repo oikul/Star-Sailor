@@ -1,0 +1,15 @@
+>>	enemies
+
+>>	collisions
+
+>>	moons
+
+>>	dungeons
+
+>>	space stations
+
+>>	Player attributes
+
+>>	loot system
+
+>>	upgrade system

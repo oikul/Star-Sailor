@@ -80,18 +80,80 @@ public class Star {
 	public void checkForClick(int x, int y){
 		if(made){
 			system.checkForClick(x, y);
+		}else{
+			createSystem();
 		}
 	}
 	
 	public void zoom(boolean in){
 		if(made){
 			system.zoom(in);
+		}else{
+			createSystem();
 		}
 	}
 	
-	public void moveSurface(int dir){
+	public void panUp(){
 		if(made){
-			system.moveSurface(dir);
+			system.panUp();
+		}else{
+			createSystem();
+		}
+	}
+
+	public void panLeft(){
+		if(made){
+			system.panLeft();
+		}else{
+			createSystem();
+		}
+	}
+
+	public void panDown(){
+		if(made){
+			system.panDown();
+		}else{
+			createSystem();
+		}
+	}
+
+	public void panRight(){
+		if(made){
+			system.panRight();
+		}else{
+			createSystem();
+		}
+	}
+	
+	public void panUR(){
+		if(made){
+			system.panUR();
+		}else{
+			createSystem();
+		}
+	}
+	
+	public void panUL(){
+		if(made){
+			system.panUL();
+		}else{
+			createSystem();
+		}
+	}
+	
+	public void panDR(){
+		if(made){
+			system.panDR();
+		}else{
+			createSystem();
+		}
+	}
+	
+	public void panDL(){
+		if(made){
+			system.panDL();
+		}else{
+			createSystem();
 		}
 	}
 	
@@ -101,25 +163,11 @@ public class Star {
 			incrementAngle();
 			calculateXAndY();
 			break;
-		case PLANETRY:
-			if(!made){
-				createSystem();
-			}
-			system.update();
-			break;
-		case SOLAR:
-			if(!made){
-				createSystem();
-			}
-			system.update();
-			break;
-		case SURFACE:
-			if(!made){
-				createSystem();
-			}
-			system.update();
-			break;
 		default:
+			if(!made){
+				createSystem();
+			}
+			system.update();
 			break;
 		}
 		
@@ -135,27 +183,14 @@ public class Star {
 			g.setColor(color);
 			g.fillOval(x - (size/30), y - (size/30), size / 15, size / 15);
 			break;
-		case SOLAR:
-			if(!made){
-				createSystem();
-			}
-			system.draw(g);
-			break;
-		case PLANETRY:
-			if(!made){
-				createSystem();
-			}
-			system.draw(g);
-			break;
-		case SURFACE:
-			if(!made){
-				createSystem();
-			}
-			system.draw(g);
-			break;
 		default:
+			if(!made){
+				createSystem();
+			}
+			system.draw(g);
 			break;
 		}
+		
 		
 	}
 
