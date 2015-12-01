@@ -22,7 +22,6 @@ public class Main extends JFrame {
 	private Galaxy galaxy;
 	private Player player;
 	private long time;
-	private State saveState;
 	private ShipInterior ship;
 	private SpaceBattle sb;
 	
@@ -30,6 +29,7 @@ public class Main extends JFrame {
 		GALACTIC, SOLAR, PLANETRY, SURFACE, SHIP, SPACEBATTLE;
 	}
 	public static State state;
+	private State saveState = State.GALACTIC;
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -66,7 +66,7 @@ public class Main extends JFrame {
 		setVisible(running);
 		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(ResourceLoader.getImage("cursor/cursor.png"), new Point(getX(), getY()), "c");
 		this.setCursor(cursor);
-		state = State.SPACEBATTLE;
+		state = State.SHIP;
 		random = new Random();
 		input = new InputHandler(this);
 		Biome.createBiomes();
@@ -141,6 +141,7 @@ public class Main extends JFrame {
 					Player.setIsShip(true);
 					input.artificialKeyReleased(KeyEvent.VK_E);
 				}
+				Block.engine_fire.update();
 				break;
 			case SPACEBATTLE:
 				if(input.isMouseDown(MouseEvent.BUTTON1)){

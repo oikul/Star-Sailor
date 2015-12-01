@@ -112,7 +112,7 @@ public class Galaxy {
 	
 	public void checkForClick(int x, int y){
 		if(Main.state == Main.State.GALACTIC){
-			Point2D point = new Point2D.Double(x - 2, y - 2);
+			Point2D point = new Point2D.Double(x + 16, y + 16);
 			transform.transform(point, point);
 			for(int i = 0; i < galaxy.length; i ++){
 				if(galaxy[i].getRect().intersects(new Rectangle((int) (point.getX()), (int) (point.getY()), 4, 4))){

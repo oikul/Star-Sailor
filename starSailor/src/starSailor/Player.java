@@ -2,7 +2,6 @@ package starSailor;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.geom.Point2D;
 
 public class Player {

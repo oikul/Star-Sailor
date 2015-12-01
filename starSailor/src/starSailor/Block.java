@@ -60,18 +60,19 @@ public class Block {
 	public static final Block tree_spruce = new Block("trees/tree_spruce.png", true);
 	
 	//liquids
-	public static final BlockAnimated lava = new BlockAnimated("lava/lava.png", true);
-	public static final BlockAnimated water_murky = new BlockAnimated("water/water_murky.png", true);
-	public static final BlockAnimated water_ocean = new BlockAnimated("water/water_ocean.png", true);
-	public static final BlockAnimated water_river = new BlockAnimated("water/water_river.png", true);
+	public static final BlockAnimated lava = new BlockAnimated("lava/lava.png", true, 16, 16, 500);
+	public static final BlockAnimated water_murky = new BlockAnimated("water/water_murky.png", true, 16, 16, 500);
+	public static final BlockAnimated water_ocean = new BlockAnimated("water/water_ocean.png", true, 16, 16, 500);
+	public static final BlockAnimated water_river = new BlockAnimated("water/water_river.png", true, 16, 16, 500);
 	
 	//ship_interior
 	public static final Block iron = new Block("ship_interior/iron.png", false);
-	public static final Block engine_fire = new Block("ship_interior/engine_fire_1.png", false);
+	public static final BlockAnimated engine_fire = new BlockAnimated("ship_interior/engine_fire_sprites.png", false, 64, 192, 200);
 	public static final Block engine = new Block("ship_interior/engine.png", true);
 	public static final Block ship_walls = new Block("ship_interior/ship_walls.png", true);
 	public static final Block glass = new Block("ship_interior/glass.png", true);
 	public static final Block ship_lights = new Block("ship_interior/ship_lights.png", true);
+	public static final Block control_desk = new Block("ship_interior/control_desk.png", false);
 	
 	protected Image image;
 	private boolean isSolid;
