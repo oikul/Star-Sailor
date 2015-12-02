@@ -46,6 +46,8 @@ public class SolarSystem {
 			if(new Rectangle(Main.width/2 - size/2, Main.height/2 - size/2, size, size).contains(point.getX(), point.getY())){
 				selectedPlanet = -1;
 			}
+		}else{
+			planets[selectedPlanet].checkForClick(x, y);
 		}
 	}
 	

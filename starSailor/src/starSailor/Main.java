@@ -96,7 +96,7 @@ public class Main extends JFrame {
 		input = new InputHandler(this);
 		Biome.createBiomes();
 		galaxy = new Galaxy(4096);
-		player = new Player("character/character_sprites.png", "spaceship/shipSprites.png");
+		player = new Player("character/character_sprites.png", "spaceship/ship_sprites.png");
 		ship = new ShipInterior();
 		sb = new SpaceBattle();
 		time = System.currentTimeMillis();

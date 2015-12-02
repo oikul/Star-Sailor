@@ -5,11 +5,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 public class Planet {
 
-	private int size, x, y, numOfMoons;
+	private int size, x, y, numOfMoons, selectedMoon = -1;
 	private double distance, temperature, precipitation, angle, zoom = 1.0, zoomSurface = 1.0, xtrans, ytrans, xDif, yDif;
 	private NoiseGenerator generator;
 	private double[][] noise;
@@ -18,6 +19,7 @@ public class Planet {
 	private Planet[] moons;
 	private Biome biome;
 	private Color color;
+	private AffineTransform transform;
 	private boolean selected = false, made = false, isMoon;
 	private Rectangle playerRectUp = new Rectangle(Main.width/2 - 3, Main.height/2 - 1, 6, 2);
 	private Rectangle playerRectLeft = new Rectangle(Main.width/2 - 5, Main.height/2 + 1, 2, 4);
@@ -140,6 +142,26 @@ public class Planet {
 			}
 		}
 	}
+	
+	public void checkForClick(int x, int y){
+		if(Main.state == Main.State.PLANETRY){
+			Point2D point = new Point2D.Double(x - 2, y - 2);
+			transform.transform(point, point);
+			for(int i = 0; i < moons.length; i ++){
+				if(moons[i].getRect().intersects(new Rectangle((int) (point.getX()), (int) (point.getY()), 4, 4))){
+					moons[i].setSelected(true);
+					xDif = 0;
+					yDif = 0;
+					selectedMoon = i;
+				}else{
+					moons[i].setSelected(false);
+				}
+			}
+			if(new Rectangle(Main.width/2 - size/2, Main.height/2 - size/2, size, size).contains(point.getX(), point.getY())){
+				selectedMoon = -1;
+			}
+		}
+	}
 
 	public void panUp(){
 		if(!Player.isShip()){
@@ -204,6 +226,10 @@ public class Planet {
 				yDif -= 1/Main.root2;
 				Player.pan((1/-Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
 				translateBlockRects(-1/Main.root2, 1/Main.root2);
+			}else if(!collisionUp()){
+				panUp();
+			}else if(!collisionRight()){
+				panRight();
 			}
 		}else{
 			xDif += 1/Main.root2;
@@ -221,6 +247,10 @@ public class Planet {
 				yDif -= 1/Main.root2;
 				Player.pan((1/Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
 				translateBlockRects(1/Main.root2, 1/Main.root2);
+			}else if(!collisionUp()){
+				panUp();
+			}else if(!collisionLeft()){
+				panLeft();
 			}
 		}else{
 			xDif -= 1/Main.root2;
@@ -237,6 +267,10 @@ public class Planet {
 				yDif += 1/Main.root2;
 				Player.pan((1/-Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
 				translateBlockRects(-1/Main.root2, -1/Main.root2);
+			}else if(!collisionDown()){
+				panDown();
+			}else if(!collisionRight()){
+				panRight();
 			}
 		}else{
 			xDif += 1/Main.root2;
@@ -253,6 +287,10 @@ public class Planet {
 				yDif += 1/Main.root2;
 				Player.pan((1/Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
 				translateBlockRects(1/Main.root2, -1/Main.root2);
+			}else if(!collisionDown()){
+				panDown();
+			}else if(!collisionLeft()){
+				panLeft();
 			}
 		}else{
 			xDif -= 1/Main.root2;
@@ -308,10 +346,10 @@ public class Planet {
 			xDif = 0;
 			yDif = 0;
 		}else{
-			if(isMoon){
-				Main.state = Main.State.MOON;
-			}else{
+			if(selectedMoon == -1){
 				Main.state = Main.State.SURFACE;
+			}else{
+				Main.state = Main.State.MOON;
 			}
 		}
 	}
@@ -347,7 +385,14 @@ public class Planet {
 	}
 
 	private void getXTrans(){
-		double x = (Main.width/2) + xDif;
+		double x;
+		if(selectedMoon == -1){
+			x = Main.width/2 + xDif;
+		}else if(numOfMoons > 0 && selectedMoon != -1){
+			x = moons[selectedMoon].getX() + xDif;
+		}else{
+			x = Main.width/2 + xDif;
+		}
 		if(x > Main.width/(zoom*2)){
 			xtrans = -(x - Main.width/(zoom*2));
 		}else{
@@ -356,7 +401,12 @@ public class Planet {
 	}
 
 	private void getYTrans(){
-		double y = (Main.height/2) + yDif;
+		double y;
+		if(selectedMoon == -1){
+			y = Main.height/2 + yDif;
+		}else{
+			y = moons[selectedMoon].getY() + yDif;
+		}
 		if(y > Main.height/(zoom*2)){
 			ytrans = -(y - Main.height/(zoom*2));
 		}else{
@@ -367,8 +417,9 @@ public class Planet {
 	private void createMoons(){
 		moons = new Planet[numOfMoons];
 		for(int i = 0; i < numOfMoons; i++){
-			moons[i] = new Planet(Main.random.nextInt(7) + 2, Main.random.nextDouble() * Main.height/2, Main.random.nextDouble() * 360, true);
+			moons[i] = new Planet(Main.random.nextInt(7) + 2, (Main.random.nextDouble() * (Main.height/2 - size/2)) + (size / 2), Main.random.nextDouble() * 360, true);
 		}
+		made = true;
 	}
 
 	private boolean collisionUp(){
@@ -430,8 +481,16 @@ public class Planet {
 	public void update(){
 		switch(Main.state){
 		case PLANETRY:
-			if(!made){
-				createMoons();
+			if(isMoon){
+				incrementAngle();
+				calculateXAndY();
+			}else{
+				if(!made){
+					createMoons();
+				}
+				for(int i = 0; i < moons.length; i++){
+					moons[i].update();
+				}
 			}
 			break;
 		case SOLAR:
@@ -463,17 +522,26 @@ public class Planet {
 			g2d.fillOval(x - size/2, y - size/2, size, size);
 			break;
 		case PLANETRY:
+			saveAt = g2d.getTransform();
 			if(isMoon){
+				if(selected){
+					g2d.setColor(Color.cyan);
+					g2d.drawRect(x - size / 2, y - size / 2, size, size);
+				}
 				g2d.setColor(color);
 				g2d.fillOval(x - size/2, y - size/2, size, size);
 			}else{
-				saveAt = g2d.getTransform();
 				at = new AffineTransform();
 				at.scale(zoom, zoom);
 				getXTrans();
 				getYTrans();
 				at.translate(xtrans, ytrans);
+				transform = at;
 				g2d.setTransform(at);
+				if(selectedMoon == -1){
+					g2d.setColor(Color.cyan);
+					g2d.drawRect((Main.width/2) - size * 10, (Main.height/2) - size * 10, size*20, size*20);
+				}
 				g2d.setColor(color);
 				g2d.fillOval((Main.width/2) - size * 10, (Main.height/2) - size * 10, size*20, size*20);
 				if(!made){
@@ -482,8 +550,8 @@ public class Planet {
 				for(int i = 0; i < moons.length; i++){
 					moons[i].draw(g2d);
 				}
-				g2d.setTransform(saveAt);
 			}
+			g2d.setTransform(saveAt);
 			break;
 		case SURFACE:
 			saveAt = g2d.getTransform();

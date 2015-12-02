@@ -65,7 +65,7 @@ public class Player {
 
 	public void update(Point p){
 		long newTime = System.currentTimeMillis();
-		if(newTime >= time + 300){
+		if(newTime >= time + 200){
 			if(isMoving){
 				if(isShip){
 					if(shipIndex < 2){
