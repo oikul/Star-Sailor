@@ -15,17 +15,19 @@ public class SpaceBattle {
 	private ArrayList<Line2D.Double> shots;
 	private EnemyShip ship;
 	private Point2D.Double enemyLocation;
+	private Point2D.Double pointer;
 	
 	public SpaceBattle(){
 		trajectories = new ArrayList<Point2D.Double>();
 		shots = new ArrayList<Line2D.Double>();
 		enemyLocation = new Point2D.Double(200,200);
 		ship = new EnemyShip((int)enemyLocation.x,(int)enemyLocation.y,EnemyShip.shipClass.CARRIER);
+		pointer = new Point2D.Double(0, 0);
 	}
 	
 	public void shoot(Point mouseCoord){
 		shots.add(new Line2D.Double(Main.width/2, Main.height/2,Main.width/2, Main.height/2));
-		
+		pointer.setLocation(mouseCoord.getX(),mouseCoord.getY());
 		double speed = 20.0;
 
 		trajectories.add(Main.getPoint(new Point2D.Double(Main.width/2,Main.height/2),new Point2D.Double(mouseCoord.getX(), mouseCoord.getY()),speed));
@@ -61,6 +63,7 @@ public class SpaceBattle {
 			for(int i = 0; i< shots.size(); i++){
 				g2d.drawLine((int)shots.get(i).getX1(),(int)shots.get(i).getY1(),(int)shots.get(i).getX2(),(int)shots.get(i).getY2());
 			}
+			g2d.drawRect((int)pointer.x, (int)pointer.y, 1, 1);
 			
 			
 			ship.draw(g2d);

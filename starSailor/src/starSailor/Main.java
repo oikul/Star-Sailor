@@ -56,6 +56,25 @@ public class Main extends JFrame {
 		
 	}
 
+	public static double getAngle(Point2D.Double p1,Point2D.Double p2){
+		
+		double xdif = (p2.getX() - p1.getX());
+		double ydif = (p2.getY() - p1.getY());
+		double angle = 0;		// in radians
+		
+		angle = -Math.atan(ydif/xdif);
+		if(xdif<0){
+			if(ydif<0){
+				angle += Math.PI;
+			} else {
+				angle -= +Math.PI;
+			}
+		}
+		
+		return angle;
+		
+	}
+	
 	public static void main(String[] args) {
 		Main main = new Main();
 		main.run();
@@ -126,7 +145,7 @@ public class Main extends JFrame {
 				break;
 			case SPACEBATTLE:
 				if(input.isMouseDown(MouseEvent.BUTTON1)){
-					sb.shoot(input.getMousePositionRelativeToComponent());
+					sb.shoot(input.getMousePositionOnScreen());
 					input.artificialMouseReleased(MouseEvent.BUTTON1);
 				}
 				sb.update();

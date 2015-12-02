@@ -55,17 +55,16 @@ public class Player {
 	}
 	
 	public void calculateRotation(Point mouseCoords){
-			double xDif = Main.width/2 - mouseCoords.x;
-			double yDif = Main.height/2 - mouseCoords.y;
-			rotation = Math.atan(yDif/xDif);
-			if(xDif < 0){
-				rotation += Math.PI;
-			}
+			
+				rotation = -Main.getAngle(new Point2D.Double(Main.width/2, Main.height/2),new Point2D.Double(mouseCoords.x,mouseCoords.y));
 	}
 
 	public void update(Point p){
 		long newTime = System.currentTimeMillis();
-		if(newTime >= time + 200){
+		if(isShip){
+			calculateRotation(p);
+		}
+		if(newTime >= time + 300){
 			if(isMoving){
 				if(isShip){
 					if(shipIndex < 2){
@@ -73,7 +72,6 @@ public class Player {
 					}else{
 						shipIndex = 1;
 					}
-					calculateRotation(p);
 				}else{
 					if(jIndex == 0){
 						jIndex = 2;
@@ -91,7 +89,6 @@ public class Player {
 					}else{
 						shipIndex = 3;
 					}
-					calculateRotation(p);
 				}else{
 					jIndex = 0;
 					lastRotation = rotation;
@@ -106,7 +103,10 @@ public class Player {
 		AffineTransform saveAt;
 		AffineTransform at;
 		switch (Main.state){
-		case SURFACE:
+		case SHIP:
+			g2d.drawImage(playerImages[iIndex][jIndex], Main.width/2 - 8, Main.height /2 - 8, null);
+			break;
+		default:
 			if(isShip){
 				at = new AffineTransform();
 				saveAt = g2d.getTransform();
@@ -119,22 +119,11 @@ public class Player {
 				g2d.drawImage(playerImages[iIndex][jIndex], Main.width/2 - 8, Main.height /2 - 8, null);
 				at = new AffineTransform();
 				saveAt = g2d.getTransform();
-				at.rotate(lastRotation, lastLocation.x, lastLocation.y);
+				at.rotate(lastRotation, lastLocation.x+16, lastLocation.y+16);
 				g2d.setTransform(at);
 				g2d.drawImage(shipImages[0],(int) lastLocation.x,(int) lastLocation.y, null);
 				g2d.setTransform(saveAt);
 			}
-			break;
-		case SHIP:
-			g2d.drawImage(playerImages[iIndex][jIndex], Main.width/2 - 8, Main.height /2 - 8, null);
-			break;
-		default:
-			at = new AffineTransform();
-			saveAt = g2d.getTransform();
-			at.rotate(rotation, Main.width/2, Main.height/2);
-			g2d.setTransform(at);
-			g2d.drawImage(shipImages[shipIndex], Main.width/2 - 16, Main.height /2 - 16, null);
-			g2d.setTransform(saveAt);
 			break;
 		}
 
