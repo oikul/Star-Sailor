@@ -9,18 +9,17 @@ import java.awt.geom.Point2D;
 
 public class Player {
 	
-	private Image[][] playerImages, shipImages;
-	private int currentIFrame = 0, currentJFrame = 3;
+	private Image[][] playerImages;
+	private Image[] shipImages;
+	private int iIndex = 0, jIndex = 0, shipIndex = 0;
 	private static Point2D.Double lastLocation;
-	private int lastDir;
-	private static boolean isShip = true;
-	private static boolean isMoving = false;
+	private static boolean isShip = true, isMoving = false;
 	private long time;
-	private double rotation;
+	private double rotation, lastRotation;
 
 	public Player(String playerPath, String shipPath){
-		playerImages = ResourceLoader.getSprites(playerPath, 32);
-		shipImages = ResourceLoader.getSprites(shipPath, 32);
+		playerImages = ResourceLoader.getPlayerSprites(playerPath, 16, 16);
+		shipImages = ResourceLoader.getBlockSprites(shipPath, 32, 32);
 		time = System.currentTimeMillis();
 	}
 	
@@ -35,13 +34,17 @@ public class Player {
 	public void setMoving(){
 		isMoving = true;
 	}
+	
+	public void setDirection(int dir){
+		iIndex = dir;
+	}
 
 	public void stop(){
 		isMoving = false;
-		if(isShip && currentIFrame != 4){
-			currentIFrame = 3;
-		}else if(!isShip && !isMoving){
-			currentIFrame = 0;
+		if(isShip && shipIndex != 3 && shipIndex != 4){
+			shipIndex = 3;
+		}else{
+			jIndex = 0;
 		}
 	}
 	
@@ -60,36 +63,39 @@ public class Player {
 			}
 	}
 
-	public void update(){
+	public void update(Point p){
 		long newTime = System.currentTimeMillis();
 		if(newTime >= time + 300){
-			switch (currentIFrame){
-			case 0:
-				if(isMoving){currentIFrame = 1;}
-				else{currentIFrame = 0;}
-				break;
-			case 1:
-				currentIFrame = 2;
-				break;
-			case 2:
-				currentIFrame = 1;
-				break;
-			case 3:
-				if(isMoving){
-					currentIFrame = 1;
+			if(isMoving){
+				if(isShip){
+					if(shipIndex < 2){
+						shipIndex ++;
+					}else{
+						shipIndex = 1;
+					}
+					calculateRotation(p);
+				}else{
+					if(jIndex == 0){
+						jIndex = 2;
+					}else if(jIndex == 1){
+						jIndex = 0;
+					}else if(jIndex == 2){
+						jIndex = 1;
+					}
+					lastRotation = rotation;
 				}
-				else{
-					currentIFrame = 4;
+			}else{
+				if(isShip){
+					if(shipIndex < 4){
+						shipIndex ++;
+					}else{
+						shipIndex = 3;
+					}
+					calculateRotation(p);
+				}else{
+					jIndex = 0;
+					lastRotation = rotation;
 				}
-				break;
-			case 4:
-				if(isMoving){
-					currentIFrame = 2;
-				}
-				else{
-					currentIFrame = 3;
-				}
-				break;
 			}
 			time = newTime;
 		}
@@ -102,35 +108,32 @@ public class Player {
 		switch (Main.state){
 		case SURFACE:
 			if(isShip){
-				saveAt = new AffineTransform();
 				at = new AffineTransform();
 				saveAt = g2d.getTransform();
 				at.rotate(rotation, Main.width/2, Main.height/2);
 				g2d.setTransform(at);
-				g2d.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
+				g2d.drawImage(shipImages[shipIndex], Main.width/2 - 16, Main.height /2 - 16, null);
 				g2d.setTransform(saveAt);
 				lastLocation = new Point2D.Double(Main.width/2 - 16, Main.height /2 - 16);
 			}else{
-				if(currentIFrame > 2){
-					currentIFrame = 1;
-				}
-				g2d.drawImage(playerImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
-				g2d.drawImage(shipImages[0][lastDir],(int) lastLocation.x,(int) lastLocation.y, null);
+				g2d.drawImage(playerImages[iIndex][jIndex], Main.width/2 - 8, Main.height /2 - 8, null);
+				at = new AffineTransform();
+				saveAt = g2d.getTransform();
+				at.rotate(lastRotation, lastLocation.x, lastLocation.y);
+				g2d.setTransform(at);
+				g2d.drawImage(shipImages[0],(int) lastLocation.x,(int) lastLocation.y, null);
+				g2d.setTransform(saveAt);
 			}
 			break;
 		case SHIP:
-			if(currentIFrame > 2){
-				currentIFrame = 0;
-			}
-			g2d.drawImage(playerImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
+			g2d.drawImage(playerImages[iIndex][jIndex], Main.width/2 - 8, Main.height /2 - 8, null);
 			break;
 		default:
-			saveAt = new AffineTransform();
 			at = new AffineTransform();
 			saveAt = g2d.getTransform();
 			at.rotate(rotation, Main.width/2, Main.height/2);
 			g2d.setTransform(at);
-			g2d.drawImage(shipImages[currentIFrame][currentJFrame], Main.width/2 - 16, Main.height /2 - 16, null);
+			g2d.drawImage(shipImages[shipIndex], Main.width/2 - 16, Main.height /2 - 16, null);
 			g2d.setTransform(saveAt);
 			break;
 		}

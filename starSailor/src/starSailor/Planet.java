@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 
 public class Planet {
 
@@ -13,15 +14,15 @@ public class Planet {
 	private NoiseGenerator generator;
 	private double[][] noise;
 	private Block[][] terrain, decoration;
-	private Rectangle[][] blockRects;
+	private Rectangle2D.Double[][] blockRects;
 	private Planet[] moons;
 	private Biome biome;
 	private Color color;
 	private boolean selected = false, made = false, isMoon;
-	private Rectangle playerRectUp = new Rectangle(Main.width/2 - 14, Main.height/2 - 16, 28, 2);
-	private Rectangle playerRectLeft = new Rectangle(Main.width/2 - 16, Main.height/2 - 14, 2, 28);
-	private Rectangle playerRectDown = new Rectangle(Main.width/2 - 14, Main.height/2 + 14, 28, 2);
-	private Rectangle playerRectRight = new Rectangle(Main.width/2 + 14, Main.height/2 - 14, 2, 28);
+	private Rectangle playerRectUp = new Rectangle(Main.width/2 - 3, Main.height/2 - 1, 6, 2);
+	private Rectangle playerRectLeft = new Rectangle(Main.width/2 - 5, Main.height/2 + 1, 2, 4);
+	private Rectangle playerRectDown = new Rectangle(Main.width/2 - 3, Main.height/2 + 5, 6, 2);
+	private Rectangle playerRectRight = new Rectangle(Main.width/2 + 3, Main.height/2 + 1, 2, 4);
 
 	public Planet(int size, double distance, double angle, boolean isMoon){
 		this.size = size;
@@ -38,16 +39,16 @@ public class Planet {
 		calculateBiome();
 		terrain = biome.buildTerrain(noise);
 		decoration = biome.buildDecoration(noise);
-		blockRects = new Rectangle[terrain.length][terrain[0].length];
+		blockRects = new Rectangle2D.Double[terrain.length][terrain[0].length];
 		for(int i = 0; i < terrain.length; i++){
 			for(int j = 0; j < terrain.length; j++){
 				if(decoration[i][j] != null){
 					if(decoration[i][j].isSolid()){
-						blockRects[i][j] = new Rectangle(i*16, j*16, 16, 16);
+						blockRects[i][j] = new Rectangle2D.Double(i*16, j*16, 16, 16);
 					}
 				}
 				if(terrain[i][j].isSolid()){
-					blockRects[i][j] = new Rectangle(i*16, j*16, 16, 16);
+					blockRects[i][j] = new Rectangle2D.Double(i*16, j*16, 16, 16);
 				}
 			}
 		}
@@ -130,11 +131,11 @@ public class Planet {
 		return size;
 	}
 	
-	private void translateBlockRects(int x, int y){
+	private void translateBlockRects(double x, double y){
 		for(int i = 0; i < blockRects.length; i++){
 			for(int j = 0; j < blockRects.length; j++){
 				if(blockRects[i][j] != null){
-					blockRects[i][j].translate(x, y);
+					blockRects[i][j].setRect(blockRects[i][j].x + x, blockRects[i][j].y + y, blockRects[i][j].width, blockRects[i][j].height);;
 				}
 			}
 		}
@@ -197,24 +198,68 @@ public class Planet {
 	}
 
 	public void panUR(){
-		xDif += 1/Main.root2;
-		yDif -= 1/Main.root2;
-		Player.pan((1/-Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+		if(!Player.isShip()){
+			if(!collisionUp() && !collisionRight()){
+				xDif += 1/Main.root2;
+				yDif -= 1/Main.root2;
+				Player.pan((1/-Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+				translateBlockRects(-1/Main.root2, 1/Main.root2);
+			}
+		}else{
+			xDif += 1/Main.root2;
+			yDif -= 1/Main.root2;
+			Player.pan((1/-Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+			translateBlockRects(-1/Main.root2, 1/Main.root2);
+		}
+		
 	}
+	
 	public void panUL(){
-		xDif -= 1/Main.root2;
-		yDif -= 1/Main.root2;
-		Player.pan((1/Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+		if(!Player.isShip()){
+			if(!collisionUp() && !collisionLeft()){
+				xDif -= 1/Main.root2;
+				yDif -= 1/Main.root2;
+				Player.pan((1/Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+				translateBlockRects(1/Main.root2, 1/Main.root2);
+			}
+		}else{
+			xDif -= 1/Main.root2;
+			yDif -= 1/Main.root2;
+			Player.pan((1/Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+			translateBlockRects(1/Main.root2, 1/Main.root2);
+		}
 	}
+	
 	public void panDR(){
-		xDif += 1/Main.root2;
-		yDif += 1/Main.root2;
-		Player.pan((1/-Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+		if(!Player.isShip()){
+			if(!collisionDown() && !collisionRight()){
+				xDif += 1/Main.root2;
+				yDif += 1/Main.root2;
+				Player.pan((1/-Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+				translateBlockRects(-1/Main.root2, -1/Main.root2);
+			}
+		}else{
+			xDif += 1/Main.root2;
+			yDif += 1/Main.root2;
+			Player.pan((1/-Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+			translateBlockRects(-1/Main.root2, -1/Main.root2);
+		}
 	}
+	
 	public void panDL(){
-		xDif -= 1/Main.root2;
-		yDif += 1/Main.root2;
-		Player.pan((1/Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+		if(!Player.isShip()){
+			if(!collisionDown() && !collisionLeft()){
+				xDif -= 1/Main.root2;
+				yDif += 1/Main.root2;
+				Player.pan((1/Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+				translateBlockRects(1/Main.root2, -1/Main.root2);
+			}
+		}else{
+			xDif -= 1/Main.root2;
+			yDif += 1/Main.root2;
+			Player.pan((1/Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+			translateBlockRects(1/Main.root2, 1/-Main.root2);
+		}
 	}
 
 	private void incrementAngle(){
@@ -333,7 +378,6 @@ public class Planet {
 				if(blockRects[i][j] != null){
 					if(playerRectUp.intersects(blockRects[i][j])){
 						collided = true;
-						System.out.println("collided");
 					}
 				}
 			}
@@ -348,7 +392,6 @@ public class Planet {
 				if(blockRects[i][j] != null){
 					if(playerRectLeft.intersects(blockRects[i][j])){
 						collided = true;
-						System.out.println("collided");
 					}
 				}
 			}
@@ -363,7 +406,6 @@ public class Planet {
 				if(blockRects[i][j] != null){
 					if(playerRectDown.intersects(blockRects[i][j])){
 						collided = true;
-						System.out.println("collided");
 					}
 				}
 			}
@@ -378,7 +420,6 @@ public class Planet {
 				if(blockRects[i][j] != null){
 					if(playerRectRight.intersects(blockRects[i][j])){
 						collided = true;
-						System.out.println("collided");
 					}
 				}
 			}
@@ -463,19 +504,6 @@ public class Planet {
 				}
 			}
 			g2d.setTransform(saveAt);
-			for(int i = 0; i < noise.length; i++){
-				for(int j = 0; j < noise[0].length; j++){
-					if(blockRects[i][j] != null){
-						g2d.setColor(Color.red);
-						g2d.drawRect(blockRects[i][j].x + 1, blockRects[i][j].y + 1, 14, 14);
-					}
-				}
-			}
-			g2d.setColor(Color.red);
-			g2d.draw(playerRectUp);
-			g2d.draw(playerRectLeft);
-			g2d.draw(playerRectDown);
-			g2d.draw(playerRectRight);
 			break;
 		default:
 			break;

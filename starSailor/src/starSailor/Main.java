@@ -96,7 +96,7 @@ public class Main extends JFrame {
 		input = new InputHandler(this);
 		Biome.createBiomes();
 		galaxy = new Galaxy(4096);
-		player = new Player("character/charSprites.png", "spaceship/shipSprites.png");
+		player = new Player("character/character_sprites.png", "spaceship/shipSprites.png");
 		ship = new ShipInterior();
 		sb = new SpaceBattle();
 		time = System.currentTimeMillis();
@@ -136,31 +136,39 @@ public class Main extends JFrame {
 			}
 			if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_A)){
 				galaxy.panUL();
+				player.setMoving();
 				ship.panUL();
 			}else if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_D)){
 				galaxy.panUR();
+				player.setMoving();
 				ship.panUR();
 			}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_A)){
 				galaxy.panDL();
+				player.setMoving();
 				ship.panDL();
 			}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_D)){
 				galaxy.panDR();
+				player.setMoving();
 				ship.panDR();
 			}else if(input.isKeyDown(KeyEvent.VK_W)){
 				galaxy.panUp();
 				player.setMoving();
+				player.setDirection(1);
 				ship.panUp();
 			}else if(input.isKeyDown(KeyEvent.VK_A)){
 				galaxy.panLeft();
 				player.setMoving();
+				player.setDirection(3);
 				ship.panLeft();
 			}else if(input.isKeyDown(KeyEvent.VK_S)){
 				galaxy.panDown();
 				player.setMoving();
+				player.setDirection(0);
 				ship.panDown();
 			}else if(input.isKeyDown(KeyEvent.VK_D)){
 				galaxy.panRight();
 				player.setMoving();
+				player.setDirection(2);
 				ship.panRight();
 			}else{
 				player.stop();
@@ -186,8 +194,7 @@ public class Main extends JFrame {
 			if(input.isKeyDown(KeyEvent.VK_F)){
 				state = State.SPACEBATTLE;
 			}
-			player.calculateRotation(input.getMousePositionOnScreen());
-			player.update();
+			player.update(input.getMousePositionOnScreen());
 			galaxy.update();
 			time = newTime;
 			if(input.isKeyDown(KeyEvent.VK_ESCAPE)){

@@ -7,7 +7,7 @@ public class ShipInterior {
 	
 	private Block[][] ship;
 	private Point[][] shipPoints;
-	private int xDif = 16*15, yDif = 16;
+	private double xDif = 16*15, yDif = 16;
 	
 	public ShipInterior(){
 		ship = new Block[64][64];
@@ -140,26 +140,29 @@ public class ShipInterior {
 	
 	public void panUR(){
 		if(Main.state == Main.State.SHIP){
-			xDif += 1/Main.root2;
-			yDif -= 1/Main.root2;
+			xDif -= 1/Main.root2;
+			yDif += 1/Main.root2;
 		}
 	}
+	
 	public void panUL(){
 		if(Main.state == Main.State.SHIP){
-			xDif -= 1/Main.root2;
-			yDif -= 1/Main.root2;
-		}
-	}
-	public void panDR(){
-		if(Main.state == Main.State.SHIP){
 			xDif += 1/Main.root2;
 			yDif += 1/Main.root2;
 		}
 	}
-	public void panDL(){
+	
+	public void panDR(){
 		if(Main.state == Main.State.SHIP){
 			xDif -= 1/Main.root2;
-			yDif += 1/Main.root2;
+			yDif -= 1/Main.root2;
+		}
+	}
+	
+	public void panDL(){
+		if(Main.state == Main.State.SHIP){
+			xDif += 1/Main.root2;
+			yDif -= 1/Main.root2;
 		}
 	}
 	
@@ -167,7 +170,7 @@ public class ShipInterior {
 		for(int i = 0; i < ship.length; i++){
 			for(int j = 0; j < ship[0].length; j++){
 				if(ship[i][j] != null){
-					ship[i][j].draw(g, shipPoints[i][j].x + xDif, shipPoints[i][j].y + yDif);
+					ship[i][j].draw(g, shipPoints[i][j].x + (int) xDif, shipPoints[i][j].y + (int) yDif);
 				}
 			}
 		}
