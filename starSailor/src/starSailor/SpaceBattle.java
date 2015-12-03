@@ -3,6 +3,7 @@ package starSailor;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
@@ -16,8 +17,10 @@ public class SpaceBattle {
 	private EnemyShip ship;
 	private Point2D.Double enemyLocation;
 	private Point2D.Double pointer;
+	private Image background;
 	
 	public SpaceBattle(){
+		background = ResourceLoader.getImage("background/planet1.png");
 		trajectories = new ArrayList<Point2D.Double>();
 		shots = new ArrayList<Line2D.Double>();
 		enemyLocation = new Point2D.Double(200,200);
@@ -53,12 +56,13 @@ public class SpaceBattle {
 		
 		
 		
-		
+		ship.update();
 	}
 	
 	public void draw(Graphics g){
+		Graphics2D g2d = (Graphics2D) g;
 		if(Main.state == Main.State.SPACEBATTLE){
-			Graphics2D g2d = (Graphics2D) g;
+		g2d.drawImage(background, 0, 0, Main.width, Main.height, null);
 			g2d.setColor(Color.green);
 			for(int i = 0; i< shots.size(); i++){
 				g2d.drawLine((int)shots.get(i).getX1(),(int)shots.get(i).getY1(),(int)shots.get(i).getX2(),(int)shots.get(i).getY2());

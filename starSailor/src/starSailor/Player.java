@@ -56,7 +56,7 @@ public class Player {
 	
 	public void calculateRotation(Point mouseCoords){
 			
-				rotation = -Main.getAngle(new Point2D.Double(Main.width/2, Main.height/2),new Point2D.Double(mouseCoords.x,mouseCoords.y));
+				rotation = Main.getAngle(new Point2D.Double(Main.width/2, Main.height/2),new Point2D.Double(mouseCoords.x,mouseCoords.y));
 	}
 
 	public void update(Point p){

@@ -71,7 +71,7 @@ public class Main extends JFrame {
 			}
 		}
 		
-		return angle;
+		return -angle;
 		
 	}
 	
@@ -81,6 +81,7 @@ public class Main extends JFrame {
 	}
 	
 	private void run(){
+		setResizable(false);
 		initialise();
 		while(running){
 			long beforeTime = System.currentTimeMillis();
@@ -232,8 +233,8 @@ public class Main extends JFrame {
 		if(state == State.SHIP){
 			ship.draw(offGraphics);
 		}
-		player.draw(offGraphics);
 		sb.draw(offGraphics);
+		player.draw(offGraphics);
 		g2d.drawImage(offImage, 0, 0, width, height, null);
 	}
 
