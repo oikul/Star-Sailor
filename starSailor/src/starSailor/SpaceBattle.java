@@ -14,17 +14,19 @@ public class SpaceBattle {
 	
 	private ArrayList<Point2D.Double> trajectories;
 	private ArrayList<Line2D.Double> shots;
-	private EnemyShip ship;
+	private ArrayList<EnemyShip> ships;
 	private Point2D.Double enemyLocation;
 	private Point2D.Double pointer;
 	private Image background;
 	
 	public SpaceBattle(){
+		ships = new ArrayList<EnemyShip>();
 		background = ResourceLoader.getImage("background/planet1.png");
 		trajectories = new ArrayList<Point2D.Double>();
 		shots = new ArrayList<Line2D.Double>();
 		enemyLocation = new Point2D.Double(200,200);
-		ship = new EnemyShip((int)enemyLocation.x,(int)enemyLocation.y,EnemyShip.shipClass.CARRIER);
+		ships.add(new EnemyShip((int)enemyLocation.x,(int)enemyLocation.y,EnemyShip.shipClass.CARRIER));
+		ships.add(new EnemyShip((int)enemyLocation.x+300,(int)enemyLocation.y,EnemyShip.shipClass.CARRIER));
 		pointer = new Point2D.Double(0, 0);
 	}
 	
@@ -41,9 +43,8 @@ public class SpaceBattle {
 				angle -= +Math.PI;
 			}
 		}
-		accuracy = (Main.random.nextGaussian()*accuracy);
-		System.out.println(accuracy);
-		angle += accuracy;
+		
+		angle += (Main.random.nextGaussian()*accuracy);
 		
 		double xgain = 0;
 		double ygain = 0;
@@ -100,10 +101,9 @@ public class SpaceBattle {
 			
 		}
 		
-		
-		
-		
-		ship.update();
+		for (EnemyShip enemyShip : ships) {
+			enemyShip.update();
+		}
 	}
 	
 	public void draw(Graphics g){
@@ -117,11 +117,14 @@ public class SpaceBattle {
 			g2d.drawRect((int)pointer.x, (int)pointer.y, 1, 1);
 			
 			
-			ship.draw(g2d);
+			for (EnemyShip enemyShip : ships) {
+				enemyShip.draw(g2d);
+			}
 			
 		}else{
 			shots.clear();
 			trajectories.clear();
+			ships.clear();
 		}
 	}
 

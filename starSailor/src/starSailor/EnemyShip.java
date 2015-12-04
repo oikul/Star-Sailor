@@ -1,9 +1,11 @@
 package starSailor;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
@@ -15,7 +17,7 @@ public class EnemyShip{
 	private ArrayList<Point2D.Double> trajectories;
 	private ArrayList<Line2D.Double> shots;
 	private int health,speed,currentFrame;
-	private Point2D.Double location;
+	private Rectangle location;
 	private fightingStyle fightStyle;
 	private double rotation,time,shootTime;
 	private Image[] shipImages;
@@ -31,19 +33,21 @@ public class EnemyShip{
 	public EnemyShip(int x,int y,shipClass ship){
 		
 		time = System.currentTimeMillis();
-		location = new Point2D.Double(x,y);
-		getAngle();
 		if(ship == shipClass.FIGHTER){
 			this.health = 100;
 			shipImages = ResourceLoader.getBlockSprites("spaceship/enemyCarrierSprite.png", 32, 32);
+			location = new Rectangle(x,y,16,16);
 		}else if(ship == shipClass.CARRIER){
 			this.health = 500;
 			shipImages = ResourceLoader.getBlockSprites("spaceship/enemyCarrierSprite.png", 32, 32);
+			location = new Rectangle(x,y,32,32);
 		}else if(ship == shipClass.COMMAND){
 			this.health = 2000;
 			shipImages = ResourceLoader.getBlockSprites("spaceship/enemyCarrierSprite.png", 32, 32);
+			location = new Rectangle(x,y,32,128);
 		}
 
+		getAngle();
 		int num = Main.random.nextInt(3);
 		switch (num){
 		case 0:
@@ -65,8 +69,8 @@ public class EnemyShip{
 		shootTime = System.currentTimeMillis()+3000;
 	}
 	
-	public Point2D.Double getLocation(){
-		return location;
+	public Point getLocation(){
+		return location.getLocation();
 	}
 	
 	private boolean isAlive(){
@@ -79,7 +83,8 @@ public class EnemyShip{
 	}
 	
 	public void getAngle(){
-		rotation = SpaceBattle.getAngle(location, new Point2D.Double(Main.width/2,Main.height/2));
+		rotation = SpaceBattle.getAngle(new Point2D.Double(location.getX()+(location.getWidth()/2),location.getY()+(location.getHeight()/2)), 
+										new Point2D.Double(Main.width/2,Main.height/2));
 	}
 
 	public void takeDamage(int damage){
@@ -105,14 +110,17 @@ public class EnemyShip{
 			Point2D.Double temp = new Point2D.Double();
 			switch (fightStyle){
 			case DEFENSIVE:
-				temp.setLocation(SpaceBattle.getPoint(location,new Point2D.Double(Main.width/2-16,Main.height/2-16),speed,0));
-				location.setLocation(location.x +temp.x,location.y + temp.y);
+				temp.setLocation(SpaceBattle.getPoint(new Point2D.Double(location.getX()+(location.getWidth()/2),location.getY()+(location.getHeight()/2)),
+						new Point2D.Double(Main.width/2-16,Main.height/2-16),speed,0));
+				location.setLocation((int)(location.getX() + temp.x),(int)(location.getY() + temp.y));
 			case AGGRESSIVE:
-				temp.setLocation(SpaceBattle.getPoint(location,new Point2D.Double(Main.width/2-16,Main.height/2-16),speed,0));
-				location.setLocation(location.x +temp.x,location.y + temp.y);
+				temp.setLocation(SpaceBattle.getPoint(new Point2D.Double(location.getX()+(location.getWidth()/2),location.getY()+(location.getHeight()/2)),
+						new Point2D.Double(Main.width/2-16,Main.height/2-16),speed,0));
+				location.setLocation((int)(location.getX() + temp.x),(int)(location.getY() + temp.y));
 			case TACTICAL:
-				temp.setLocation(SpaceBattle.getPoint(location,new Point2D.Double(Main.width/2-16,Main.height/2-16),speed,0));
-				location.setLocation(location.x +temp.x,location.y + temp.y);
+				temp.setLocation(SpaceBattle.getPoint(new Point2D.Double(location.getX()+(location.getWidth()/2),location.getY()+(location.getHeight()/2)),
+						new Point2D.Double(Main.width/2-16,Main.height/2-16),speed,0));
+				location.setLocation((int)(location.getX() + temp.x),(int)(location.getY() + temp.y));
 			}
 			if(currentFrame == 1){
 				currentFrame = 0;
@@ -150,7 +158,7 @@ public class EnemyShip{
 		saveAt = g2d.getTransform();
 		at.rotate(rotation, location.x+16, location.y+16);
 		g2d.setTransform(at);
-		g2d.drawImage(shipImages[currentFrame],(int)location.x,(int)location.y, null);
+		g2d.drawImage(shipImages[currentFrame],(int)(location.getX()+(location.getWidth()/2)),(int)(location.getY()+(location.getHeight()/2)), null);
 		g2d.setTransform(saveAt);
 		
 		g2d.setColor(Color.red);
