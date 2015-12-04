@@ -128,7 +128,7 @@ public class Main extends JFrame {
 			switch (state){
 			case SURFACE:
 				if(input.isKeyDown(KeyEvent.VK_Q)){
-					if(Player.isShip()){
+					if(Player.isShip() && Player.canLeave){
 						Player.setIsShip(false);
 					}else{
 						Player.setIsShip(true);
@@ -138,7 +138,7 @@ public class Main extends JFrame {
 				break;
 			case MOON:
 				if(input.isKeyDown(KeyEvent.VK_Q)){
-					if(Player.isShip()){
+					if(Player.isShip() && Player.canLeave){
 						Player.setIsShip(false);
 					}else{
 						Player.setIsShip(true);
@@ -155,10 +155,13 @@ public class Main extends JFrame {
 				Block.engine_fire.update();
 				break;
 			case SPACEBATTLE:
-				if(input.isKeyDown(KeyEvent.VK_H)){
+				if(input.isMouseDown(MouseEvent.BUTTON1)){
 					sb.shoot(input.getMousePositionRelativeToComponent());
 				}
 				sb.update();
+				break;
+			case SPACESTATION:
+				
 				break;
 			default:
 				break;

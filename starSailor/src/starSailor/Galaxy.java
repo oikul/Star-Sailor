@@ -18,7 +18,7 @@ public class Galaxy {
 	public Galaxy(int numOfStars){
 		galaxy = new Star[numOfStars];
 		for(int i = 0; i < numOfStars; i++){
-			galaxy[i] = new Star(Main.random.nextDouble() * 32768, Main.random.nextDouble() * 360, Main.random.nextInt(40) + 30);
+			galaxy[i] = new Star(Main.random.nextDouble() * 16384, Main.random.nextDouble() * 360, Main.random.nextInt(40) + 30);
 		}
 		galaxy[selectedStar].setSelected(true);
 	}

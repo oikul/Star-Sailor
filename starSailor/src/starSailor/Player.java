@@ -14,6 +14,7 @@ public class Player {
 	private int iIndex = 0, jIndex = 0, shipIndex = 0;
 	private static Point2D.Double lastLocation;
 	private static boolean isShip = true, isMoving = false;
+	public static boolean canLeave = true;
 	private long time;
 	private double rotation, lastRotation;
 

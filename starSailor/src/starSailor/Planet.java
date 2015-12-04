@@ -35,7 +35,7 @@ public class Planet {
 		this.isMoon = isMoon;
 		if(!isMoon){
 			numOfMoons = Main.random.nextInt(5);
-			numOfStations = 2;
+			numOfStations = Main.random.nextInt(2) + 1;
 		}
 		generator = new NoiseGenerator(size * 10, size * 10, 4, 5);
 		noise = generator.getNoise();
@@ -153,6 +153,22 @@ public class Planet {
 					moons[i].setSelected(false);
 				}
 			}
+			for(int i = 1; i < stations.length; i++){
+				if(stations[i].getRect().intersects(new Rectangle((int) (point.getX()), (int) (point.getY()), 8, 8))){
+					selectedStation = i;
+					stations[i].setSelected(true);
+					xDif = 0;
+					yDif = 0;
+					if(selectedMoon > -1){
+						moons[selectedMoon].setSelected(false);
+					}
+					selectedMoon = -2;
+				}else{
+					selectedStation = 0;
+					stations[i].setSelected(false);
+				}
+			}
+			
 			if(new Rectangle(Main.width/2 - size/5, Main.height/2 - size/5, size * 10, size * 10).contains(point.getX(), point.getY())){
 				selectedMoon = -1;
 				xDif = 0;
@@ -173,6 +189,9 @@ public class Planet {
 				yDif --;
 				Player.pan(0, 1 * zoomSurface);
 				translateBlockRects(0, 1);
+				if(!collisionUp()){
+					Player.canLeave = true;
+				}
 			}
 		}else if(Main.state == Main.State.MOON){
 			if(!isMoon){
@@ -188,6 +207,9 @@ public class Planet {
 					yDif --;
 					Player.pan(0, 1 * zoomSurface);
 					translateBlockRects(0, 1);
+					if(!collisionUp()){
+						Player.canLeave = true;
+					}
 				}
 			}
 		}
@@ -205,6 +227,9 @@ public class Planet {
 				xDif --;
 				Player.pan(1 * zoomSurface, 0);
 				translateBlockRects(1, 0);
+				if(!collisionLeft()){
+					Player.canLeave = true;
+				}
 			}
 		}else if(Main.state == Main.State.MOON){
 			if(!isMoon){
@@ -220,6 +245,9 @@ public class Planet {
 					xDif --;
 					Player.pan(1 * zoomSurface, 0);
 					translateBlockRects(1, 0);
+					if(!collisionLeft()){
+						Player.canLeave = true;
+					}
 				}
 			}
 		}
@@ -237,6 +265,9 @@ public class Planet {
 				yDif ++;
 				Player.pan(0, -1 * zoomSurface);
 				translateBlockRects(0, -1);
+				if(!collisionDown()){
+					Player.canLeave = true;
+				}
 			}
 		}else if(Main.state == Main.State.MOON){
 			if(!isMoon){
@@ -252,6 +283,9 @@ public class Planet {
 					yDif ++;
 					Player.pan(0, -1 * zoomSurface);
 					translateBlockRects(0, -1);
+					if(!collisionDown()){
+						Player.canLeave = true;
+					}
 				}
 			}
 		}
@@ -269,6 +303,9 @@ public class Planet {
 				xDif ++;;
 				Player.pan(-1 * zoomSurface, 0);
 				translateBlockRects(-1, 0);
+				if(!collisionRight()){
+					Player.canLeave = true;
+				}
 			}
 		}else if(Main.state == Main.State.MOON){
 			if(!isMoon){
@@ -284,6 +321,9 @@ public class Planet {
 					xDif ++;;
 					Player.pan(-1 * zoomSurface, 0);
 					translateBlockRects(-1, 0);
+					if(!collisionRight()){
+						Player.canLeave = true;
+					}
 				}
 			}
 		}
@@ -307,6 +347,9 @@ public class Planet {
 				yDif -= 1/Main.root2;
 				Player.pan((1/-Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
 				translateBlockRects(-1/Main.root2, 1/Main.root2);
+				if(!collisionUp() && !collisionRight()){
+					Player.canLeave = true;
+				}
 			}
 		}else if(Main.state == Main.State.MOON){
 			if(!isMoon){
@@ -328,6 +371,9 @@ public class Planet {
 					yDif -= 1/Main.root2;
 					Player.pan((1/-Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
 					translateBlockRects(-1/Main.root2, 1/Main.root2);
+					if(!collisionUp() && !collisionRight()){
+						Player.canLeave = true;
+					}
 				}
 			}
 		}
@@ -352,6 +398,9 @@ public class Planet {
 				yDif -= 1/Main.root2;
 				Player.pan((1/Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
 				translateBlockRects(1/Main.root2, 1/Main.root2);
+				if(!collisionUp() && !collisionLeft()){
+					Player.canLeave = true;
+				}
 			}
 		}else if(Main.state == Main.State.MOON){
 			if(!isMoon){
@@ -373,6 +422,9 @@ public class Planet {
 					yDif -= 1/Main.root2;
 					Player.pan((1/Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
 					translateBlockRects(1/Main.root2, 1/Main.root2);
+					if(!collisionUp() && !collisionLeft()){
+						Player.canLeave = true;
+					}
 				}
 			}
 		}
@@ -396,6 +448,9 @@ public class Planet {
 				yDif += 1/Main.root2;
 				Player.pan((1/-Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
 				translateBlockRects(-1/Main.root2, -1/Main.root2);
+				if(!collisionDown() && !collisionRight()){
+					Player.canLeave = true;
+				}
 			}
 		}else if(Main.state == Main.State.MOON){
 			if(!isMoon){
@@ -417,6 +472,9 @@ public class Planet {
 					yDif += 1/Main.root2;
 					Player.pan((1/-Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
 					translateBlockRects(-1/Main.root2, -1/Main.root2);
+					if(!collisionDown() && !collisionRight()){
+						Player.canLeave = true;
+					}
 				}
 			}
 		}
@@ -440,6 +498,9 @@ public class Planet {
 				yDif += 1/Main.root2;
 				Player.pan((1/Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
 				translateBlockRects(1/Main.root2, 1/-Main.root2);
+				if(!collisionDown() && !collisionLeft()){
+					Player.canLeave = true;
+				}
 			}
 		}else if(Main.state == Main.State.MOON){
 			if(!isMoon){
@@ -461,6 +522,9 @@ public class Planet {
 					yDif += 1/Main.root2;
 					Player.pan((1/Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
 					translateBlockRects(1/Main.root2, 1/-Main.root2);
+					if(!collisionDown() && !collisionLeft()){
+						Player.canLeave = true;
+					}
 				}
 			}
 		}
@@ -512,7 +576,9 @@ public class Planet {
 			xDif = 0;
 			yDif = 0;
 		}else{
-			if(selectedMoon >= 0){
+			if(selectedStation > 0){
+				Main.state = Main.State.SPACESTATION;
+			}else if(selectedMoon >= 0){
 				Main.state = Main.State.MOON;
 			}else{
 				Main.state = Main.State.SURFACE;
@@ -541,7 +607,7 @@ public class Planet {
 			}else{
 				zoomOut();
 			}
-		}else if(Main.state == Main.State.SURFACE || Main.state == Main.State.MOON){
+		}else if(Main.state == Main.State.SURFACE || Main.state == Main.State.MOON || Main.state == Main.State.SPACESTATION){
 			if(!in){
 				if(Player.isShip()){
 					Main.state = Main.State.PLANETRY;
@@ -554,6 +620,8 @@ public class Planet {
 		double x;
 		if(selectedMoon >= 0){
 			x = moons[selectedMoon].getX() + xDif;
+		}else if(selectedStation > 0){
+			x = stations[selectedStation].getRect().x + xDif;
 		}else{
 			x = Main.width/2 + xDif;
 		}
@@ -568,6 +636,8 @@ public class Planet {
 		double y;
 		if(selectedMoon >= 0){
 			y = moons[selectedMoon].getY() + yDif;
+		}else if(selectedStation > 0){
+			y = stations[selectedStation].getRect().y + yDif;
 		}else{
 			y = Main.height/2 + yDif;
 		}
@@ -597,10 +667,12 @@ public class Planet {
 				if(decoration[i][j] != null){
 					if(playerRectUp.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
 						collided = true;
+						Player.canLeave = false;
 					}
 				}else{
 					if(playerRectUp.intersects(blockRects[i][j]) && terrain[i][j].isSolid()){
 						collided = true;
+						Player.canLeave = false;
 					}
 				}
 			}
@@ -615,10 +687,12 @@ public class Planet {
 				if(decoration[i][j] != null){
 					if(playerRectLeft.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
 						collided = true;
+						Player.canLeave = false;
 					}
 				}else{
 					if(playerRectLeft.intersects(blockRects[i][j]) && terrain[i][j].isSolid()){
 						collided = true;
+						Player.canLeave = false;
 					}
 				}
 			}
@@ -633,10 +707,12 @@ public class Planet {
 				if(decoration[i][j] != null){
 					if(playerRectDown.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
 						collided = true;
+						Player.canLeave = false;
 					}
 				}else{
 					if(playerRectDown.intersects(blockRects[i][j]) && terrain[i][j].isSolid()){
 						collided = true;
+						Player.canLeave = false;
 					}
 				}
 			}
@@ -651,10 +727,12 @@ public class Planet {
 				if(decoration[i][j] != null){
 					if(playerRectRight.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
 						collided = true;
+						Player.canLeave = false;
 					}
 				}else{
 					if(playerRectRight.intersects(blockRects[i][j]) && (terrain[i][j].isSolid())){
 						collided = true;
+						Player.canLeave = false;
 					}
 				}
 			}
@@ -695,6 +773,14 @@ public class Planet {
 				Block.lava.update();
 			}else{
 				moons[selectedMoon].update();
+			}
+		case SPACESTATION:
+			if(made){
+				for(int i = 1; i < stations.length; i++){
+					stations[i].update();
+				}
+			}else{
+				createMoons();
 			}
 		default:
 			break;
@@ -800,6 +886,10 @@ public class Planet {
 				g2d.setTransform(saveAt);
 			}else{
 				moons[selectedMoon].draw(g2d);
+			}
+		case SPACESTATION:
+			for(int i = 1; i < stations.length; i++){
+				stations[i].draw(g2d);
 			}
 		default:
 			break;

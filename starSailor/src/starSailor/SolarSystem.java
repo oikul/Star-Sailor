@@ -216,15 +216,15 @@ public class SolarSystem {
 			}
 			break;
 		default:
-			planets[selectedPlanet].update();
+			if(selectedPlanet != -1){
+				planets[selectedPlanet].update();
+			}
 			break;
 		}
 	}
 	
 	public void draw(Graphics g){
 		switch (Main.state){
-		case GALACTIC:
-			break;
 		case PLANETRY:
 			if(selectedPlanet >= 0){
 				planets[selectedPlanet].draw(g);
@@ -255,12 +255,10 @@ public class SolarSystem {
 			}
 			g2d.setTransform(saveAt);
 			break;
-		case SURFACE:
-			planets[selectedPlanet].draw(g);
-			break;
-		case MOON:
-			planets[selectedPlanet].draw(g);
 		default:
+			if(selectedPlanet != -1){
+				planets[selectedPlanet].draw(g);
+			}
 			break;
 		}
 		
