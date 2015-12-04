@@ -28,13 +28,60 @@ public class SpaceBattle {
 		pointer = new Point2D.Double(0, 0);
 	}
 	
+	public static Point2D.Double getPoint(Point2D.Double p1,Point2D.Double p2,double speed,double accuracy){
+		double xdif = (p2.getX() - p1.getX());
+		double ydif = (p2.getY() - p1.getY());
+		double angle = 0;		// in radians
+		
+		angle = -Math.atan(ydif/xdif);
+		if(xdif<0){
+			if(ydif<0){
+				angle += Math.PI;
+			} else {
+				angle -= +Math.PI;
+			}
+		}
+		accuracy = (Main.random.nextGaussian()*accuracy);
+		System.out.println(accuracy);
+		angle += accuracy;
+		
+		double xgain = 0;
+		double ygain = 0;
+		xgain = Math.cos(angle) * speed;
+		ygain = -Math.sin(angle) * speed;
+		
+
+		
+		return new Point2D.Double(xgain,ygain);
+		
+	}
+
+	public static double getAngle(Point2D.Double p1,Point2D.Double p2){
+		
+		double xdif = (p2.getX() - p1.getX());
+		double ydif = (p2.getY() - p1.getY());
+		double angle = 0;		// in radians
+		
+		angle = -Math.atan(ydif/xdif);
+		if(xdif<0){
+			if(ydif<0){
+				angle += Math.PI;
+			} else {
+				angle -= +Math.PI;
+			}
+		}
+		
+		return -angle;
+		
+	}
+	
 	public void shoot(Point mouseCoord){
+		double accuracy = 1.0 / ((Player.accuracySTAT*3)+30);
 		shots.add(new Line2D.Double(Main.width/2, Main.height/2,Main.width/2, Main.height/2));
 		pointer.setLocation(mouseCoord.getX(),mouseCoord.getY());
 		double speed = 20.0;
+		trajectories.add(getPoint(new Point2D.Double(Main.width/2,Main.height/2),new Point2D.Double(mouseCoord.getX(), mouseCoord.getY()),speed,accuracy));
 
-		trajectories.add(Main.getPoint(new Point2D.Double(Main.width/2,Main.height/2),new Point2D.Double(mouseCoord.getX(), mouseCoord.getY()),speed));
-		
 			
 	}
 	

@@ -14,10 +14,14 @@ public class Player {
 	private int iIndex = 0, jIndex = 0, shipIndex = 0;
 	private static Point2D.Double lastLocation;
 	private static boolean isShip = true, isMoving = false;
+	public static boolean canLeave = true;
 	private long time;
 	private double rotation, lastRotation;
+	
+	public static int accuracySTAT;
 
 	public Player(String playerPath, String shipPath){
+		accuracySTAT = 1;
 		playerImages = ResourceLoader.getPlayerSprites(playerPath, 16, 16);
 		shipImages = ResourceLoader.getBlockSprites(shipPath, 32, 32);
 		time = System.currentTimeMillis();
@@ -56,7 +60,7 @@ public class Player {
 	
 	public void calculateRotation(Point mouseCoords){
 			
-				rotation = Main.getAngle(new Point2D.Double(Main.width/2, Main.height/2),new Point2D.Double(mouseCoords.x,mouseCoords.y));
+				rotation = SpaceBattle.getAngle(new Point2D.Double(Main.width/2, Main.height/2),new Point2D.Double(mouseCoords.x,mouseCoords.y));
 	}
 
 	public void update(Point p){

@@ -167,6 +167,7 @@ public class ShipInterior {
 	}
 	
 	public void draw(Graphics g){
+		
 		for(int i = 0; i < ship.length; i++){
 			for(int j = 0; j < ship[0].length; j++){
 				if(ship[i][j] != null){

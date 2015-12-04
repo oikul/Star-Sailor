@@ -33,48 +33,6 @@ public class Main extends JFrame {
 	public static State state;
 	private State saveState = State.GALACTIC;
 	
-	public static Point2D.Double getPoint(Point2D.Double p1,Point2D.Double p2,double speed){
-		double xdif = (p2.getX() - p1.getX());
-		double ydif = (p2.getY() - p1.getY());
-		double angle = 0;		// in radians
-		
-		angle = -Math.atan(ydif/xdif);
-		if(xdif<0){
-			if(ydif<0){
-				angle += Math.PI;
-			} else {
-				angle -= +Math.PI;
-			}
-		}
-
-		double xgain = 0;
-		double ygain = 0;
-		xgain = Math.cos(angle) * speed;
-		ygain = -Math.sin(angle) * speed;
-		
-		return new Point2D.Double(xgain,ygain);
-		
-	}
-
-	public static double getAngle(Point2D.Double p1,Point2D.Double p2){
-		
-		double xdif = (p2.getX() - p1.getX());
-		double ydif = (p2.getY() - p1.getY());
-		double angle = 0;		// in radians
-		
-		angle = -Math.atan(ydif/xdif);
-		if(xdif<0){
-			if(ydif<0){
-				angle += Math.PI;
-			} else {
-				angle -= +Math.PI;
-			}
-		}
-		
-		return -angle;
-		
-	}
-	
 	public static void main(String[] args) {
 		Main main = new Main();
 		main.run();
@@ -128,7 +86,7 @@ public class Main extends JFrame {
 			switch (state){
 			case SURFACE:
 				if(input.isKeyDown(KeyEvent.VK_Q)){
-					if(Player.isShip()){
+					if(Player.isShip() && Player.canLeave){
 						Player.setIsShip(false);
 					}else{
 						Player.setIsShip(true);
@@ -138,7 +96,7 @@ public class Main extends JFrame {
 				break;
 			case MOON:
 				if(input.isKeyDown(KeyEvent.VK_Q)){
-					if(Player.isShip()){
+					if(Player.isShip() && Player.canLeave){
 						Player.setIsShip(false);
 					}else{
 						Player.setIsShip(true);
@@ -155,10 +113,15 @@ public class Main extends JFrame {
 				Block.engine_fire.update();
 				break;
 			case SPACEBATTLE:
-				if(input.isKeyDown(KeyEvent.VK_H)){
+				if(input.isMouseDown(MouseEvent.BUTTON1)){
+					sb.shoot(input.getMousePositionRelativeToComponent());
+				} else if(input.isKeyDown(KeyEvent.VK_SPACE)){
 					sb.shoot(input.getMousePositionRelativeToComponent());
 				}
 				sb.update();
+				break;
+			case SPACESTATION:
+				
 				break;
 			default:
 				break;

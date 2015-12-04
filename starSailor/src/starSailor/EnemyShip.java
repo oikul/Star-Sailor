@@ -65,6 +65,10 @@ public class EnemyShip{
 		shootTime = System.currentTimeMillis()+3000;
 	}
 	
+	public Point2D.Double getLocation(){
+		return location;
+	}
+	
 	private boolean isAlive(){
 		
 		if(health <= 0){
@@ -75,7 +79,7 @@ public class EnemyShip{
 	}
 	
 	public void getAngle(){
-		rotation = Main.getAngle(location, new Point2D.Double(Main.width/2,Main.height/2));
+		rotation = SpaceBattle.getAngle(location, new Point2D.Double(Main.width/2,Main.height/2));
 	}
 
 	public void takeDamage(int damage){
@@ -88,7 +92,7 @@ public class EnemyShip{
 		shots.add(new Line2D.Double(location.x, location.y, location.x, location.y));
 		double speed = 20.0;
 		
-		trajectories.add(Main.getPoint(new Point2D.Double(location.x,location.y),new Point2D.Double(Main.width/2, Main.height/2),speed));
+		trajectories.add(SpaceBattle.getPoint(new Point2D.Double(location.x,location.y),new Point2D.Double(Main.width/2, Main.height/2),speed,0));
 		
 		shootTime = System.currentTimeMillis() + ((Main.random.nextDouble() * 1000) * 2);
 	}
@@ -101,13 +105,13 @@ public class EnemyShip{
 			Point2D.Double temp = new Point2D.Double();
 			switch (fightStyle){
 			case DEFENSIVE:
-				temp.setLocation(Main.getPoint(location,new Point2D.Double(Main.width/2-16,Main.height/2-16),speed));
+				temp.setLocation(SpaceBattle.getPoint(location,new Point2D.Double(Main.width/2-16,Main.height/2-16),speed,0));
 				location.setLocation(location.x +temp.x,location.y + temp.y);
 			case AGGRESSIVE:
-				temp.setLocation(Main.getPoint(location,new Point2D.Double(Main.width/2-16,Main.height/2-16),speed));
+				temp.setLocation(SpaceBattle.getPoint(location,new Point2D.Double(Main.width/2-16,Main.height/2-16),speed,0));
 				location.setLocation(location.x +temp.x,location.y + temp.y);
 			case TACTICAL:
-				temp.setLocation(Main.getPoint(location,new Point2D.Double(Main.width/2-16,Main.height/2-16),speed));
+				temp.setLocation(SpaceBattle.getPoint(location,new Point2D.Double(Main.width/2-16,Main.height/2-16),speed,0));
 				location.setLocation(location.x +temp.x,location.y + temp.y);
 			}
 			if(currentFrame == 1){
