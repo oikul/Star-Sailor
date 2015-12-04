@@ -18,7 +18,7 @@ public class Galaxy {
 	public Galaxy(int numOfStars){
 		galaxy = new Star[numOfStars];
 		for(int i = 0; i < numOfStars; i++){
-			galaxy[i] = new Star(Main.random.nextDouble() * 8192, Main.random.nextDouble() * 360, Main.random.nextInt(40) + 30);
+			galaxy[i] = new Star(Main.random.nextDouble() * 32768, Main.random.nextDouble() * 360, Main.random.nextInt(40) + 30);
 		}
 		galaxy[selectedStar].setSelected(true);
 	}
@@ -143,10 +143,10 @@ public class Galaxy {
 	
 	public void checkForClick(int x, int y){
 		if(Main.state == Main.State.GALACTIC){
-			Point2D point = new Point2D.Double(x + 16, y + 16);
+			Point2D point = new Point2D.Double(x - 8, y - 8);
 			transform.transform(point, point);
 			for(int i = 0; i < galaxy.length; i ++){
-				if(galaxy[i].getRect().intersects(new Rectangle((int) (point.getX()), (int) (point.getY()), 4, 4))){
+				if(galaxy[i].getRect().intersects(new Rectangle((int) (point.getX()), (int) (point.getY()), 16, 16))){
 					galaxy[i].setSelected(true);
 					xDif = 0;
 					yDif = 0;
@@ -157,7 +157,7 @@ public class Galaxy {
 			}
 			galaxy[selectedStar].setSelected(true);
 		}else{
-			galaxy[selectedStar].checkForClick(x + 16, y + 16);
+			galaxy[selectedStar].checkForClick(x, y);
 		}
 	}
 	
@@ -168,16 +168,8 @@ public class Galaxy {
 				galaxy[i].update();
 			}
 			break;
-		case PLANETRY:
-			galaxy[selectedStar].update();
-			break;
-		case SOLAR:
-			galaxy[selectedStar].update();
-			break;
-		case SURFACE:
-			galaxy[selectedStar].update();
-			break;
 		default:
+			galaxy[selectedStar].update();
 			break;
 		}
 	}
@@ -203,16 +195,8 @@ public class Galaxy {
 			}
 			g2d.setTransform(saveAt);
 			break;
-		case PLANETRY:
-			galaxy[selectedStar].draw(g);
-			break;
-		case SOLAR:
-			galaxy[selectedStar].draw(g);
-			break;
-		case SURFACE:
-			galaxy[selectedStar].draw(g);
-			break;
 		default:
+			galaxy[selectedStar].draw(g);
 			break;
 		}
 		

@@ -5,18 +5,20 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 public class Planet {
 
-	private int size, x, y, numOfMoons, selectedMoon = -1;
+	private int size, x, y, numOfMoons, selectedMoon = -1, numOfStations, selectedStation = 0;
 	private double distance, temperature, precipitation, angle, zoom = 1.0, zoomSurface = 1.0, xtrans, ytrans, xDif, yDif;
 	private NoiseGenerator generator;
 	private double[][] noise;
 	private Block[][] terrain, decoration;
 	private Rectangle2D.Double[][] blockRects;
 	private Planet[] moons;
+	private SpaceStation[] stations;
 	private Biome biome;
 	private Color color;
 	private AffineTransform transform;
@@ -33,6 +35,7 @@ public class Planet {
 		this.isMoon = isMoon;
 		if(!isMoon){
 			numOfMoons = Main.random.nextInt(5);
+			numOfStations = 2;
 		}
 		generator = new NoiseGenerator(size * 10, size * 10, 4, 5);
 		noise = generator.getNoise();
@@ -44,14 +47,7 @@ public class Planet {
 		blockRects = new Rectangle2D.Double[terrain.length][terrain[0].length];
 		for(int i = 0; i < terrain.length; i++){
 			for(int j = 0; j < terrain.length; j++){
-				if(decoration[i][j] != null){
-					if(decoration[i][j].isSolid()){
-						blockRects[i][j] = new Rectangle2D.Double(i*16, j*16, 16, 16);
-					}
-				}
-				if(terrain[i][j].isSolid()){
-					blockRects[i][j] = new Rectangle2D.Double(i*16, j*16, 16, 16);
-				}
+				blockRects[i][j] = new Rectangle2D.Double(i*16, j*16, 16, 16);
 			}
 		}
 		color = biome.getColor();
@@ -132,7 +128,7 @@ public class Planet {
 	public int getSize(){
 		return size;
 	}
-	
+
 	private void translateBlockRects(double x, double y){
 		for(int i = 0; i < blockRects.length; i++){
 			for(int j = 0; j < blockRects.length; j++){
@@ -142,13 +138,13 @@ public class Planet {
 			}
 		}
 	}
-	
+
 	public void checkForClick(int x, int y){
 		if(Main.state == Main.State.PLANETRY){
-			Point2D point = new Point2D.Double(x - 2, y - 2);
+			Point2D point = new Point2D.Double(x - 4, y - 4);
 			transform.transform(point, point);
 			for(int i = 0; i < moons.length; i ++){
-				if(moons[i].getRect().intersects(new Rectangle((int) (point.getX()), (int) (point.getY()), 4, 4))){
+				if(moons[i].getRect().intersects(new Rectangle((int) (point.getX()), (int) (point.getY()), 8, 8))){
 					moons[i].setSelected(true);
 					xDif = 0;
 					yDif = 0;
@@ -157,146 +153,316 @@ public class Planet {
 					moons[i].setSelected(false);
 				}
 			}
-			if(new Rectangle(Main.width/2 - size/2, Main.height/2 - size/2, size, size).contains(point.getX(), point.getY())){
+			if(new Rectangle(Main.width/2 - size/5, Main.height/2 - size/5, size * 10, size * 10).contains(point.getX(), point.getY())){
 				selectedMoon = -1;
+				xDif = 0;
+				yDif = 0;
 			}
 		}
 	}
 
 	public void panUp(){
-		if(!Player.isShip()){
-			if(!collisionUp()){
+		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+			if(!Player.isShip()){
+				if(!collisionUp()){
+					yDif --;
+					Player.pan(0, 1 * zoomSurface);
+					translateBlockRects(0, 1);
+				}
+			}else{
 				yDif --;
 				Player.pan(0, 1 * zoomSurface);
 				translateBlockRects(0, 1);
 			}
-		}else{
-			yDif --;
-			Player.pan(0, 1 * zoomSurface);
-			translateBlockRects(0, 1);
+		}else if(Main.state == Main.State.MOON){
+			if(!isMoon){
+				moons[selectedMoon].panUp();
+			}else{
+				if(!Player.isShip()){
+					if(!collisionUp()){
+						yDif --;
+						Player.pan(0, 1 * zoomSurface);
+						translateBlockRects(0, 1);
+					}
+				}else{
+					yDif --;
+					Player.pan(0, 1 * zoomSurface);
+					translateBlockRects(0, 1);
+				}
+			}
 		}
 	}
 
 	public void panLeft(){
-		if(!Player.isShip()){
-			if(!collisionLeft()){
+		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+			if(!Player.isShip()){
+				if(!collisionLeft()){
+					xDif --;
+					Player.pan(1 * zoomSurface, 0);
+					translateBlockRects(1, 0);
+				}
+			}else{
 				xDif --;
 				Player.pan(1 * zoomSurface, 0);
 				translateBlockRects(1, 0);
 			}
-		}else{
-			xDif --;
-			Player.pan(1 * zoomSurface, 0);
-			translateBlockRects(1, 0);
+		}else if(Main.state == Main.State.MOON){
+			if(!isMoon){
+				moons[selectedMoon].panLeft();
+			}else{
+				if(!Player.isShip()){
+					if(!collisionLeft()){
+						xDif --;
+						Player.pan(1 * zoomSurface, 0);
+						translateBlockRects(1, 0);
+					}
+				}else{
+					xDif --;
+					Player.pan(1 * zoomSurface, 0);
+					translateBlockRects(1, 0);
+				}
+			}
 		}
 	}
 
 	public void panDown(){
-		if(!Player.isShip()){
-			if(!collisionDown()){
+		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+			if(!Player.isShip()){
+				if(!collisionDown()){
+					yDif ++;
+					Player.pan(0, -1 * zoomSurface);
+					translateBlockRects(0, -1);
+				}
+			}else{
 				yDif ++;
 				Player.pan(0, -1 * zoomSurface);
 				translateBlockRects(0, -1);
 			}
-		}else{
-			yDif ++;
-			Player.pan(0, -1 * zoomSurface);
-			translateBlockRects(0, -1);
+		}else if(Main.state == Main.State.MOON){
+			if(!isMoon){
+				moons[selectedMoon].panDown();
+			}else{
+				if(!Player.isShip()){
+					if(!collisionDown()){
+						yDif ++;
+						Player.pan(0, -1 * zoomSurface);
+						translateBlockRects(0, -1);
+					}
+				}else{
+					yDif ++;
+					Player.pan(0, -1 * zoomSurface);
+					translateBlockRects(0, -1);
+				}
+			}
 		}
 	}
 
 	public void panRight(){
-		if(!Player.isShip()){
-			if(!collisionRight()){
-				xDif ++;
+		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+			if(!Player.isShip()){
+				if(!collisionRight()){
+					xDif ++;
+					Player.pan(-1 * zoomSurface, 0);
+					translateBlockRects(-1, 0);
+				}
+			}else{
+				xDif ++;;
 				Player.pan(-1 * zoomSurface, 0);
 				translateBlockRects(-1, 0);
 			}
-		}else{
-			xDif ++;;
-			Player.pan(-1 * zoomSurface, 0);
-			translateBlockRects(-1, 0);
+		}else if(Main.state == Main.State.MOON){
+			if(!isMoon){
+				moons[selectedMoon].panRight();
+			}else{
+				if(!Player.isShip()){
+					if(!collisionRight()){
+						xDif ++;
+						Player.pan(-1 * zoomSurface, 0);
+						translateBlockRects(-1, 0);
+					}
+				}else{
+					xDif ++;;
+					Player.pan(-1 * zoomSurface, 0);
+					translateBlockRects(-1, 0);
+				}
+			}
 		}
 	}
 
 	public void panUR(){
-		if(!Player.isShip()){
-			if(!collisionUp() && !collisionRight()){
+		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+			if(!Player.isShip()){
+				if(!collisionUp() && !collisionRight()){
+					xDif += 1/Main.root2;
+					yDif -= 1/Main.root2;
+					Player.pan((1/-Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+					translateBlockRects(-1/Main.root2, 1/Main.root2);
+				}else if(!collisionUp()){
+					panUp();
+				}else if(!collisionRight()){
+					panRight();
+				}
+			}else{
 				xDif += 1/Main.root2;
 				yDif -= 1/Main.root2;
 				Player.pan((1/-Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
 				translateBlockRects(-1/Main.root2, 1/Main.root2);
-			}else if(!collisionUp()){
-				panUp();
-			}else if(!collisionRight()){
-				panRight();
 			}
-		}else{
-			xDif += 1/Main.root2;
-			yDif -= 1/Main.root2;
-			Player.pan((1/-Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
-			translateBlockRects(-1/Main.root2, 1/Main.root2);
+		}else if(Main.state == Main.State.MOON){
+			if(!isMoon){
+				moons[selectedMoon].panUR();
+			}else{
+				if(!Player.isShip()){
+					if(!collisionUp() && !collisionRight()){
+						xDif += 1/Main.root2;
+						yDif -= 1/Main.root2;
+						Player.pan((1/-Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+						translateBlockRects(-1/Main.root2, 1/Main.root2);
+					}else if(!collisionUp()){
+						panUp();
+					}else if(!collisionRight()){
+						panRight();
+					}
+				}else{
+					xDif += 1/Main.root2;
+					yDif -= 1/Main.root2;
+					Player.pan((1/-Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+					translateBlockRects(-1/Main.root2, 1/Main.root2);
+				}
+			}
 		}
-		
+
 	}
-	
+
 	public void panUL(){
-		if(!Player.isShip()){
-			if(!collisionUp() && !collisionLeft()){
+		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+			if(!Player.isShip()){
+				if(!collisionUp() && !collisionLeft()){
+					xDif -= 1/Main.root2;
+					yDif -= 1/Main.root2;
+					Player.pan((1/Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+					translateBlockRects(1/Main.root2, 1/Main.root2);
+				}else if(!collisionUp()){
+					panUp();
+				}else if(!collisionLeft()){
+					panLeft();
+				}
+			}else{
 				xDif -= 1/Main.root2;
 				yDif -= 1/Main.root2;
 				Player.pan((1/Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
 				translateBlockRects(1/Main.root2, 1/Main.root2);
-			}else if(!collisionUp()){
-				panUp();
-			}else if(!collisionLeft()){
-				panLeft();
 			}
-		}else{
-			xDif -= 1/Main.root2;
-			yDif -= 1/Main.root2;
-			Player.pan((1/Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
-			translateBlockRects(1/Main.root2, 1/Main.root2);
+		}else if(Main.state == Main.State.MOON){
+			if(!isMoon){
+				moons[selectedMoon].panUL();
+			}else{
+				if(!Player.isShip()){
+					if(!collisionUp() && !collisionLeft()){
+						xDif -= 1/Main.root2;
+						yDif -= 1/Main.root2;
+						Player.pan((1/Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+						translateBlockRects(1/Main.root2, 1/Main.root2);
+					}else if(!collisionUp()){
+						panUp();
+					}else if(!collisionLeft()){
+						panLeft();
+					}
+				}else{
+					xDif -= 1/Main.root2;
+					yDif -= 1/Main.root2;
+					Player.pan((1/Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+					translateBlockRects(1/Main.root2, 1/Main.root2);
+				}
+			}
 		}
 	}
-	
+
 	public void panDR(){
-		if(!Player.isShip()){
-			if(!collisionDown() && !collisionRight()){
+		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+			if(!Player.isShip()){
+				if(!collisionDown() && !collisionRight()){
+					xDif += 1/Main.root2;
+					yDif += 1/Main.root2;
+					Player.pan((1/-Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+					translateBlockRects(-1/Main.root2, -1/Main.root2);
+				}else if(!collisionDown()){
+					panDown();
+				}else if(!collisionRight()){
+					panRight();
+				}
+			}else{
 				xDif += 1/Main.root2;
 				yDif += 1/Main.root2;
 				Player.pan((1/-Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
 				translateBlockRects(-1/Main.root2, -1/Main.root2);
-			}else if(!collisionDown()){
-				panDown();
-			}else if(!collisionRight()){
-				panRight();
 			}
-		}else{
-			xDif += 1/Main.root2;
-			yDif += 1/Main.root2;
-			Player.pan((1/-Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
-			translateBlockRects(-1/Main.root2, -1/Main.root2);
+		}else if(Main.state == Main.State.MOON){
+			if(!isMoon){
+				moons[selectedMoon].panDR();
+			}else{
+				if(!Player.isShip()){
+					if(!collisionDown() && !collisionRight()){
+						xDif += 1/Main.root2;
+						yDif += 1/Main.root2;
+						Player.pan((1/-Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+						translateBlockRects(-1/Main.root2, -1/Main.root2);
+					}else if(!collisionDown()){
+						panDown();
+					}else if(!collisionRight()){
+						panRight();
+					}
+				}else{
+					xDif += 1/Main.root2;
+					yDif += 1/Main.root2;
+					Player.pan((1/-Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+					translateBlockRects(-1/Main.root2, -1/Main.root2);
+				}
+			}
 		}
 	}
-	
+
 	public void panDL(){
-		if(!Player.isShip()){
-			if(!collisionDown() && !collisionLeft()){
+		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+			if(!Player.isShip()){
+				if(!collisionDown() && !collisionLeft()){
+					xDif -= 1/Main.root2;
+					yDif += 1/Main.root2;
+					Player.pan((1/Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+					translateBlockRects(1/Main.root2, -1/Main.root2);
+				}else if(!collisionDown()){
+					panDown();
+				}else if(!collisionLeft()){
+					panLeft();
+				}
+			}else{
 				xDif -= 1/Main.root2;
 				yDif += 1/Main.root2;
 				Player.pan((1/Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
-				translateBlockRects(1/Main.root2, -1/Main.root2);
-			}else if(!collisionDown()){
-				panDown();
-			}else if(!collisionLeft()){
-				panLeft();
+				translateBlockRects(1/Main.root2, 1/-Main.root2);
 			}
-		}else{
-			xDif -= 1/Main.root2;
-			yDif += 1/Main.root2;
-			Player.pan((1/Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
-			translateBlockRects(1/Main.root2, 1/-Main.root2);
+		}else if(Main.state == Main.State.MOON){
+			if(!isMoon){
+				moons[selectedMoon].panDL();
+			}else{
+				if(!Player.isShip()){
+					if(!collisionDown() && !collisionLeft()){
+						xDif -= 1/Main.root2;
+						yDif += 1/Main.root2;
+						Player.pan((1/Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+						translateBlockRects(1/Main.root2, -1/Main.root2);
+					}else if(!collisionDown()){
+						panDown();
+					}else if(!collisionLeft()){
+						panLeft();
+					}
+				}else{
+					xDif -= 1/Main.root2;
+					yDif += 1/Main.root2;
+					Player.pan((1/Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+					translateBlockRects(1/Main.root2, 1/-Main.root2);
+				}
+			}
 		}
 	}
 
@@ -346,10 +512,10 @@ public class Planet {
 			xDif = 0;
 			yDif = 0;
 		}else{
-			if(selectedMoon == -1){
-				Main.state = Main.State.SURFACE;
-			}else{
+			if(selectedMoon >= 0){
 				Main.state = Main.State.MOON;
+			}else{
+				Main.state = Main.State.SURFACE;
 			}
 		}
 	}
@@ -386,9 +552,7 @@ public class Planet {
 
 	private void getXTrans(){
 		double x;
-		if(selectedMoon == -1){
-			x = Main.width/2 + xDif;
-		}else if(numOfMoons > 0 && selectedMoon != -1){
+		if(selectedMoon >= 0){
 			x = moons[selectedMoon].getX() + xDif;
 		}else{
 			x = Main.width/2 + xDif;
@@ -402,10 +566,10 @@ public class Planet {
 
 	private void getYTrans(){
 		double y;
-		if(selectedMoon == -1){
-			y = Main.height/2 + yDif;
-		}else{
+		if(selectedMoon >= 0){
 			y = moons[selectedMoon].getY() + yDif;
+		}else{
+			y = Main.height/2 + yDif;
 		}
 		if(y > Main.height/(zoom*2)){
 			ytrans = -(y - Main.height/(zoom*2));
@@ -416,8 +580,12 @@ public class Planet {
 
 	private void createMoons(){
 		moons = new Planet[numOfMoons];
+		stations = new SpaceStation[numOfStations];
 		for(int i = 0; i < numOfMoons; i++){
-			moons[i] = new Planet(Main.random.nextInt(7) + 2, (Main.random.nextDouble() * (Main.height/2 - size/2)) + (size / 2), Main.random.nextDouble() * 360, true);
+			moons[i] = new Planet(Main.random.nextInt(9) + 3, (Main.random.nextDouble() * (Main.height/2 - size * 5)) + (size * 5), Main.random.nextDouble() * 360, true);
+		}
+		for(int i = 1; i < numOfStations; i++){
+			stations[i] = new SpaceStation((Main.random.nextDouble() * (Main.height/2 - size * 5)) + (size * 5), Main.random.nextDouble() * 360);
 		}
 		made = true;
 	}
@@ -426,8 +594,12 @@ public class Planet {
 		boolean collided = false;
 		for(int i = 0; i < terrain.length; i++){
 			for(int j = 0; j < terrain[0].length; j++){
-				if(blockRects[i][j] != null){
-					if(playerRectUp.intersects(blockRects[i][j])){
+				if(decoration[i][j] != null){
+					if(playerRectUp.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
+						collided = true;
+					}
+				}else{
+					if(playerRectUp.intersects(blockRects[i][j]) && terrain[i][j].isSolid()){
 						collided = true;
 					}
 				}
@@ -440,8 +612,12 @@ public class Planet {
 		boolean collided = false;
 		for(int i = 0; i < terrain.length; i++){
 			for(int j = 0; j < terrain[0].length; j++){
-				if(blockRects[i][j] != null){
-					if(playerRectLeft.intersects(blockRects[i][j])){
+				if(decoration[i][j] != null){
+					if(playerRectLeft.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
+						collided = true;
+					}
+				}else{
+					if(playerRectLeft.intersects(blockRects[i][j]) && terrain[i][j].isSolid()){
 						collided = true;
 					}
 				}
@@ -454,8 +630,12 @@ public class Planet {
 		boolean collided = false;
 		for(int i = 0; i < terrain.length; i++){
 			for(int j = 0; j < terrain[0].length; j++){
-				if(blockRects[i][j] != null){
-					if(playerRectDown.intersects(blockRects[i][j])){
+				if(decoration[i][j] != null){
+					if(playerRectDown.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
+						collided = true;
+					}
+				}else{
+					if(playerRectDown.intersects(blockRects[i][j]) && terrain[i][j].isSolid()){
 						collided = true;
 					}
 				}
@@ -468,8 +648,12 @@ public class Planet {
 		boolean collided = false;
 		for(int i = 0; i < terrain.length; i++){
 			for(int j = 0; j < terrain[0].length; j++){
-				if(blockRects[i][j] != null){
-					if(playerRectRight.intersects(blockRects[i][j])){
+				if(decoration[i][j] != null){
+					if(playerRectRight.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
+						collided = true;
+					}
+				}else{
+					if(playerRectRight.intersects(blockRects[i][j]) && (terrain[i][j].isSolid())){
 						collided = true;
 					}
 				}
@@ -503,6 +687,15 @@ public class Planet {
 			Block.water_river.update();
 			Block.lava.update();
 			break;
+		case MOON:
+			if(isMoon){
+				Block.water_murky.update();
+				Block.water_ocean.update();
+				Block.water_river.update();
+				Block.lava.update();
+			}else{
+				moons[selectedMoon].update();
+			}
 		default:
 			break;
 		}
@@ -536,19 +729,26 @@ public class Planet {
 				getXTrans();
 				getYTrans();
 				at.translate(xtrans, ytrans);
-				transform = at;
+				try {
+					transform = at.createInverse();
+				} catch (NoninvertibleTransformException e) {
+					e.printStackTrace();
+				}
 				g2d.setTransform(at);
 				if(selectedMoon == -1){
 					g2d.setColor(Color.cyan);
-					g2d.drawRect((Main.width/2) - size * 10, (Main.height/2) - size * 10, size*20, size*20);
+					g2d.drawRect((Main.width/2) - size * 5, (Main.height/2) - size * 5, size*10, size*10);
 				}
 				g2d.setColor(color);
-				g2d.fillOval((Main.width/2) - size * 10, (Main.height/2) - size * 10, size*20, size*20);
+				g2d.fillOval((Main.width/2) - size * 5, (Main.height/2) - size * 5, size*10, size*10);
 				if(!made){
 					createMoons();
 				}
 				for(int i = 0; i < moons.length; i++){
 					moons[i].draw(g2d);
+				}
+				for(int i = 1; i < stations.length; i++){
+					stations[i].draw(g2d);
 				}
 			}
 			g2d.setTransform(saveAt);
@@ -561,18 +761,46 @@ public class Planet {
 			g2d.setTransform(at);
 			for(int i = 0; i < noise.length; i++){
 				for(int j = 0; j < noise[0].length; j++){
-					terrain[i][j].draw(g2d, i * 16, j * 16);
+					if(blockRects[i][j].intersects(new Rectangle(0, 0, Main.width, Main.height))){
+						terrain[i][j].draw(g2d, i * 16, j * 16);
+					}
 				}
 			}
 			for(int i = 0; i < noise.length; i++){
 				for(int j = 0; j < noise[0].length; j++){
-					if(decoration[i][j] != null){
+					if(decoration[i][j] != null && blockRects[i][j].intersects(new Rectangle(0, 0, Main.width, Main.height))){
 						decoration[i][j].draw(g2d, i * 16, j * 16);
 					}
 				}
 			}
 			g2d.setTransform(saveAt);
 			break;
+		case MOON:
+			if(isMoon){
+				saveAt = g2d.getTransform();
+				at = new AffineTransform();
+				at.translate(-xDif, -yDif);
+				g2d.setTransform(at);
+				for(int i = 0; i < noise.length; i++){
+					for(int j = 0; j < noise[0].length; j++){
+						if(blockRects[i][j].intersects(new Rectangle(0, 0, Main.width, Main.height))){
+							terrain[i][j].draw(g2d, i * 16, j * 16);
+						}
+					}
+				}
+				for(int i = 0; i < noise.length; i++){
+					for(int j = 0; j < noise[0].length; j++){
+						if(decoration[i][j] != null){
+							if(blockRects[i][j].intersects(new Rectangle(0, 0, Main.width, Main.height))){
+								decoration[i][j].draw(g2d, i * 16, j * 16);
+							}
+						}
+					}
+				}
+				g2d.setTransform(saveAt);
+			}else{
+				moons[selectedMoon].draw(g2d);
+			}
 		default:
 			break;
 		}

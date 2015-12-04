@@ -31,10 +31,10 @@ public class SolarSystem {
 	
 	public void checkForClick(int x, int y){
 		if(Main.state == Main.State.SOLAR){
-			Point2D point = new Point2D.Double(x - 8, y - 8);
+			Point2D point = new Point2D.Double(x, y);
 			transform.transform(point, point);
 			for(int i = 0; i < planets.length; i ++){
-				if(planets[i].getRect().intersects(new Rectangle((int) (point.getX()), (int) (point.getY()), 16, 16))){
+				if(planets[i].getRect().intersects(new Rectangle((int) (point.getX() - 8), (int) (point.getY() - 8), 16, 16))){
 					planets[i].setSelected(true);
 					xDif = 0;
 					yDif = 0;
@@ -45,9 +45,13 @@ public class SolarSystem {
 			}
 			if(new Rectangle(Main.width/2 - size/2, Main.height/2 - size/2, size, size).contains(point.getX(), point.getY())){
 				selectedPlanet = -1;
+				xDif = 0;
+				yDif = 0;
 			}
 		}else{
-			planets[selectedPlanet].checkForClick(x, y);
+			if(selectedPlanet != -1){
+				planets[selectedPlanet].checkForClick(x, y);
+			}
 		}
 	}
 	
@@ -201,8 +205,6 @@ public class SolarSystem {
 	
 	public void update(){
 		switch (Main.state){
-		case GALACTIC:
-			break;
 		case PLANETRY:
 			if(selectedPlanet >= 0){
 				planets[selectedPlanet].update();
@@ -213,10 +215,8 @@ public class SolarSystem {
 				planets[i].update();
 			}
 			break;
-		case SURFACE:
-			planets[selectedPlanet].update();
-			break;
 		default:
+			planets[selectedPlanet].update();
 			break;
 		}
 	}
@@ -258,6 +258,8 @@ public class SolarSystem {
 		case SURFACE:
 			planets[selectedPlanet].draw(g);
 			break;
+		case MOON:
+			planets[selectedPlanet].draw(g);
 		default:
 			break;
 		}

@@ -48,7 +48,7 @@ public class EnemyShip{
 		switch (num){
 		case 0:
 			fightStyle = fightingStyle.AGGRESSIVE;
-			speed = 3;
+			speed = 1;
 			break;
 		case 1:
 			fightStyle = fightingStyle.DEFENSIVE;
@@ -56,7 +56,7 @@ public class EnemyShip{
 			break;
 		case 2:
 			fightStyle = fightingStyle.TACTICAL;
-			speed = 2;
+			speed = 1;
 			break;
 		}
 		
