@@ -114,7 +114,9 @@ public class Main extends JFrame {
 				break;
 			case SPACEBATTLE:
 				if(input.isMouseDown(MouseEvent.BUTTON1)){
-					sb.shoot(input.getMousePositionRelativeToComponent());
+					sb.shoot(input.getMousePositionOnScreen());
+				}else if(input.isKeyDown(KeyEvent.VK_SPACE)){
+				    sb.shoot(input.getMousePositionOnScreen());
 				}
 				sb.update();
 				break;
