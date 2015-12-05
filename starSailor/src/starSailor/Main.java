@@ -64,9 +64,10 @@ public class Main extends JFrame {
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		setSize(width, height);
+		//setUndecorated(true);
 		setVisible(running);
 		setResizable(false);
-		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(ResourceLoader.getImage("cursor/cursor.png"), new Point(getX(), getY()), "c");
+		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(ResourceLoader.getImage("cursor/cursor.png"), new Point(getX()+16, getY()+16), "c");
 		setCursor(cursor);
 		state = State.GALACTIC;
 		random = new Random();
@@ -200,11 +201,19 @@ public class Main extends JFrame {
 		Image offImage = createImage(width, height);
 		Graphics offGraphics = offImage.getGraphics();
 		offGraphics.fillRect(0, 0, width, height);
-		galaxy.draw(offGraphics);
-		if(state == State.SHIP){
+		switch (state){
+		case GALACTIC:
+			galaxy.draw(offGraphics);
+			break;
+		case SHIP:
 			ship.draw(offGraphics);
+			break;
+		case SPACEBATTLE:
+			sb.draw(offGraphics);
+			break;
+		default:
+			break;
 		}
-		sb.draw(offGraphics);
 		player.draw(offGraphics);
 		g2d.drawImage(offImage, 0, 0, width, height, null);
 	}

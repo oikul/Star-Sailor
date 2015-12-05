@@ -12,6 +12,7 @@ public class SpaceStation {
 	private int[] xPoints, yPoints;
 	private double distance, angle;
 	private boolean up = false, selected;
+	private double time;
 	
 	public SpaceStation(double distance, double angle){
 		this.distance = distance;
@@ -19,6 +20,7 @@ public class SpaceStation {
 		station = new Block[64][64];
 		xPoints = new int[3];
 		yPoints = new int[3];
+		time = System.currentTimeMillis();
 		genStation();
 	}
 	
@@ -116,19 +118,22 @@ public class SpaceStation {
 			x = (int) (Main.width/2 + distance*Math.sin(angle - 270));
 			y = (int) (Main.height/2 + distance*Math.cos(angle - 270));
 		}
-		xPoints = new int[] {
-			x - 10, x, x + 10
-		};
-		if(up){
-			yPoints = new int[] {
-					y - 8, y + 2, y - 8
+		if(System.currentTimeMillis() >= time){
+			xPoints = new int[] {
+				x - 10, x, x + 10
 			};
-			up = false;
-		}else{
-			yPoints = new int[] {
-					y - 5, y + 5, y - 5
-			};
-			up = true;
+			if(up){
+				yPoints = new int[] {
+						y - 8, y + 2, y - 8
+				};
+				up = false;
+			}else{
+				yPoints = new int[] {
+						y - 5, y + 5, y - 5
+				};
+				up = true;
+			}
+			time += 300;
 		}
 	}
 	

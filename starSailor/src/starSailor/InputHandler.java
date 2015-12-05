@@ -26,16 +26,16 @@ public class InputHandler implements KeyListener, MouseListener, MouseWheelListe
 	}
 	
 	public Point getMousePositionOnScreen(){
-		Point point = new Point(MouseInfo.getPointerInfo().getLocation().x + 16, MouseInfo.getPointerInfo().getLocation().y - 34);
-		// x + 16 y - 34 for lab machines
-		// x+16 y+16 for laptop
+		Point point = new Point(MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
+		// x + 0 y - 50 for lab machines
+		// x+0 y+0 for laptop
 		return point;
 	}
 	
 	public Point getMousePositionRelativeToComponent(){
-		Point point = new Point(c.getMousePosition().x + 16, c.getMousePosition().y +16);
-		// x + 16 y +16 for lab machines
-		// x+16 y+16 for laptop
+		Point point = new Point(c.getMousePosition().x, c.getMousePosition().y);
+		// x + 0 y +0 for lab machines
+		// x+0 y+0 for laptop
 		return point;
 	}
 	
