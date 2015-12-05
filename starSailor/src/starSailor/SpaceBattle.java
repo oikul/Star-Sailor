@@ -91,7 +91,7 @@ public class SpaceBattle {
 		pointer.setLocation(mouseCoord.getX(),mouseCoord.getY());
 		double speed = 20.0;
 		trajectories.add(getPoint(new Point2D.Double(Main.width/2,Main.height/2),new Point2D.Double(mouseCoord.getX(), mouseCoord.getY()),speed,accuracy));
-
+		Sound.laser.play();
 			
 	}
 	
@@ -122,6 +122,7 @@ public class SpaceBattle {
 				if(ships.get(i).deadYet()){
 					enemyLocation.remove(i);
 					ships.remove(i);
+					Sound.explosion.play();
 					i--;
 				}else{
 					ships.get(i).die();

@@ -5,6 +5,8 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.swing.ImageIcon;
 
 public class ResourceLoader {
@@ -44,6 +46,16 @@ public class ResourceLoader {
 			sprites[i] = BI.getSubimage(i * spriteWidth, 0, spriteWidth, spriteHeight);
 		}
 		return sprites;
+	}
+	
+	public static AudioInputStream getSound(String path){
+		try {
+			URL url = rl.getClass().getClassLoader().getResource("resources/" + path);
+			return AudioSystem.getAudioInputStream(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

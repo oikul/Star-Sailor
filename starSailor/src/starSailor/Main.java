@@ -115,6 +115,7 @@ public class Main extends JFrame {
 			case SPACEBATTLE:
 				if(input.isMouseDown(MouseEvent.BUTTON1)){
 					sb.shoot(input.getMousePositionOnScreen());
+					Sound.laser.play();
 				}else if(input.isKeyDown(KeyEvent.VK_SPACE)){
 				    sb.shoot(input.getMousePositionOnScreen());
 				}
