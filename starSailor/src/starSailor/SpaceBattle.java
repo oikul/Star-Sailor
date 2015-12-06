@@ -13,28 +13,42 @@ import java.util.ArrayList;
 public class SpaceBattle {
 	
 	private ArrayList<Point2D.Double> trajectories;
-	private ArrayList<Rectangle> enemyLocation;
+	private ArrayList<Rectangle> fighterLocations;
+	private ArrayList<Rectangle> carrierLocations;
 	private ArrayList<Line2D.Double> shots;
-	private ArrayList<EnemyShip> ships;
+	private ArrayList<Fighter> fighters;
+	private ArrayList<Carrier> carriers;
 	private Point2D.Double pointer; // displays the pointer location
 	private Image background;
 	
 	public SpaceBattle(){
-		int carries = 5;
-		ships = new ArrayList<EnemyShip>(carries);
+		int carriers = 5;
+		int fighters = 5;
+		this.carriers = new ArrayList<Carrier>(carriers);
+		this.fighters = new ArrayList<Fighter>(fighters);
 		background = ResourceLoader.getImage("background/planet1.png");
 		trajectories = new ArrayList<Point2D.Double>();
 		shots = new ArrayList<Line2D.Double>();
-		enemyLocation = new ArrayList<Rectangle>(carries);
+		fighterLocations = new ArrayList<Rectangle>(fighters);
+		carrierLocations = new ArrayList<Rectangle>(carriers);
 		
-		for (int i = 0; i < carries; i++) {
+		for (int i = 0; i < carriers; i++) {
 			
-			int x = Main.random.nextInt(500);
-			int y = Main.random.nextInt(Main.height);
+			int x = Main.random.nextInt(300)+50;
+			int y = Main.random.nextInt(Main.height-100)+50;
 
-			enemyLocation.add(new Rectangle(x,y,32,32));
-			ships.add(new EnemyShip(x,y,EnemyShip.shipClass.CARRIER));
+			carrierLocations.add(new Rectangle(x,y,32,32));
+			this.carriers.add(new Carrier(x,y));
+			for (int j = 0; j < fighters; j++) {
+			
+				int x2 = x + Main.random.nextInt(50)-25;
+				int y2 = y + Main.random.nextInt(50)-25;
+				this.fighters.add(new Fighter(x2,y2,this.carriers.get(i)));
+				fighterLocations.add(new Rectangle(x2,y2,16,16));
+			}
 		}
+		
+		
 		
 		pointer = new Point2D.Double(0, 0);
 	}
@@ -110,22 +124,24 @@ public class SpaceBattle {
 			
 		}
 		
-		for (int i = 0; i < ships.size(); i++) {
-			if(ships.get(i).isAlive()){
-				ships.get(i).update();
-			for (Line2D.Double shot : shots) {
-				if(enemyLocation.get(i).contains(shot.getP1())||enemyLocation.get(i).contains(shot.getP2())){
-					ships.get(i).takeDamage(100);
+		for (int i = 0; i < carriers.size(); i++) {
+			if(carriers.get(i).isAlive()){
+				carriers.get(i).update();
+			for (int j = 0; j < shots.size();j++) {
+				if(carrierLocations.get(i).contains(shots.get(j).getP1())||carrierLocations.get(i).contains(shots.get(j).getP2())){
+					carriers.get(i).takeDamage(100);
+					shots.remove(j);
+					trajectories.remove(j);
 				}
 			}
 			}else{
-				if(ships.get(i).deadYet()){
-					enemyLocation.remove(i);
-					ships.remove(i);
+				if(carriers.get(i).deadYet()){
+					carrierLocations.remove(i);
+					carriers.remove(i);
 					Sound.explosion.play();
 					i--;
 				}else{
-					ships.get(i).die();
+					carriers.get(i).die();
 				}
 			}
 		}
@@ -143,8 +159,11 @@ public class SpaceBattle {
 		g2d.drawRect(Main.width/2 - 16, Main.height/2-16, 32, 32);
 		g2d.drawRect((int)pointer.x, (int)pointer.y, 1, 1);
 		
-		for (EnemyShip enemy : ships) {
-			enemy.draw(g2d);
+		for (Carrier carrier : carriers) {
+			carrier.draw(g2d);
+		}
+		for (Fighter fighter : fighters) {
+			fighter.draw(g2d);
 		}
 			
 	}

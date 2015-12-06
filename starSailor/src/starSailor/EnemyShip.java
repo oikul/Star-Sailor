@@ -12,19 +12,20 @@ import java.util.ArrayList;
 
 public class EnemyShip{
 
-	private ArrayList<Point2D.Double> trajectories;
-	private ArrayList<Line2D.Double> shots;
-	private int health,speed,currentFrame,death;
-	private Rectangle location;
-	private fightingStyle fightStyle;
-	private double rotation,time,shootTime;
+	protected ArrayList<Point2D.Double> trajectories;
+	protected ArrayList<Line2D.Double> shots;
+	private int health,speed;
+	protected int currentFrame;
+	protected int death;
+	protected Rectangle location;
+	private double rotation;
+	protected double time;
+	protected double shootTime;
 	private Image[] shipImages;
+	private int xSize,ySize;
 	
 	public enum shipClass{
 		FIGHTER,CARRIER,COMMAND
-	}
-	public enum fightingStyle{
-		AGGRESSIVE,DEFENSIVE,TACTICAL
 	}
 	
 	public EnemyShip(int x,int y,shipClass ship){
@@ -32,39 +33,31 @@ public class EnemyShip{
 		time = System.currentTimeMillis();
 		if(ship == shipClass.FIGHTER){
 			this.health = 100;
-			shipImages = ResourceLoader.getBlockSprites("spaceship/enemyCarrierSprite.png", 32, 32);
-			location = new Rectangle(x-8,y-8,16,16);
+			shipImages = ResourceLoader.getBlockSprites("spaceship/enemyFighterSprite.png", 16, 16);
+			location = new Rectangle(x+8,y+8,16,16);
+			xSize = 16;
+			ySize = 16;
 		}else if(ship == shipClass.CARRIER){
 			this.health = 500;
 			shipImages = ResourceLoader.getBlockSprites("spaceship/enemyCarrierSprite.png", 32, 32);
-			location = new Rectangle(x-16,y-16,32,32);
+			location = new Rectangle(x+16,y+16,32,32);
+			xSize = 32;
+			ySize = 32;
 		}else if(ship == shipClass.COMMAND){
 			this.health = 2000;
 			shipImages = ResourceLoader.getBlockSprites("spaceship/enemyCarrierSprite.png", 32, 32);
-			location = new Rectangle(x-16,y-64,32,128);
+			location = new Rectangle(x+16,y+64,32,128);
+			xSize = 32;
+			ySize = 128;
 		}else{
 			health = 100;
 		}
 
 		getAngle();
-		int num = Main.random.nextInt(3);
-		switch (num){
-		case 0:
-			fightStyle = fightingStyle.AGGRESSIVE;
-			speed = 1;
-			break;
-		case 1:
-			fightStyle = fightingStyle.DEFENSIVE;
-			speed = 1;
-			break;
-		case 2:
-			fightStyle = fightingStyle.TACTICAL;
-			speed = 1;
-			break;
-		}
+		
 		trajectories = new ArrayList<Point2D.Double>();
 		shots = new ArrayList<Line2D.Double>();
-		shootTime = System.currentTimeMillis()+3000;
+		shootTime = System.currentTimeMillis()+3000 + Main.random.nextInt(500);
 	}
 	
 	public void die(){
@@ -78,7 +71,6 @@ public class EnemyShip{
 	}
 	
 	public boolean isAlive(){
-		System.out.println(health);
 		if(health > 0){
 			return true;
 		}
@@ -112,22 +104,16 @@ public class EnemyShip{
 	public void update(){
 		
 		getAngle();
-		if(System.currentTimeMillis() >= time + 300){
+		if(System.currentTimeMillis() >= time){
 			
 			Point2D.Double temp = new Point2D.Double();
-			switch (fightStyle){
-			case DEFENSIVE:
-				location.setLocation((int)(location.getX()),(int)(location.getY()));
-			case AGGRESSIVE:
-				location.setLocation((int)(location.getX()),(int)(location.getY()));
-			case TACTICAL:
-				location.setLocation((int)(location.getX()),(int)(location.getY()));
-			}
+			
 			if(currentFrame == 1){
 				currentFrame = 0;
 			}else{
 				currentFrame = 1;
 			}
+			time += Main.random.nextInt(500);
 		}
 		
 		if(System.currentTimeMillis() >= shootTime){
@@ -153,14 +139,14 @@ public class EnemyShip{
 		
 		g2d.setColor(Color.red);
 
-		g2d.drawRect(location.x-13, location.y-13, 26, 26);
 		AffineTransform saveAt;
 		AffineTransform at;
 		at = new AffineTransform();
 		saveAt = g2d.getTransform();
 		at.rotate(rotation, location.x, location.y);
 		g2d.setTransform(at);
-		g2d.drawImage(shipImages[currentFrame],location.x-16,location.y-16, null);
+		g2d.drawRect(location.x-(xSize/2)-3, location.y-(ySize/2)-3,xSize-6,ySize-6);
+		g2d.drawImage(shipImages[currentFrame],location.x-(xSize/2),location.y-(ySize/2), null);
 		g2d.setTransform(saveAt);
 		
 		

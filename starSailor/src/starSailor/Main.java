@@ -64,7 +64,7 @@ public class Main extends JFrame {
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		setSize(width, height);
-		//setUndecorated(true);
+		setUndecorated(true);
 		setVisible(running);
 		setResizable(false);
 		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(ResourceLoader.getImage("cursor/cursor.png"), new Point(getX()+16, getY()+16), "c");
@@ -114,10 +114,10 @@ public class Main extends JFrame {
 				break;
 			case SPACEBATTLE:
 				if(input.isMouseDown(MouseEvent.BUTTON1)){
-					sb.shoot(input.getMousePositionOnScreen());
+					sb.shoot(input.getMousePositionRelativeToComponent());
 					Sound.laser.play();
 				}else if(input.isKeyDown(KeyEvent.VK_SPACE)){
-				    sb.shoot(input.getMousePositionOnScreen());
+				    sb.shoot(input.getMousePositionRelativeToComponent());
 				}
 				sb.update();
 				break;
@@ -167,7 +167,7 @@ public class Main extends JFrame {
 				player.stop();
 			}
 			if(input.isMouseDown(MouseEvent.BUTTON1)){
-				galaxy.checkForClick(input.getMousePositionOnScreen().x, input.getMousePositionOnScreen().y);
+				galaxy.checkForClick(input.getMousePositionRelativeToComponent().x, input.getMousePositionRelativeToComponent().y);
 				input.artificialMouseReleased(MouseEvent.BUTTON1);
 			}
 			if(input.getMouseWheelUp()){
@@ -187,7 +187,7 @@ public class Main extends JFrame {
 			if(input.isKeyDown(KeyEvent.VK_F)){
 				state = State.SPACEBATTLE;
 			}
-			player.update(input.getMousePositionOnScreen());
+			player.update(input.getMousePositionRelativeToComponent());
 			galaxy.update();
 			time = newTime;
 			if(input.isKeyDown(KeyEvent.VK_ESCAPE)){
