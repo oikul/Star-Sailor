@@ -29,6 +29,7 @@ public class InputHandler implements KeyListener, MouseListener, MouseWheelListe
 	}
 	
 	public Point getMousePositionOnScreen(){
+		
 		if(MouseInfo.getPointerInfo().getLocation().x+16 > Main.width-16){
 			try {
 				new Robot().mouseMove(Main.width-32, MouseInfo.getPointerInfo().getLocation().y);
@@ -45,13 +46,15 @@ public class InputHandler implements KeyListener, MouseListener, MouseWheelListe
 			Point point = new Point(Main.width-16, MouseInfo.getPointerInfo().getLocation().y+16);
 			return point;
 		}else if(MouseInfo.getPointerInfo().getLocation().y+16 > Main.height-16){
+			
 			try {
 				new Robot().mouseMove(MouseInfo.getPointerInfo().getLocation().x,Main.height-32);
 			} catch (HeadlessException | AWTException e) {
 			}
-			Point point = new Point(Main.width-16, MouseInfo.getPointerInfo().getLocation().y+16);
+			Point point = new Point(MouseInfo.getPointerInfo().getLocation().x+16, Main.height-16);
 			return point;
 		}
+		
 		Point point = new Point(MouseInfo.getPointerInfo().getLocation().x+16, MouseInfo.getPointerInfo().getLocation().y+16);
 		return point;
 	}

@@ -33,7 +33,7 @@ public class EnemyShip{
 		time = System.currentTimeMillis();
 		if(ship == shipClass.FIGHTER){
 			this.health = 100;
-			shipImages = ResourceLoader.getBlockSprites("spaceship/enemyFighterSprite.png", 16, 16);
+			shipImages = ResourceLoader.getBlockSprites("spaceship/smallFighterSprite.png", 16, 16);
 			location = new Rectangle(x+8,y+8,16,16);
 			xSize = 16;
 			ySize = 16;
@@ -101,9 +101,10 @@ public class EnemyShip{
 		Sound.laser.play();
 	}
 	
-	public void update(){
+	public void update(int xChange,int yChange){
 		
 		getAngle();
+		location.setLocation(location.x+xChange, location.y+yChange);
 		if(System.currentTimeMillis() >= time){
 			
 			Point2D.Double temp = new Point2D.Double();
@@ -145,7 +146,7 @@ public class EnemyShip{
 		saveAt = g2d.getTransform();
 		at.rotate(rotation, location.x, location.y);
 		g2d.setTransform(at);
-		g2d.drawRect(location.x-(xSize/2)-3, location.y-(ySize/2)-3,xSize-6,ySize-6);
+		g2d.drawRect(location.x-(xSize/2), location.y-(ySize/2),xSize,ySize);
 		g2d.drawImage(shipImages[currentFrame],location.x-(xSize/2),location.y-(ySize/2), null);
 		g2d.setTransform(saveAt);
 		

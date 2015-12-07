@@ -31,8 +31,10 @@ public class Carrier extends EnemyShip {
 	}
 	
 	@Override
-	public void update(){
+	public void update(int xChange,int yChange){
 		
+
+		location.setLocation(location.x+xChange, location.y+yChange);
 		switch (fightStyle){
 		case DEFENSIVE:
 			location.setLocation((int)(location.getX()),(int)(location.getY()));

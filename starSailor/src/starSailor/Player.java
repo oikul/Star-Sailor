@@ -19,9 +19,11 @@ public class Player {
 	private double rotation, lastRotation;
 	
 	public static int accuracySTAT;
+	public static int speedSTAT;
 
 	public Player(String playerPath, String shipPath){
 		accuracySTAT = 1;
+		speedSTAT = 1;
 		playerImages = ResourceLoader.getPlayerSprites(playerPath, 16, 16);
 		shipImages = ResourceLoader.getBlockSprites(shipPath, 32, 32);
 		time = System.currentTimeMillis();

@@ -87,7 +87,7 @@ public class Main extends JFrame {
 		random = new Random();
 		input = new InputHandler(this);
 		Biome.createBiomes();
-		galaxy = new Galaxy(4096);
+		galaxy = new Galaxy(8192);
 		player = new Player("character/character_sprites.png", "spaceship/ship_sprites.png");
 		ship = new ShipInterior();
 		sb = new SpaceBattle();
@@ -130,6 +130,7 @@ public class Main extends JFrame {
 				if(input.isMouseDown(MouseEvent.BUTTON1)){
 					sb.shoot(input.getMousePositionOnScreen());
 					Sound.laser.play();
+					input.artificialMouseReleased(MouseEvent.BUTTON1);
 				}else if(input.isKeyDown(KeyEvent.VK_SPACE)){
 				    sb.shoot(input.getMousePositionOnScreen());
 				}
@@ -137,13 +138,29 @@ public class Main extends JFrame {
 				    state = State.GALACTIC;
 				}
 				if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_A)){
+					sb.panUL();
+					player.setMoving();
 				}else if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_D)){
+					sb.panUR();
+					player.setMoving();
 				}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_A)){
+					sb.panDL();
+					player.setMoving();
 				}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_D)){
+					sb.panDR();
+					player.setMoving();
 				}else if(input.isKeyDown(KeyEvent.VK_W)){
-				}else if(input.isKeyDown(KeyEvent.VK_A)){
+					sb.panUp();
+					player.setMoving();
 				}else if(input.isKeyDown(KeyEvent.VK_S)){
+					sb.panDown();
+					player.setMoving();
+				}else if(input.isKeyDown(KeyEvent.VK_A)){
+					sb.panLeft();
+					player.setMoving();
 				}else if(input.isKeyDown(KeyEvent.VK_D)){
+					sb.panRight();
+					player.setMoving();
 				}else{
 					player.stop();
 				}

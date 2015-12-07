@@ -63,7 +63,7 @@ public class SolarSystem {
 		}else{
 			if(selectedPlanet != -1){
 				double chance = Main.random.nextDouble();
-				if(chance < 0.4){
+				if(chance < 0.2){
 					Main.state = Main.State.SPACEBATTLE;
 					SpaceBattle.saveState = Main.State.PLANETRY;
 				}else{

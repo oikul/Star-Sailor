@@ -106,6 +106,31 @@ public class SpaceBattle {
 		
 	}
 	
+	public void panUp(){
+		spaceLocation.setLocation(spaceLocation.x, spaceLocation.y + Player.speedSTAT);
+	}
+	public void panDown(){
+		spaceLocation.setLocation(spaceLocation.x, spaceLocation.y - Player.speedSTAT);
+	}
+	public void panLeft(){
+		spaceLocation.setLocation(spaceLocation.x + Player.speedSTAT, spaceLocation.y);
+	}
+	public void panRight(){
+		spaceLocation.setLocation(spaceLocation.x - Player.speedSTAT, spaceLocation.y);
+	}
+	public void panUR(){
+		spaceLocation.setLocation(spaceLocation.x - (Player.speedSTAT*(1/Main.root2)), spaceLocation.y + (Player.speedSTAT*(1/Main.root2)));
+	}
+	public void panUL(){
+		spaceLocation.setLocation(spaceLocation.x + (Player.speedSTAT*(1/Main.root2)), spaceLocation.y + (Player.speedSTAT*(1/Main.root2)));
+	}
+	public void panDR(){
+		spaceLocation.setLocation(spaceLocation.x - (Player.speedSTAT*(1/Main.root2)), spaceLocation.y - (Player.speedSTAT*(1/Main.root2)));
+	}
+	public void panDL(){
+		spaceLocation.setLocation(spaceLocation.x + (Player.speedSTAT*(1/Main.root2)), spaceLocation.y - (Player.speedSTAT*(1/Main.root2)));
+	}
+	
 	public void shoot(Point mouseCoord){
 		double accuracy = 1.0 / ((Player.accuracySTAT*3)+30);
 		shots.add(new Line2D.Double(Main.width/2, Main.height/2,Main.width/2, Main.height/2));
@@ -117,6 +142,14 @@ public class SpaceBattle {
 	}
 	
 	public void newGame(){
+		shots.clear();
+		trajectories.clear();
+		carriers.clear();
+		fighters.clear();
+		carrierLocations.clear();
+		fighterLocations.clear();
+		spaceLocation.setLocation(0, 0);
+		
 		int carriers = 5;
 		int fighters = 5;
 		for (int i = 0; i < carriers; i++) {
@@ -143,6 +176,8 @@ public class SpaceBattle {
 			newBattle = false;
 		}
 		
+		
+		
 		for(int i = 0; i < shots.size(); i++){
 			
 			shots.get(i).setLine(shots.get(i).getX1()+trajectories.get(i).getX(), shots.get(i).getY1()+trajectories.get(i).getY(),shots.get(i).getX1(), shots.get(i).getY1());
@@ -158,7 +193,7 @@ public class SpaceBattle {
 		
 		for (int i = 0; i < carriers.size(); i++) {
 			if(carriers.get(i).isAlive()){
-				carriers.get(i).update();
+				carriers.get(i).update((int)spaceLocation.x,(int)spaceLocation.y);
 			for (int j = 0; j < shots.size();j++) {
 				if(carrierLocations.get(i).contains(shots.get(j).getP1())||carrierLocations.get(i).contains(shots.get(j).getP2())){
 					carriers.get(i).takeDamage(100);
@@ -180,6 +215,9 @@ public class SpaceBattle {
 		if(carriers.size() == 0){
 			newBattle = true;
 			Main.state = saveState;
+
+			int planet = Main.random.nextInt(6);
+			background = ResourceLoader.getImage("background/planet"+planet+".png");
 		}
 		
 	}
@@ -188,7 +226,7 @@ public class SpaceBattle {
 		Graphics2D g2d = (Graphics2D) g;
 		switch(Main.state){
 		case SPACEBATTLE:
-			g2d.drawImage(background, 0, 0, Main.width, Main.height, null);
+			g2d.drawImage(background, (int)spaceLocation.x, (int)spaceLocation.y, background.getWidth(null) * 3, background.getHeight(null) * 3, null);
 			g2d.setColor(Color.green);
 			for(int i = 0; i< shots.size(); i++){
 				g2d.drawLine((int)shots.get(i).getX1(),(int)shots.get(i).getY1(),(int)shots.get(i).getX2(),(int)shots.get(i).getY2());
