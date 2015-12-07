@@ -68,7 +68,7 @@ public class Block {
 	public static final BlockAnimated water_ocean = new BlockAnimated("water/water_ocean.png", true, 16, 16, 500);
 	public static final BlockAnimated water_river = new BlockAnimated("water/water_river.png", true, 16, 16, 500);
 	
-	//ship_interior
+	//ship_interior / space stations
 	public static final Block iron = new Block("ship_interior/iron.png", false);
 	public static final BlockAnimated engine_fire = new BlockAnimated("ship_interior/engine_fire_sprites.png", false, 64, 192, 200);
 	public static final Block engine = new Block("ship_interior/engine.png", true);
@@ -76,6 +76,9 @@ public class Block {
 	public static final Block glass = new Block("ship_interior/glass.png", true);
 	public static final Block ship_lights = new Block("ship_interior/ship_lights.png", true);
 	public static final Block control_desk = new Block("ship_interior/control_desk.png", false);
+	public static final Block wood = new Block("wood/wood.png", false);
+	public static final Block counter = new Block("wood/counter.png", true);
+	public static final Block crates = new Block("decoration/crates.png", true);
 	
 	protected Image image;
 	private boolean isSolid;

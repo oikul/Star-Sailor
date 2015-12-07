@@ -33,7 +33,7 @@ public class EnemyShip{
 		time = System.currentTimeMillis();
 		if(ship == shipClass.FIGHTER){
 			this.health = 100;
-			shipImages = ResourceLoader.getBlockSprites("spaceship/enemyFighterSprite.png", 16, 16);
+			shipImages = ResourceLoader.getBlockSprites("spaceship/smallFighterSprite.png", 16, 16);
 			location = new Rectangle(x+8,y+8,16,16);
 			xSize = 16;
 			ySize = 16;

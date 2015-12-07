@@ -87,7 +87,7 @@ public class Main extends JFrame {
 		random = new Random();
 		input = new InputHandler(this);
 		Biome.createBiomes();
-		galaxy = new Galaxy(4096);
+		galaxy = new Galaxy(8192);
 		player = new Player("character/character_sprites.png", "spaceship/ship_sprites.png");
 		ship = new ShipInterior();
 		sb = new SpaceBattle();
@@ -130,6 +130,7 @@ public class Main extends JFrame {
 				if(input.isMouseDown(MouseEvent.BUTTON1)){
 					sb.shoot(input.getMousePositionOnScreen());
 					Sound.laser.play();
+					input.artificialMouseReleased(MouseEvent.BUTTON1);
 				}else if(input.isKeyDown(KeyEvent.VK_SPACE)){
 				    sb.shoot(input.getMousePositionOnScreen());
 				}
