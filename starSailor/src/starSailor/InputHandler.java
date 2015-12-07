@@ -1,8 +1,11 @@
 package starSailor;
 
+import java.awt.AWTException;
 import java.awt.Component;
+import java.awt.HeadlessException;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -26,16 +29,35 @@ public class InputHandler implements KeyListener, MouseListener, MouseWheelListe
 	}
 	
 	public Point getMousePositionOnScreen(){
-		Point point = new Point(MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y);
-		// x + 0 y - 50 for lab machines
-		// x+0 y+0 for laptop
+		if(MouseInfo.getPointerInfo().getLocation().x+16 > Main.width-16){
+			try {
+				new Robot().mouseMove(Main.width-32, MouseInfo.getPointerInfo().getLocation().y);
+			} catch (HeadlessException | AWTException e) {
+			}
+			if(MouseInfo.getPointerInfo().getLocation().y+16 > Main.height-16){
+				try {
+					new Robot().mouseMove(Main.width-32,Main.height-32);
+				} catch (HeadlessException | AWTException e) {
+				}
+				Point point = new Point(Main.width-16, MouseInfo.getPointerInfo().getLocation().y+16);
+				return point;
+			}
+			Point point = new Point(Main.width-16, MouseInfo.getPointerInfo().getLocation().y+16);
+			return point;
+		}else if(MouseInfo.getPointerInfo().getLocation().y+16 > Main.height-16){
+			try {
+				new Robot().mouseMove(MouseInfo.getPointerInfo().getLocation().x,Main.height-32);
+			} catch (HeadlessException | AWTException e) {
+			}
+			Point point = new Point(Main.width-16, MouseInfo.getPointerInfo().getLocation().y+16);
+			return point;
+		}
+		Point point = new Point(MouseInfo.getPointerInfo().getLocation().x+16, MouseInfo.getPointerInfo().getLocation().y+16);
 		return point;
 	}
 	
 	public Point getMousePositionRelativeToComponent(){
-		Point point = new Point(c.getMousePosition().x, c.getMousePosition().y);
-		// x + 0 y +0 for lab machines
-		// x+0 y+0 for laptop
+		Point point = new Point(c.getMousePosition().x+16, c.getMousePosition().y+16);
 		return point;
 	}
 	

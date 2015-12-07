@@ -72,7 +72,16 @@ public class Main extends JFrame {
 		device.setFullScreenWindow(this);
 		setVisible(running);
 		setResizable(false);
-		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(ResourceLoader.getImage("cursor/cursor.png"), new Point(getX(), getY()), "c");
+		boolean fix = false;
+		Cursor cursor = this.getCursor();
+		while(!fix){
+			try{
+				cursor = Toolkit.getDefaultToolkit().createCustomCursor(ResourceLoader.getImage("cursor/cursor.png"), new Point(getX(), getY()), "c");
+				fix = true;
+			}catch(Exception e){
+				System.out.println("fail");
+			}
+		}
 		setCursor(cursor);
 		state = State.GALACTIC;
 		random = new Random();
@@ -119,10 +128,24 @@ public class Main extends JFrame {
 				break;
 			case SPACEBATTLE:
 				if(input.isMouseDown(MouseEvent.BUTTON1)){
-					sb.shoot(input.getMousePositionRelativeToComponent());
+					sb.shoot(input.getMousePositionOnScreen());
 					Sound.laser.play();
 				}else if(input.isKeyDown(KeyEvent.VK_SPACE)){
-				    sb.shoot(input.getMousePositionRelativeToComponent());
+				    sb.shoot(input.getMousePositionOnScreen());
+				}
+				if(input.isKeyDown(KeyEvent.VK_F)){
+				    state = State.GALACTIC;
+				}
+				if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_A)){
+				}else if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_D)){
+				}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_A)){
+				}else if(input.isKeyDown(KeyEvent.VK_S) && input.isKeyDown(KeyEvent.VK_D)){
+				}else if(input.isKeyDown(KeyEvent.VK_W)){
+				}else if(input.isKeyDown(KeyEvent.VK_A)){
+				}else if(input.isKeyDown(KeyEvent.VK_S)){
+				}else if(input.isKeyDown(KeyEvent.VK_D)){
+				}else{
+					player.stop();
 				}
 				sb.update();
 				break;
@@ -132,6 +155,7 @@ public class Main extends JFrame {
 			default:
 				break;
 			}
+			if(state != State.SPACEBATTLE){
 			if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_A)){
 				galaxy.panUL();
 				player.setMoving();
@@ -172,7 +196,7 @@ public class Main extends JFrame {
 				player.stop();
 			}
 			if(input.isMouseDown(MouseEvent.BUTTON1)){
-				galaxy.checkForClick(input.getMousePositionRelativeToComponent().x, input.getMousePositionRelativeToComponent().y);
+				galaxy.checkForClick(input.getMousePositionOnScreen().x, input.getMousePositionOnScreen().y);
 				input.artificialMouseReleased(MouseEvent.BUTTON1);
 			}
 			if(input.getMouseWheelUp()){
@@ -192,9 +216,10 @@ public class Main extends JFrame {
 			if(input.isKeyDown(KeyEvent.VK_F)){
 				state = State.SPACEBATTLE;
 			}
-			player.update(input.getMousePositionOnScreen());
 			galaxy.update();
 			time = newTime;
+			}
+			player.update(input.getMousePositionOnScreen());
 			if(input.isKeyDown(KeyEvent.VK_ESCAPE)){
 				System.exit(0);
 			}
