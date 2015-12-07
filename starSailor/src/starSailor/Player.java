@@ -18,12 +18,14 @@ public class Player {
 	private long time;
 	private double rotation, lastRotation;
 	
-	public static int accuracySTAT;
-	public static int speedSTAT;
+	public static int accuracySTAT,speedSTAT,HPSTAT;
+	public static int killCount;
 
 	public Player(String playerPath, String shipPath){
 		accuracySTAT = 1;
 		speedSTAT = 1;
+		HPSTAT = 1000;
+		killCount = 0;
 		playerImages = ResourceLoader.getPlayerSprites(playerPath, 16, 16);
 		shipImages = ResourceLoader.getBlockSprites(shipPath, 32, 32);
 		time = System.currentTimeMillis();

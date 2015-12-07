@@ -18,6 +18,7 @@ public class Main extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	private boolean running = false;
+	public static boolean alive = false;
 	public static int width, height;
 	public static Random random;
 	public static final double root2 = Math.sqrt(2.0);
@@ -43,6 +44,7 @@ public class Main extends JFrame {
 	private void run(){
 		initialise();
 		while(running){
+			alive = true;
 			long beforeTime = System.currentTimeMillis();
 			update();
 			draw();
@@ -56,8 +58,14 @@ public class Main extends JFrame {
 			}catch (Exception e){
 				e.printStackTrace();
 			}
+			if(!alive){
+				dispose();
+				initialise();
+				gameOver();
+			}
 		}
 		dispose();
+		
 	}
 	
 	private void initialise(){
@@ -135,7 +143,8 @@ public class Main extends JFrame {
 				    sb.shoot(input.getMousePositionOnScreen());
 				}
 				if(input.isKeyDown(KeyEvent.VK_F)){
-				    state = State.GALACTIC;
+				    state = saveState;
+				    input.artificialKeyReleased(KeyEvent.VK_F);
 				}
 				if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_A)){
 					sb.panUL();
@@ -232,6 +241,7 @@ public class Main extends JFrame {
 			}
 			if(input.isKeyDown(KeyEvent.VK_F)){
 				state = State.SPACEBATTLE;
+			    input.artificialKeyReleased(KeyEvent.VK_F);
 			}
 			galaxy.update();
 			time = newTime;
@@ -244,16 +254,29 @@ public class Main extends JFrame {
 	}
 	
 	private void draw(){
-		Graphics g = getGraphics();
-		Graphics2D g2d = (Graphics2D) g;
-		Image offImage = createImage(width, height);
-		Graphics offGraphics = offImage.getGraphics();
-		offGraphics.fillRect(0, 0, width, height);
-		galaxy.draw(offGraphics);
-		ship.draw(offGraphics);
-		sb.draw(offGraphics);
-		player.draw(offGraphics);
-		g2d.drawImage(offImage, 0, 0, width, height, null);
+			Graphics g = getGraphics();
+			Graphics2D g2d = (Graphics2D) g;
+			Image offImage = createImage(width, height);
+			Graphics offGraphics = offImage.getGraphics();
+			offGraphics.fillRect(0, 0, width, height);
+			galaxy.draw(offGraphics);
+			ship.draw(offGraphics);
+			sb.draw(offGraphics);
+			player.draw(offGraphics);
+			g2d.drawImage(offImage, 0, 0, width, height, null);
 	}
 
+	private void gameOver(){
+		
+		Image gameover = ResourceLoader.getImage("background/gameOver.png");
+		
+		Graphics g = getGraphics();
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.drawImage(gameover,0,0,Main.width,Main.height,null);
+		long time = System.currentTimeMillis()+4000;
+		while(System.currentTimeMillis() < time){}
+		
+		
+	}
+	
 }

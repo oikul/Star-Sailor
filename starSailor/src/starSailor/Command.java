@@ -3,46 +3,18 @@ package starSailor;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 
-public class Carrier extends EnemyShip {
+public class Command extends EnemyShip {
 
-
-	private fightingStyle fightStyle;
-
-	public enum fightingStyle{
-		AGGRESSIVE,DEFENSIVE,TACTICAL
-	}
-	
-	public Carrier(int x, int y) {
-		super(x, y, EnemyShip.shipClass.CARRIER);
+	public Command(int x, int y) {
+		super(x,y,EnemyShip.shipClass.COMMAND);
 		
-		int num = Main.random.nextInt(3);
-		switch (num){
-		case 0:
-			fightStyle = fightingStyle.AGGRESSIVE;
-			break;
-		case 1:
-			fightStyle = fightingStyle.DEFENSIVE;
-			break;
-		case 2:
-			fightStyle = fightingStyle.TACTICAL;
-			break;
-		}
 		
 	}
 	
 	@Override
 	public void update(double xChange,double yChange){
-		
-
+	
 		location.setLocation((int)xChange+location.x, (int)yChange+location.y);
-		switch (fightStyle){
-		case DEFENSIVE:
-			location.setLocation((int)(location.getX()),(int)(location.getY()));
-		case AGGRESSIVE:
-			location.setLocation((int)(location.getX()),(int)(location.getY()));
-		case TACTICAL:
-			location.setLocation((int)(location.getX()),(int)(location.getY()));
-		}
 		getAngle();
 		if(System.currentTimeMillis() >= time){
 			
@@ -62,12 +34,6 @@ public class Carrier extends EnemyShip {
 		
 		for(int i = 0; i < shots.size(); i++){
 			shots.get(i).setLine(shots.get(i).getX1()+trajectories.get(i).x, shots.get(i).getY1()+trajectories.get(i).y, shots.get(i).getX1(), shots.get(i).getY1());
-			if(shots.get(i).intersects(new Rectangle(Main.width/2 - 16, Main.height/2 - 16, 32, 32))){
-				SpaceBattle.playerDamage(20);
-				shots.remove(i);
-				trajectories.remove(i);
-				i--;
-			}
 		}
 		Rectangle rect = new Rectangle(0,0,Main.width,Main.height);
 		for (int i = 0; i < shots.size(); i++) {

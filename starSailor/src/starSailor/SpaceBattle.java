@@ -13,10 +13,13 @@ import java.util.ArrayList;
 public class SpaceBattle {
 	
 	private Point2D.Double spaceLocation;
-	private int xSize = 10000;
-	private int ySize = 6000;
-	private int xChange;
-	private int yChange;
+	private int xSize;
+	private int ySize;
+	private double xChange;
+	private double yChange;
+	
+	private int playerHealth;
+	
 	private ArrayList<Point2D.Double> trajectories;
 	private ArrayList<Rectangle> fighterLocations;
 	private ArrayList<Rectangle> carrierLocations;
@@ -29,42 +32,27 @@ public class SpaceBattle {
 	private boolean newBattle = false;
 	
 	public SpaceBattle(){
-		spaceLocation = new Point2D.Double(0,0);
-		xChange = 0;
-		yChange = 0;
 		int carriers = 5;
 		int fighters = 5;
 		this.carriers = new ArrayList<Carrier>(carriers);
 		this.fighters = new ArrayList<Fighter>(fighters);
 		int planet = Main.random.nextInt(6);
 		background = ResourceLoader.getImage("background/planet"+planet+".png");
+		xSize = background.getWidth(null)*2;
+		ySize = background.getHeight(null)*2;
+		spaceLocation = new Point2D.Double(0, 0);
 		trajectories = new ArrayList<Point2D.Double>();
 		shots = new ArrayList<Line2D.Double>();
 		fighterLocations = new ArrayList<Rectangle>(fighters);
 		carrierLocations = new ArrayList<Rectangle>(carriers);
 		
-		for (int i = 0; i < carriers; i++) {
-			
-			int x = Main.random.nextInt(300)+50;
-			int y = Main.random.nextInt(Main.height-100)+50;
-
-			carrierLocations.add(new Rectangle(x,y,32,32));
-			this.carriers.add(new Carrier(x,y));
-			for (int j = 0; j < fighters; j++) {
-			
-				int x2 = x + Main.random.nextInt(50)-25;
-				int y2 = y + Main.random.nextInt(50)-25;
-				this.fighters.add(new Fighter(x2,y2,this.carriers.get(i)));
-				fighterLocations.add(new Rectangle(x2,y2,16,16));
-			}
-		}
-		
-		
+		newGame();
 		
 		pointer = new Point2D.Double(0, 0);
 	}
 	
 	public static Point2D.Double getPoint(Point2D.Double p1,Point2D.Double p2,double speed,double accuracy){
+		if((int)p1.x != (int)p2.x && (int)p1.y != (int)p2.y){
 		double xdif = (p2.getX() - p1.getX());
 		double ydif = (p2.getY() - p1.getY());
 		double angle = 0;		// in radians
@@ -88,54 +76,108 @@ public class SpaceBattle {
 
 		
 		return new Point2D.Double(xgain,ygain);
-		
+		}
+		return new Point2D.Double(0,0);
 	}
 
 	public static double getAngle(Point2D.Double p1,Point2D.Double p2){
 		
-		double xdif = (p2.getX() - p1.getX());
-		double ydif = (p2.getY() - p1.getY());
-		double angle = 0;		// in radians
+		if((int)p1.x != (int)p2.x && (int)p1.y != (int)p2.y){
+			double xdif = (p2.getX() - p1.getX());
+			double ydif = (p2.getY() - p1.getY());
+			double angle = 0;		// in radians
 		
-		angle = -Math.atan(ydif/xdif);
-		if(xdif<0){
-			if(ydif<0){
-				angle += Math.PI;
-			} else {
-				angle -= +Math.PI;
+			angle = -Math.atan(ydif/xdif);
+			if(xdif<0){
+				if(ydif<0){
+					angle += Math.PI;
+				} else {
+					angle -= +Math.PI;
+				}
 			}
+		
+			return -angle;
 		}
-		
-		return -angle;
-		
+		return 0.0;
+	}
+	
+	public static void playerDamage(int damage){
+		Player.HPSTAT -= damage;
+		if(Player.HPSTAT <= 0){
+			Main.alive = false;
+		}
 	}
 	
 	public void panUp(){
-		spaceLocation.setLocation(spaceLocation.x, spaceLocation.y + Player.speedSTAT);
-		yChange -= Player.speedSTAT;
+		if(spaceLocation.y < 0){
+			spaceLocation.setLocation(spaceLocation.x, spaceLocation.y + Player.speedSTAT);
+			yChange -= Player.speedSTAT;
+		}else{
+		}
 	}
 	public void panDown(){
-		spaceLocation.setLocation(spaceLocation.x, spaceLocation.y - Player.speedSTAT);
+		if(spaceLocation.y >  Main.height - ySize){
+			spaceLocation.setLocation(spaceLocation.x, spaceLocation.y - Player.speedSTAT);
+			yChange += Player.speedSTAT;
+		}
 	}
 	public void panLeft(){
-		spaceLocation.setLocation(spaceLocation.x + Player.speedSTAT, spaceLocation.y);
+		if(spaceLocation.x < 0){
+			spaceLocation.setLocation(spaceLocation.x + Player.speedSTAT, spaceLocation.y);
+			xChange -= Player.speedSTAT;
+		}
 	}
 	public void panRight(){
-		spaceLocation.setLocation(spaceLocation.x - Player.speedSTAT, spaceLocation.y);
+		if(spaceLocation.x > Main.width - xSize){
+			spaceLocation.setLocation(spaceLocation.x - Player.speedSTAT, spaceLocation.y);
+			xChange += Player.speedSTAT;
+		}
 	}
 	public void panUR(){
-		spaceLocation.setLocation(spaceLocation.x - (Player.speedSTAT*(1/Main.root2)), spaceLocation.y + (Player.speedSTAT*(1/Main.root2)));
+		if(spaceLocation.x >= 0){
+			panUp();
+		}else if(spaceLocation.y <= Main.height - ySize){
+			panRight();
+		}else{
+			spaceLocation.setLocation(spaceLocation.x - (Player.speedSTAT*(1/Main.root2)), spaceLocation.y + (Player.speedSTAT*(1/Main.root2)));
+			xChange += Player.speedSTAT*(1/Main.root2);
+			yChange -= Player.speedSTAT*(1/Main.root2);
+		}
 	}
 	public void panUL(){
-		spaceLocation.setLocation(spaceLocation.x + (Player.speedSTAT*(1/Main.root2)), spaceLocation.y + (Player.speedSTAT*(1/Main.root2)));
+		if(spaceLocation.x >= 0){
+			panUp();
+		}else if(spaceLocation.y >= 0){
+			panLeft();
+		}else{
+			spaceLocation.setLocation(spaceLocation.x + (Player.speedSTAT*(1/Main.root2)), spaceLocation.y + (Player.speedSTAT*(1/Main.root2)));
+			xChange -= Player.speedSTAT*(1/Main.root2);
+			yChange -= Player.speedSTAT*(1/Main.root2);
+		}
 	}
 	public void panDR(){
-		spaceLocation.setLocation(spaceLocation.x - (Player.speedSTAT*(1/Main.root2)), spaceLocation.y - (Player.speedSTAT*(1/Main.root2)));
+		if(spaceLocation.x <= Main.width - xSize){
+			panDown();
+		}else if(spaceLocation.y <= Main.height - ySize){
+			panRight();
+		}else{
+			spaceLocation.setLocation(spaceLocation.x - (Player.speedSTAT*(1/Main.root2)), spaceLocation.y - (Player.speedSTAT*(1/Main.root2)));
+			xChange += Player.speedSTAT*(1/Main.root2);
+			yChange += Player.speedSTAT*(1/Main.root2);
+		}
 	}
 	public void panDL(){
-		spaceLocation.setLocation(spaceLocation.x + (Player.speedSTAT*(1/Main.root2)), spaceLocation.y - (Player.speedSTAT*(1/Main.root2)));
+		if(spaceLocation.x >= 0){
+			panDown();
+		}else if(spaceLocation.y <= Main.height - ySize){
+			panLeft();
+		}else{
+			spaceLocation.setLocation(spaceLocation.x + (Player.speedSTAT*(1/Main.root2)), spaceLocation.y - (Player.speedSTAT*(1/Main.root2)));
+			xChange -= Player.speedSTAT*(1/Main.root2);
+			yChange += Player.speedSTAT*(1/Main.root2);
+		}
 	}
-	
+ 	
 	public void shoot(Point mouseCoord){
 		double accuracy = 1.0 / ((Player.accuracySTAT*3)+30);
 		shots.add(new Line2D.Double(Main.width/2, Main.height/2,Main.width/2, Main.height/2));
@@ -146,6 +188,8 @@ public class SpaceBattle {
 			
 	}
 	
+	
+	
 	public void newGame(){
 		shots.clear();
 		trajectories.clear();
@@ -154,17 +198,17 @@ public class SpaceBattle {
 		carrierLocations.clear();
 		fighterLocations.clear();
 		spaceLocation.setLocation(0, 0);
+		xChange = 0;
+		yChange = 0;
 		
-		int carriers = 5;
-		int fighters = 5;
-		for (int i = 0; i < carriers; i++) {
+		for (int i = 0; i < Main.random.nextInt(5)+5; i++) {
 
 			int x = Main.random.nextInt(300)+50;
 			int y = Main.random.nextInt(Main.height-100)+50;
 
 			carrierLocations.add(new Rectangle(x,y,32,32));
 			this.carriers.add(new Carrier(x,y));
-			for (int j = 0; j < fighters; j++) {
+			for (int j = 0; j < Main.random.nextInt(5)+5; j++) {
 
 				int x2 = x + Main.random.nextInt(50)-25;
 				int y2 = y + Main.random.nextInt(50)-25;
@@ -198,7 +242,7 @@ public class SpaceBattle {
 		
 		for (int i = 0; i < carriers.size(); i++) {
 			if(carriers.get(i).isAlive()){
-				carriers.get(i).update(0,0);
+				carriers.get(i).update(xChange,yChange);
 			for (int j = 0; j < shots.size();j++) {
 				if(carrierLocations.get(i).contains(shots.get(j).getP1())||carrierLocations.get(i).contains(shots.get(j).getP2())){
 					carriers.get(i).takeDamage(100);
@@ -217,12 +261,17 @@ public class SpaceBattle {
 				}
 			}
 		}
+				xChange = 0;
+				yChange = 0;
 		if(carriers.size() == 0){
 			newBattle = true;
 			Main.state = saveState;
 
 			int planet = Main.random.nextInt(6);
 			background = ResourceLoader.getImage("background/planet"+planet+".png");
+
+			xSize = background.getWidth(null)*2;
+			ySize = background.getHeight(null)*2;
 		}
 		
 	}
@@ -231,8 +280,11 @@ public class SpaceBattle {
 		Graphics2D g2d = (Graphics2D) g;
 		switch(Main.state){
 		case SPACEBATTLE:
-			g2d.drawImage(background, (int)spaceLocation.x, (int)spaceLocation.y, background.getWidth(null) * 3, background.getHeight(null) * 3, null);
+
+			g2d.setColor(Color.red);
+			g2d.fillRect(Main.width/2 - 500, 50, 1000, 20);
 			g2d.setColor(Color.green);
+			g2d.fillRect(Main.width/2 - (Player.HPSTAT - 500), 50, Player.HPSTAT, 20);
 			for(int i = 0; i< shots.size(); i++){
 				g2d.drawLine((int)shots.get(i).getX1(),(int)shots.get(i).getY1(),(int)shots.get(i).getX2(),(int)shots.get(i).getY2());
 			}

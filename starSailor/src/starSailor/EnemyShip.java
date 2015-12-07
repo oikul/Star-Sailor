@@ -3,7 +3,6 @@ package starSailor;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
@@ -14,11 +13,11 @@ public class EnemyShip{
 
 	protected ArrayList<Point2D.Double> trajectories;
 	protected ArrayList<Line2D.Double> shots;
-	private int health,speed;
+	private int health;
 	protected int currentFrame;
 	protected int death;
-	protected Rectangle location;
 	protected Point2D.Double spaceLocation;
+	protected Point2D.Double location;
 	private double rotation;
 	protected double time;
 	protected double shootTime;
@@ -32,23 +31,23 @@ public class EnemyShip{
 	public EnemyShip(int x,int y,shipClass ship){
 		
 		time = System.currentTimeMillis();
-		spaceLocation = new Point2D.Double(0,0);
+		spaceLocation = new Point2D.Double(x,y);
 		if(ship == shipClass.FIGHTER){
 			this.health = 100;
 			shipImages = ResourceLoader.getBlockSprites("spaceship/smallFighterSprite.png", 16, 16);
-			location = new Rectangle(x+8,y+8,16,16);
+			location = new Point2D.Double(x,y);
 			xSize = 16;
 			ySize = 16;
 		}else if(ship == shipClass.CARRIER){
 			this.health = 500;
 			shipImages = ResourceLoader.getBlockSprites("spaceship/enemyCarrierSprite.png", 32, 32);
-			location = new Rectangle(x+16,y+16,32,32);
+			location = new Point2D.Double(x,y);
 			xSize = 32;
 			ySize = 32;
 		}else if(ship == shipClass.COMMAND){
 			this.health = 2000;
 			shipImages = ResourceLoader.getBlockSprites("spaceship/enemyCarrierSprite.png", 32, 32);
-			location = new Rectangle(x+16,y+64,32,128);
+			location = new Point2D.Double(x,y);
 			xSize = 32;
 			ySize = 128;
 		}else{
@@ -83,7 +82,7 @@ public class EnemyShip{
 	}
 	
 	public void getAngle(){
-		rotation = SpaceBattle.getAngle(new Point2D.Double(location.getX()+(location.getWidth()/2),location.getY()+(location.getHeight()/2)), 
+		rotation = SpaceBattle.getAngle(new Point2D.Double(location.getX()+(location.x/2),location.getY()+(location.y/2)), 
 										new Point2D.Double(Main.width/2,Main.height/2));
 	}
 
@@ -103,13 +102,11 @@ public class EnemyShip{
 		Sound.laser.play();
 	}
 	
-	public void update(int xChange,int yChange){
+	public void update(double xChange,double yChange){
 		
 		getAngle();
 		spaceLocation.setLocation(xChange+location.x, yChange+location.y);
 		if(System.currentTimeMillis() >= time){
-			
-			Point2D.Double temp = new Point2D.Double();
 			
 			if(currentFrame == 1){
 				currentFrame = 0;
@@ -125,6 +122,12 @@ public class EnemyShip{
 		
 		for(int i = 0; i < shots.size(); i++){
 			shots.get(i).setLine(shots.get(i).getX1()+trajectories.get(i).x, shots.get(i).getY1()+trajectories.get(i).y, shots.get(i).getX1(), shots.get(i).getY1());
+			if(shots.get(i).intersects(new Rectangle(Main.width/2 - 16, Main.height/2 - 16, 32, 32))){
+				SpaceBattle.playerDamage(5);
+				shots.remove(i);
+				trajectories.remove(i);
+				i--;
+			}
 		}
 		Rectangle rect = new Rectangle(0,0,Main.width,Main.height);
 		for (int i = 0; i < shots.size(); i++) {
@@ -140,6 +143,7 @@ public class EnemyShip{
 	
 	public void draw(Graphics2D g2d){
 		
+
 		g2d.setColor(Color.red);
 
 		AffineTransform saveAt;
@@ -149,7 +153,7 @@ public class EnemyShip{
 		at.rotate(rotation, location.x, location.y);
 		g2d.setTransform(at);
 		g2d.drawRect((int)spaceLocation.x-(xSize/2), (int)spaceLocation.y-(ySize/2),xSize,ySize);
-		g2d.drawImage(shipImages[currentFrame],location.x-(xSize/2),location.y-(ySize/2), null);
+		g2d.drawImage(shipImages[currentFrame],(int)location.x-(xSize/2),(int)location.y-(ySize/2), null);
 		g2d.setTransform(saveAt);
 		
 		

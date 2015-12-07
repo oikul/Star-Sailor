@@ -17,7 +17,7 @@ public class Fighter extends EnemyShip {
 	}
 	
 	@Override
-	public void update(int xChange,int yChange){
+	public void update(double xChange,double yChange){
 		
 		getAngle();
 		spaceLocation.setLocation(xChange, yChange);
