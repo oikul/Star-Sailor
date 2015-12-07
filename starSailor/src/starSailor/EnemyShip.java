@@ -18,6 +18,7 @@ public class EnemyShip{
 	protected int currentFrame;
 	protected int death;
 	protected Rectangle location;
+	protected Point2D.Double spaceLocation;
 	private double rotation;
 	protected double time;
 	protected double shootTime;
@@ -31,6 +32,7 @@ public class EnemyShip{
 	public EnemyShip(int x,int y,shipClass ship){
 		
 		time = System.currentTimeMillis();
+		spaceLocation = new Point2D.Double(0,0);
 		if(ship == shipClass.FIGHTER){
 			this.health = 100;
 			shipImages = ResourceLoader.getBlockSprites("spaceship/smallFighterSprite.png", 16, 16);
@@ -104,7 +106,7 @@ public class EnemyShip{
 	public void update(int xChange,int yChange){
 		
 		getAngle();
-		location.setLocation(location.x+xChange, location.y+yChange);
+		spaceLocation.setLocation(xChange+location.x, yChange+location.y);
 		if(System.currentTimeMillis() >= time){
 			
 			Point2D.Double temp = new Point2D.Double();
@@ -146,7 +148,7 @@ public class EnemyShip{
 		saveAt = g2d.getTransform();
 		at.rotate(rotation, location.x, location.y);
 		g2d.setTransform(at);
-		g2d.drawRect(location.x-(xSize/2), location.y-(ySize/2),xSize,ySize);
+		g2d.drawRect((int)spaceLocation.x-(xSize/2), (int)spaceLocation.y-(ySize/2),xSize,ySize);
 		g2d.drawImage(shipImages[currentFrame],location.x-(xSize/2),location.y-(ySize/2), null);
 		g2d.setTransform(saveAt);
 		

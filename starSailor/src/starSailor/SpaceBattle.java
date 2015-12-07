@@ -15,6 +15,8 @@ public class SpaceBattle {
 	private Point2D.Double spaceLocation;
 	private int xSize = 10000;
 	private int ySize = 6000;
+	private int xChange;
+	private int yChange;
 	private ArrayList<Point2D.Double> trajectories;
 	private ArrayList<Rectangle> fighterLocations;
 	private ArrayList<Rectangle> carrierLocations;
@@ -28,6 +30,8 @@ public class SpaceBattle {
 	
 	public SpaceBattle(){
 		spaceLocation = new Point2D.Double(0,0);
+		xChange = 0;
+		yChange = 0;
 		int carriers = 5;
 		int fighters = 5;
 		this.carriers = new ArrayList<Carrier>(carriers);
@@ -108,6 +112,7 @@ public class SpaceBattle {
 	
 	public void panUp(){
 		spaceLocation.setLocation(spaceLocation.x, spaceLocation.y + Player.speedSTAT);
+		yChange -= Player.speedSTAT;
 	}
 	public void panDown(){
 		spaceLocation.setLocation(spaceLocation.x, spaceLocation.y - Player.speedSTAT);
@@ -193,7 +198,7 @@ public class SpaceBattle {
 		
 		for (int i = 0; i < carriers.size(); i++) {
 			if(carriers.get(i).isAlive()){
-				carriers.get(i).update((int)spaceLocation.x,(int)spaceLocation.y);
+				carriers.get(i).update(0,0);
 			for (int j = 0; j < shots.size();j++) {
 				if(carrierLocations.get(i).contains(shots.get(j).getP1())||carrierLocations.get(i).contains(shots.get(j).getP2())){
 					carriers.get(i).takeDamage(100);

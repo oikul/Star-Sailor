@@ -20,7 +20,7 @@ public class Fighter extends EnemyShip {
 	public void update(int xChange,int yChange){
 		
 		getAngle();
-		location.setLocation(location.x+xChange, location.y+);
+		spaceLocation.setLocation(xChange, yChange);
 		if(System.currentTimeMillis() >= time){
 			
 			Point2D.Double temp = new Point2D.Double();
