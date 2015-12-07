@@ -20,6 +20,8 @@ public class SpaceBattle {
 	private ArrayList<Carrier> carriers;
 	private Point2D.Double pointer; // displays the pointer location
 	private Image background;
+	public static Main.State saveState = Main.State.GALACTIC;
+	private boolean newBattle = false;
 	
 	public SpaceBattle(){
 		int carriers = 5;
@@ -109,7 +111,32 @@ public class SpaceBattle {
 			
 	}
 	
+	public void newGame(){
+		int carriers = 5;
+		int fighters = 5;
+		for (int i = 0; i < carriers; i++) {
+
+			int x = Main.random.nextInt(300)+50;
+			int y = Main.random.nextInt(Main.height-100)+50;
+
+			carrierLocations.add(new Rectangle(x,y,32,32));
+			this.carriers.add(new Carrier(x,y));
+			for (int j = 0; j < fighters; j++) {
+
+				int x2 = x + Main.random.nextInt(50)-25;
+				int y2 = y + Main.random.nextInt(50)-25;
+				this.fighters.add(new Fighter(x2,y2,this.carriers.get(i)));
+				fighterLocations.add(new Rectangle(x2,y2,16,16));
+			}
+		}
+	}
+	
 	public void update(){
+		
+		if(newBattle){
+			newGame();
+			newBattle = false;
+		}
 		
 		for(int i = 0; i < shots.size(); i++){
 			
@@ -144,6 +171,10 @@ public class SpaceBattle {
 					carriers.get(i).die();
 				}
 			}
+		}
+		if(carriers.size() == 0){
+			newBattle = true;
+			Main.state = saveState;
 		}
 		
 	}

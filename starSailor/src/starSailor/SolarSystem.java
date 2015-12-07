@@ -62,7 +62,13 @@ public class SolarSystem {
 			yDif = 0;
 		}else{
 			if(selectedPlanet != -1){
-				Main.state = Main.State.PLANETRY;
+				double chance = Main.random.nextDouble();
+				if(chance < 0.4){
+					Main.state = Main.State.SPACEBATTLE;
+					SpaceBattle.saveState = Main.State.PLANETRY;
+				}else{
+					Main.state = Main.State.PLANETRY;
+				}
 			}
 		}
 	}

@@ -119,10 +119,10 @@ public class Main extends JFrame {
 				break;
 			case SPACEBATTLE:
 				if(input.isMouseDown(MouseEvent.BUTTON1)){
-					sb.shoot(input.getMousePositionRelativeToComponent());
+					sb.shoot(input.getMousePositionOnScreen());
 					Sound.laser.play();
 				}else if(input.isKeyDown(KeyEvent.VK_SPACE)){
-				    sb.shoot(input.getMousePositionRelativeToComponent());
+				    sb.shoot(input.getMousePositionOnScreen());
 				}
 				sb.update();
 				break;
@@ -172,7 +172,7 @@ public class Main extends JFrame {
 				player.stop();
 			}
 			if(input.isMouseDown(MouseEvent.BUTTON1)){
-				galaxy.checkForClick(input.getMousePositionRelativeToComponent().x, input.getMousePositionRelativeToComponent().y);
+				galaxy.checkForClick(input.getMousePositionOnScreen().x, input.getMousePositionOnScreen().y);
 				input.artificialMouseReleased(MouseEvent.BUTTON1);
 			}
 			if(input.getMouseWheelUp()){
