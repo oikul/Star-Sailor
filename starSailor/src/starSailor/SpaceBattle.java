@@ -150,20 +150,25 @@ public class SpaceBattle {
 	
 	public void draw(Graphics g){
 		Graphics2D g2d = (Graphics2D) g;
-		
-		g2d.drawImage(background, 0, 0, Main.width, Main.height, null);
-		g2d.setColor(Color.green);
-		for(int i = 0; i< shots.size(); i++){
-			g2d.drawLine((int)shots.get(i).getX1(),(int)shots.get(i).getY1(),(int)shots.get(i).getX2(),(int)shots.get(i).getY2());
-		}
-		g2d.drawRect(Main.width/2 - 16, Main.height/2-16, 32, 32);
-		g2d.drawRect((int)pointer.x, (int)pointer.y, 1, 1);
-		
-		for (Carrier carrier : carriers) {
-			carrier.draw(g2d);
-		}
-		for (Fighter fighter : fighters) {
-			fighter.draw(g2d);
+		switch(Main.state){
+		case SPACEBATTLE:
+			g2d.drawImage(background, 0, 0, Main.width, Main.height, null);
+			g2d.setColor(Color.green);
+			for(int i = 0; i< shots.size(); i++){
+				g2d.drawLine((int)shots.get(i).getX1(),(int)shots.get(i).getY1(),(int)shots.get(i).getX2(),(int)shots.get(i).getY2());
+			}
+			g2d.drawRect(Main.width/2 - 16, Main.height/2-16, 32, 32);
+			g2d.drawRect((int)pointer.x, (int)pointer.y, 1, 1);
+
+			for (Carrier carrier : carriers) {
+				carrier.draw(g2d);
+			}
+			for (Fighter fighter : fighters) {
+				fighter.draw(g2d);
+			}
+			break;
+		default:
+			break;
 		}
 			
 	}

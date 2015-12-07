@@ -167,11 +167,12 @@ public class ShipInterior {
 	}
 	
 	public void draw(Graphics g){
-		
-		for(int i = 0; i < ship.length; i++){
-			for(int j = 0; j < ship[0].length; j++){
-				if(ship[i][j] != null){
-					ship[i][j].draw(g, shipPoints[i][j].x + (int) xDif, shipPoints[i][j].y + (int) yDif);
+		if(Main.state == Main.State.SHIP){
+			for(int i = 0; i < ship.length; i++){
+				for(int j = 0; j < ship[0].length; j++){
+					if(ship[i][j] != null){
+						ship[i][j].draw(g, shipPoints[i][j].x + (int) xDif, shipPoints[i][j].y + (int) yDif);
+					}
 				}
 			}
 		}

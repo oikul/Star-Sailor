@@ -3,6 +3,8 @@ package starSailor;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -25,6 +27,7 @@ public class Main extends JFrame {
 	private long time;
 	private ShipInterior ship;
 	private SpaceBattle sb;
+	private static GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
 	
 	public static enum State{
 		GALACTIC, SOLAR, PLANETRY, SURFACE, SHIP, SPACEBATTLE, MOON, DUNGEON, VILLAGE, SPACESTATION;
@@ -64,10 +67,12 @@ public class Main extends JFrame {
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		setSize(width, height);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setUndecorated(true);
+		device.setFullScreenWindow(this);
 		setVisible(running);
 		setResizable(false);
-		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(ResourceLoader.getImage("cursor/cursor.png"), new Point(getX()+16, getY()+16), "c");
+		Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(ResourceLoader.getImage("cursor/cursor.png"), new Point(getX(), getY()), "c");
 		setCursor(cursor);
 		state = State.GALACTIC;
 		random = new Random();
@@ -187,7 +192,7 @@ public class Main extends JFrame {
 			if(input.isKeyDown(KeyEvent.VK_F)){
 				state = State.SPACEBATTLE;
 			}
-			player.update(input.getMousePositionRelativeToComponent());
+			player.update(input.getMousePositionOnScreen());
 			galaxy.update();
 			time = newTime;
 			if(input.isKeyDown(KeyEvent.VK_ESCAPE)){
@@ -202,19 +207,9 @@ public class Main extends JFrame {
 		Image offImage = createImage(width, height);
 		Graphics offGraphics = offImage.getGraphics();
 		offGraphics.fillRect(0, 0, width, height);
-		switch (state){
-		case GALACTIC:
-			galaxy.draw(offGraphics);
-			break;
-		case SHIP:
-			ship.draw(offGraphics);
-			break;
-		case SPACEBATTLE:
-			sb.draw(offGraphics);
-			break;
-		default:
-			break;
-		}
+		galaxy.draw(offGraphics);
+		ship.draw(offGraphics);
+		sb.draw(offGraphics);
 		player.draw(offGraphics);
 		g2d.drawImage(offImage, 0, 0, width, height, null);
 	}
