@@ -83,6 +83,8 @@ public class Block {
 	public static final Block bigship = new Block("spaceship/EnemyCommandShip2.png", true);
 	public static final Block smallshipf = new Block("spaceship/smallShipParkedFlip.png", true);
 	public static final Block bigshipf = new Block("spaceship/EnemyCommandShip2Flip.png", true);
+	public static final Block smallfighter = new Block("spaceship/smallFighterParked.png", true);
+	public static final Block smallfighterf = new Block("spaceship/smallFighterParkedFlip.png", true);
 	public static final Block entrance = new Block("entrance.png", true);
 	
 	protected Image image;
