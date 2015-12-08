@@ -45,7 +45,16 @@ public class Planet {
 		calculateBiome();
 		terrain = biome.buildTerrain(noise);
 		decoration = biome.buildDecoration(noise);
-		decoration[Main.random.nextInt(decoration.length)][Main.random.nextInt(decoration.length)] = Block.entrance;
+		int x = Main.random.nextInt(decoration.length);
+		int y = Main.random.nextInt(decoration.length);
+		decoration[x][y] = Block.entrance;
+		for(int i = -1; i < 2; i++){
+			for(int j = -1; j < 2; j++){
+				if(x + i < terrain.length && y + j < terrain[0].length && x + i >= 0 && y + j >= 0){
+					terrain[x + i][y + j] = Block.iron;
+				}
+			}
+		}
 		blockRects = new Rectangle2D.Double[terrain.length][terrain[0].length];
 		for(int i = 0; i < terrain.length; i++){
 			for(int j = 0; j < terrain.length; j++){
@@ -53,7 +62,7 @@ public class Planet {
 			}
 		}
 		color = biome.getColor();
-		dungeon = new Dungeon(Main.random.nextInt(32) + 32);
+		dungeon = new Dungeon(Main.random.nextInt(64) + 32);
 	}
 
 	private void calculateTemperature(){
@@ -706,6 +715,7 @@ public class Planet {
 						collided = true;
 						Player.canLeave = false;
 						if(decoration[i][j].equals(Block.entrance) && !Player.isShip()){
+							Dungeon.saveState = Main.state;
 							Main.state = Main.State.DUNGEON;
 						}
 					}
@@ -729,6 +739,7 @@ public class Planet {
 						collided = true;
 						Player.canLeave = false;
 						if(decoration[i][j].equals(Block.entrance) && !Player.isShip()){
+							Dungeon.saveState = Main.state;
 							Main.state = Main.State.DUNGEON;
 						}
 					}
@@ -752,6 +763,7 @@ public class Planet {
 						collided = true;
 						Player.canLeave = false;
 						if(decoration[i][j].equals(Block.entrance) && !Player.isShip()){
+							Dungeon.saveState = Main.state;
 							Main.state = Main.State.DUNGEON;
 						}
 					}
@@ -775,6 +787,7 @@ public class Planet {
 						collided = true;
 						Player.canLeave = false;
 						if(decoration[i][j].equals(Block.entrance) && !Player.isShip()){
+							Dungeon.saveState = Main.state;
 							Main.state = Main.State.DUNGEON;
 						}
 					}
@@ -831,6 +844,9 @@ public class Planet {
 			}else{
 				createMoons();
 			}
+		case DUNGEON:
+			dungeon.update();
+			break;
 		default:
 			break;
 		}
