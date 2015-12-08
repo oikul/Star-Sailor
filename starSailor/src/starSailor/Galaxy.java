@@ -97,7 +97,13 @@ public class Galaxy {
 			yDif = 0;
 			zoom += 0.3;
 		}else{
-			Main.state = Main.State.SOLAR;
+			double chance = Main.random.nextDouble();
+			if(chance < 0.2){
+				Main.state = Main.State.SPACEBATTLE;
+				SpaceBattle.saveState = Main.State.SOLAR;
+			}else{
+				Main.state = Main.State.SOLAR;
+			}
 		}
 	}
 	

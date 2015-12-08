@@ -10,6 +10,8 @@ public class Dungeon {
 	private ArrayList<Rectangle> rooms;
 	private ArrayList<Rectangle> corridors;
 	private int xDif, yDif;
+	public static boolean leave = false;
+	public static Main.State saveState = Main.State.SURFACE;
 	
 	public Dungeon(int numOfRooms){
 		rooms = new ArrayList<Rectangle>();
@@ -18,7 +20,7 @@ public class Dungeon {
 		rooms.add(room);
 		for(int i = 0; i < numOfRooms; i++){
 			boolean collided = false;
-			room = new Rectangle(Main.random.nextInt(8192) - 4096, Main.random.nextInt(8192) - 4096, Main.random.nextInt(512) + 128, Main.random.nextInt(512) + 128);
+			room = new Rectangle(Main.random.nextInt(4096) - 2048, Main.random.nextInt(4096) - 2048, Main.random.nextInt(512) + 128, Main.random.nextInt(512) + 128);
 			for(int j = 0; j < rooms.size(); j++){
 				if(rooms.get(j).intersects(room)){
 					collided = true;
@@ -177,7 +179,12 @@ public class Dungeon {
 	}
 	
 	public void update(){
-		
+		if(leave){
+			xDif = 0;
+			yDif = 0;
+			Main.state = saveState;
+			leave = false;
+		}
 	}
 	
 	public void draw(Graphics g){
