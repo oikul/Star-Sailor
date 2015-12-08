@@ -24,7 +24,7 @@ public class Player {
 	public Player(String playerPath, String shipPath){
 		accuracySTAT = 1;
 		speedSTAT = 1;
-		HPSTAT = 100000;
+		HPSTAT = 1000;
 		killCount = 0;
 		playerImages = ResourceLoader.getPlayerSprites(playerPath, 16, 16);
 		shipImages = ResourceLoader.getBlockSprites(shipPath, 32, 32);
@@ -125,12 +125,14 @@ public class Player {
 				lastLocation = new Point2D.Double(Main.width/2 - 16, Main.height /2 - 16);
 			}else{
 				g2d.drawImage(playerImages[iIndex][jIndex], Main.width/2 - 8, Main.height /2 - 8, null);
-				at = new AffineTransform();
-				saveAt = g2d.getTransform();
-				at.rotate(lastRotation, lastLocation.x+16, lastLocation.y+16);
-				g2d.setTransform(at);
-				g2d.drawImage(shipImages[0],(int) lastLocation.x,(int) lastLocation.y, null);
-				g2d.setTransform(saveAt);
+				if(Main.state == Main.State.SURFACE || Main.state == Main.State.MOON){
+					at = new AffineTransform();
+					saveAt = g2d.getTransform();
+					at.rotate(lastRotation, lastLocation.x+16, lastLocation.y+16);
+					g2d.setTransform(at);
+					g2d.drawImage(shipImages[0],(int) lastLocation.x,(int) lastLocation.y, null);
+					g2d.setTransform(saveAt);
+				}
 			}
 			break;
 		}

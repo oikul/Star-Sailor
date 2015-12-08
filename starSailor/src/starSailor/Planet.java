@@ -24,11 +24,10 @@ public class Planet {
 	private Dungeon dungeon;
 	private AffineTransform transform;
 	private boolean selected = false, made = false, isMoon;
-	private Rectangle playerRectUp = new Rectangle(Main.width/2 - 3, Main.height/2 - 1, 6, 2);
-	private Rectangle playerRectLeft = new Rectangle(Main.width/2 - 5, Main.height/2 + 1, 2, 4);
-	private Rectangle playerRectDown = new Rectangle(Main.width/2 - 3, Main.height/2 + 5, 6, 2);
-	private Rectangle playerRectRight = new Rectangle(Main.width/2 + 3, Main.height/2 + 1, 2, 4);
-	private BlockEvent entrance;
+	public static final Rectangle playerRectUp = new Rectangle(Main.width/2 - 3, Main.height/2 - 1, 6, 2);
+	public static final Rectangle playerRectLeft = new Rectangle(Main.width/2 - 5, Main.height/2 + 1, 2, 4);
+	public static final Rectangle playerRectDown = new Rectangle(Main.width/2 - 3, Main.height/2 + 5, 6, 2);
+	public static final Rectangle playerRectRight = new Rectangle(Main.width/2 + 3, Main.height/2 + 1, 2, 4);
 
 	public Planet(int size, double distance, double angle, boolean isMoon){
 		this.size = size;
@@ -46,6 +45,7 @@ public class Planet {
 		calculateBiome();
 		terrain = biome.buildTerrain(noise);
 		decoration = biome.buildDecoration(noise);
+		decoration[Main.random.nextInt(decoration.length)][Main.random.nextInt(decoration.length)] = Block.entrance;
 		blockRects = new Rectangle2D.Double[terrain.length][terrain[0].length];
 		for(int i = 0; i < terrain.length; i++){
 			for(int j = 0; j < terrain.length; j++){
@@ -53,8 +53,7 @@ public class Planet {
 			}
 		}
 		color = biome.getColor();
-		entrance = new BlockEvent("entrance.png", false, Main.width/2 - 32, Main.height/2 - 32);
-		dungeon = new Dungeon(Main.random.nextInt(16) + 12);
+		dungeon = new Dungeon(Main.random.nextInt(32) + 32);
 	}
 
 	private void calculateTemperature(){
@@ -186,13 +185,11 @@ public class Planet {
 			if(!Player.isShip()){
 				if(!collisionUp()){
 					yDif --;
-					entrance.panUp();
 					Player.pan(0, 1 * zoomSurface);
 					translateBlockRects(0, 1);
 				}
 			}else{
 				yDif --;
-				entrance.panUp();
 				Player.pan(0, 1 * zoomSurface);
 				translateBlockRects(0, 1);
 				if(!collisionUp()){
@@ -220,6 +217,8 @@ public class Planet {
 			}
 		}else if(Main.state == Main.State.DUNGEON){
 			dungeon.panUp();
+		}else if(Main.state == Main.State.SPACESTATION){
+			stations[selectedStation].panUp();
 		}
 	}
 
@@ -228,13 +227,11 @@ public class Planet {
 			if(!Player.isShip()){
 				if(!collisionLeft()){
 					xDif --;
-					entrance.panLeft();
 					Player.pan(1 * zoomSurface, 0);
 					translateBlockRects(1, 0);
 				}
 			}else{
 				xDif --;
-				entrance.panLeft();
 				Player.pan(1 * zoomSurface, 0);
 				translateBlockRects(1, 0);
 				if(!collisionLeft()){
@@ -262,6 +259,8 @@ public class Planet {
 			}
 		}else if(Main.state == Main.State.DUNGEON){
 			dungeon.panLeft();
+		}else if(Main.state == Main.State.SPACESTATION){
+			stations[selectedStation].panLeft();
 		}
 	}
 
@@ -270,13 +269,11 @@ public class Planet {
 			if(!Player.isShip()){
 				if(!collisionDown()){
 					yDif ++;
-					entrance.panDown();
 					Player.pan(0, -1 * zoomSurface);
 					translateBlockRects(0, -1);
 				}
 			}else{
 				yDif ++;
-				entrance.panDown();
 				Player.pan(0, -1 * zoomSurface);
 				translateBlockRects(0, -1);
 				if(!collisionDown()){
@@ -304,6 +301,8 @@ public class Planet {
 			}
 		}else if(Main.state == Main.State.DUNGEON){
 			dungeon.panDown();
+		}else if(Main.state == Main.State.SPACESTATION){
+			stations[selectedStation].panDown();
 		}
 	}
 
@@ -312,13 +311,11 @@ public class Planet {
 			if(!Player.isShip()){
 				if(!collisionRight()){
 					xDif ++;
-					entrance.panRight();
 					Player.pan(-1 * zoomSurface, 0);
 					translateBlockRects(-1, 0);
 				}
 			}else{
 				xDif ++;;
-				entrance.panRight();
 				Player.pan(-1 * zoomSurface, 0);
 				translateBlockRects(-1, 0);
 				if(!collisionRight()){
@@ -346,6 +343,8 @@ public class Planet {
 			}
 		}else if(Main.state == Main.State.DUNGEON){
 			dungeon.panRight();
+		}else if(Main.state == Main.State.SPACESTATION){
+			stations[selectedStation].panRight();
 		}
 	}
 
@@ -398,6 +397,8 @@ public class Planet {
 			}
 		}else if(Main.state == Main.State.DUNGEON){
 			dungeon.panUR();
+		}else if(Main.state == Main.State.SPACESTATION){
+			stations[selectedStation].panUR();
 		}
 
 	}
@@ -451,6 +452,8 @@ public class Planet {
 			}
 		}else if(Main.state == Main.State.DUNGEON){
 			dungeon.panUL();
+		}else if(Main.state == Main.State.SPACESTATION){
+			stations[selectedStation].panUL();
 		}
 	}
 
@@ -503,6 +506,8 @@ public class Planet {
 			}
 		}else if(Main.state == Main.State.DUNGEON){
 			dungeon.panDR();
+		}else if(Main.state == Main.State.SPACESTATION){
+			stations[selectedStation].panDR();
 		}
 	}
 
@@ -555,6 +560,8 @@ public class Planet {
 			}
 		}else if(Main.state == Main.State.DUNGEON){
 			dungeon.panDL();
+		}else if(Main.state == Main.State.SPACESTATION){
+			stations[selectedStation].panDL();
 		}
 	}
 
@@ -698,6 +705,9 @@ public class Planet {
 					if(playerRectUp.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
 						collided = true;
 						Player.canLeave = false;
+						if(decoration[i][j].equals(Block.entrance) && !Player.isShip()){
+							Main.state = Main.State.DUNGEON;
+						}
 					}
 				}else{
 					if(playerRectUp.intersects(blockRects[i][j]) && terrain[i][j].isSolid()){
@@ -718,6 +728,9 @@ public class Planet {
 					if(playerRectLeft.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
 						collided = true;
 						Player.canLeave = false;
+						if(decoration[i][j].equals(Block.entrance) && !Player.isShip()){
+							Main.state = Main.State.DUNGEON;
+						}
 					}
 				}else{
 					if(playerRectLeft.intersects(blockRects[i][j]) && terrain[i][j].isSolid()){
@@ -738,6 +751,9 @@ public class Planet {
 					if(playerRectDown.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
 						collided = true;
 						Player.canLeave = false;
+						if(decoration[i][j].equals(Block.entrance) && !Player.isShip()){
+							Main.state = Main.State.DUNGEON;
+						}
 					}
 				}else{
 					if(playerRectDown.intersects(blockRects[i][j]) && terrain[i][j].isSolid()){
@@ -758,6 +774,9 @@ public class Planet {
 					if(playerRectRight.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
 						collided = true;
 						Player.canLeave = false;
+						if(decoration[i][j].equals(Block.entrance) && !Player.isShip()){
+							Main.state = Main.State.DUNGEON;
+						}
 					}
 				}else{
 					if(playerRectRight.intersects(blockRects[i][j]) && (terrain[i][j].isSolid())){
@@ -794,7 +813,6 @@ public class Planet {
 			Block.water_ocean.update();
 			Block.water_river.update();
 			Block.lava.update();
-			entrance.update();
 			break;
 		case MOON:
 			if(isMoon){
@@ -814,7 +832,6 @@ public class Planet {
 				createMoons();
 			}
 		default:
-			entrance.update();
 			break;
 		}
 	}
@@ -891,7 +908,6 @@ public class Planet {
 					}
 				}
 			}
-			entrance.draw(g2d);
 			g2d.setTransform(saveAt);
 			break;
 		case MOON:

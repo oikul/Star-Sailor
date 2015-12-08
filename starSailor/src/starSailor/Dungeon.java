@@ -14,11 +14,11 @@ public class Dungeon {
 	public Dungeon(int numOfRooms){
 		rooms = new ArrayList<Rectangle>();
 		corridors = new ArrayList<Rectangle>();
-		Rectangle room = new Rectangle(Main.random.nextInt(Main.width), Main.random.nextInt(Main.width), Main.random.nextInt(256) + 64, Main.random.nextInt(256) + 64);
+		Rectangle room = new Rectangle(Main.width/2 - 64, Main.height/2 - 64, 128, 128);
 		rooms.add(room);
 		for(int i = 0; i < numOfRooms; i++){
 			boolean collided = false;
-			room = new Rectangle(Main.random.nextInt(Main.width), Main.random.nextInt(Main.width), Main.random.nextInt(256) + 64, Main.random.nextInt(256) + 64);
+			room = new Rectangle(Main.random.nextInt(8192) - 4096, Main.random.nextInt(8192) - 4096, Main.random.nextInt(512) + 128, Main.random.nextInt(512) + 128);
 			for(int j = 0; j < rooms.size(); j++){
 				if(rooms.get(j).intersects(room)){
 					collided = true;
@@ -37,39 +37,115 @@ public class Dungeon {
 	}
 	
 	public void panUp(){
-		yDif ++;
+		if(canMoveUp()){
+			yDif ++;
+		}
 	}
 
 	public void panLeft(){
-		xDif ++;
+		if(canMoveLeft()){
+			xDif ++;
+		}
 	}
 
 	public void panDown(){
-		yDif --;
+		if(canMoveDown()){
+			yDif --;
+		}
 	}
 
 	public void panRight(){
-		xDif --;
+		if(canMoveRight()){
+			xDif --;
+		}
 	}
 
 	public void panUL(){
-		yDif ++;
-		xDif ++;
+		if(canMoveUp() && canMoveLeft()){
+			yDif ++;
+			xDif ++;
+		}
 	}
 
 	public void panUR(){
-		yDif ++;
-		xDif --;
+		if(canMoveUp() && canMoveRight()){
+			yDif ++;
+			xDif --;
+		}
 	}
 
 	public void panDL(){
-		yDif --;
-		xDif ++;
+		if(canMoveDown() && canMoveLeft()){
+			yDif --;
+			xDif ++;
+		}
 	}
 
 	public void panDR(){
-		yDif --;
-		xDif --;
+		if(canMoveDown() && canMoveRight()){
+			yDif --;
+			xDif --;
+		}
+	}
+	
+	private boolean canMoveUp(){
+		boolean canMove = false;
+		for(int i = 0; i < rooms.size(); i++){
+			if(Planet.playerRectUp.intersects(new Rectangle(rooms.get(i).x + xDif, rooms.get(i).y + yDif, rooms.get(i).width, rooms.get(i).height))){
+				canMove = true;
+			}
+		}
+		for(int i = 0; i< corridors.size(); i++){
+			if(Planet.playerRectUp.intersects(new Rectangle(corridors.get(i).x + xDif, corridors.get(i).y + yDif, corridors.get(i).width, corridors.get(i).height))){
+				canMove = true;
+			}
+		}
+		return canMove;
+	}
+
+	private boolean canMoveLeft(){
+		boolean canMove = false;
+		for(int i = 0; i < rooms.size(); i++){
+			if(Planet.playerRectLeft.intersects(new Rectangle(rooms.get(i).x + xDif, rooms.get(i).y + yDif, rooms.get(i).width, rooms.get(i).height))){
+				canMove = true;
+			}
+		}
+		for(int i = 0; i< corridors.size(); i++){
+			if(Planet.playerRectLeft.intersects(new Rectangle(corridors.get(i).x + xDif, corridors.get(i).y + yDif, corridors.get(i).width, corridors.get(i).height))){
+				canMove = true;
+			}
+		}
+		return canMove;
+	}
+
+	private boolean canMoveDown(){
+		boolean canMove = false;
+		for(int i = 0; i < rooms.size(); i++){
+			if(Planet.playerRectDown.intersects(new Rectangle(rooms.get(i).x + xDif, rooms.get(i).y + yDif, rooms.get(i).width, rooms.get(i).height))){
+				canMove = true;
+			}
+		}
+		for(int i = 0; i< corridors.size(); i++){
+			if(Planet.playerRectDown.intersects(new Rectangle(corridors.get(i).x + xDif, corridors.get(i).y + yDif, corridors.get(i).width, corridors.get(i).height))){
+				canMove = true;
+			}
+		}
+		return canMove;
+	}
+
+	private boolean canMoveRight(){
+		boolean canMove = false;
+		for(int i = 0; i < rooms.size(); i++){
+			if(Planet.playerRectRight.intersects(new Rectangle(rooms.get(i).x + xDif, rooms.get(i).y + yDif, rooms.get(i).width, rooms.get(i).height))){
+				canMove = true;
+			}
+		}
+		for(int i = 0; i< corridors.size(); i++){
+			if(Planet.playerRectRight.intersects(new Rectangle(corridors.get(i).x + xDif, corridors.get(i).y + yDif, corridors.get(i).width, corridors.get(i).height))){
+				canMove = true;
+			}
+		}
+		return canMove;
 	}
 
 	public void createHCorridors(Rectangle room1, Rectangle room2){
@@ -105,12 +181,14 @@ public class Dungeon {
 	}
 	
 	public void draw(Graphics g){
-		g.setColor(Color.gray);
-		for(int i = 0; i < rooms.size(); i++){
-			g.fillRect(rooms.get(i).x + xDif, rooms.get(i).y + yDif, rooms.get(i).width, rooms.get(i).height);
-		}
-		for(int i = 0; i < corridors.size(); i++){
-			g.fillRect(corridors.get(i).x + xDif, corridors.get(i).y + yDif, corridors.get(i).width, corridors.get(i).height);
+		if(Main.state == Main.State.DUNGEON){
+			g.setColor(Color.gray);
+			for(int i = 0; i < rooms.size(); i++){
+				g.fillRect(rooms.get(i).x + xDif, rooms.get(i).y + yDif, rooms.get(i).width, rooms.get(i).height);
+			}
+			for(int i = 0; i < corridors.size(); i++){
+				g.fillRect(corridors.get(i).x + xDif, corridors.get(i).y + yDif, corridors.get(i).width, corridors.get(i).height);
+			}
 		}
 	}
 
