@@ -24,7 +24,7 @@ public class Player {
 	public Player(String playerPath, String shipPath){
 		accuracySTAT = 1;
 		speedSTAT = 1;
-		HPSTAT = 1000;
+		HPSTAT = 100000;
 		killCount = 0;
 		playerImages = ResourceLoader.getPlayerSprites(playerPath, 16, 16);
 		shipImages = ResourceLoader.getBlockSprites(shipPath, 32, 32);

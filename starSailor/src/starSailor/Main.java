@@ -273,8 +273,12 @@ public class Main extends JFrame {
 		Graphics g = getGraphics();
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.drawImage(gameover,0,0,Main.width,Main.height,null);
-		long time = System.currentTimeMillis()+4000;
-		while(System.currentTimeMillis() < time){}
+		long time = 4000;
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		
 	}

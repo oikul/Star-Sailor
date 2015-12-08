@@ -21,12 +21,14 @@ public class Planet {
 	private SpaceStation[] stations;
 	private Biome biome;
 	private Color color;
+	private Dungeon dungeon;
 	private AffineTransform transform;
 	private boolean selected = false, made = false, isMoon;
 	private Rectangle playerRectUp = new Rectangle(Main.width/2 - 3, Main.height/2 - 1, 6, 2);
 	private Rectangle playerRectLeft = new Rectangle(Main.width/2 - 5, Main.height/2 + 1, 2, 4);
 	private Rectangle playerRectDown = new Rectangle(Main.width/2 - 3, Main.height/2 + 5, 6, 2);
 	private Rectangle playerRectRight = new Rectangle(Main.width/2 + 3, Main.height/2 + 1, 2, 4);
+	private BlockEvent entrance;
 
 	public Planet(int size, double distance, double angle, boolean isMoon){
 		this.size = size;
@@ -51,6 +53,8 @@ public class Planet {
 			}
 		}
 		color = biome.getColor();
+		entrance = new BlockEvent("entrance.png", false, Main.width/2 - 32, Main.height/2 - 32);
+		dungeon = new Dungeon(Main.random.nextInt(16) + 12);
 	}
 
 	private void calculateTemperature(){
@@ -182,11 +186,13 @@ public class Planet {
 			if(!Player.isShip()){
 				if(!collisionUp()){
 					yDif --;
+					entrance.panUp();
 					Player.pan(0, 1 * zoomSurface);
 					translateBlockRects(0, 1);
 				}
 			}else{
 				yDif --;
+				entrance.panUp();
 				Player.pan(0, 1 * zoomSurface);
 				translateBlockRects(0, 1);
 				if(!collisionUp()){
@@ -212,6 +218,8 @@ public class Planet {
 					}
 				}
 			}
+		}else if(Main.state == Main.State.DUNGEON){
+			dungeon.panUp();
 		}
 	}
 
@@ -220,11 +228,13 @@ public class Planet {
 			if(!Player.isShip()){
 				if(!collisionLeft()){
 					xDif --;
+					entrance.panLeft();
 					Player.pan(1 * zoomSurface, 0);
 					translateBlockRects(1, 0);
 				}
 			}else{
 				xDif --;
+				entrance.panLeft();
 				Player.pan(1 * zoomSurface, 0);
 				translateBlockRects(1, 0);
 				if(!collisionLeft()){
@@ -250,6 +260,8 @@ public class Planet {
 					}
 				}
 			}
+		}else if(Main.state == Main.State.DUNGEON){
+			dungeon.panLeft();
 		}
 	}
 
@@ -258,11 +270,13 @@ public class Planet {
 			if(!Player.isShip()){
 				if(!collisionDown()){
 					yDif ++;
+					entrance.panDown();
 					Player.pan(0, -1 * zoomSurface);
 					translateBlockRects(0, -1);
 				}
 			}else{
 				yDif ++;
+				entrance.panDown();
 				Player.pan(0, -1 * zoomSurface);
 				translateBlockRects(0, -1);
 				if(!collisionDown()){
@@ -288,6 +302,8 @@ public class Planet {
 					}
 				}
 			}
+		}else if(Main.state == Main.State.DUNGEON){
+			dungeon.panDown();
 		}
 	}
 
@@ -296,11 +312,13 @@ public class Planet {
 			if(!Player.isShip()){
 				if(!collisionRight()){
 					xDif ++;
+					entrance.panRight();
 					Player.pan(-1 * zoomSurface, 0);
 					translateBlockRects(-1, 0);
 				}
 			}else{
 				xDif ++;;
+				entrance.panRight();
 				Player.pan(-1 * zoomSurface, 0);
 				translateBlockRects(-1, 0);
 				if(!collisionRight()){
@@ -326,6 +344,8 @@ public class Planet {
 					}
 				}
 			}
+		}else if(Main.state == Main.State.DUNGEON){
+			dungeon.panRight();
 		}
 	}
 
@@ -376,6 +396,8 @@ public class Planet {
 					}
 				}
 			}
+		}else if(Main.state == Main.State.DUNGEON){
+			dungeon.panUR();
 		}
 
 	}
@@ -427,6 +449,8 @@ public class Planet {
 					}
 				}
 			}
+		}else if(Main.state == Main.State.DUNGEON){
+			dungeon.panUL();
 		}
 	}
 
@@ -477,6 +501,8 @@ public class Planet {
 					}
 				}
 			}
+		}else if(Main.state == Main.State.DUNGEON){
+			dungeon.panDR();
 		}
 	}
 
@@ -527,6 +553,8 @@ public class Planet {
 					}
 				}
 			}
+		}else if(Main.state == Main.State.DUNGEON){
+			dungeon.panDL();
 		}
 	}
 
@@ -612,6 +640,8 @@ public class Planet {
 				if(Player.isShip()){
 					Main.state = Main.State.PLANETRY;
 				}
+			}else{
+				
 			}
 		}
 	}
@@ -764,6 +794,7 @@ public class Planet {
 			Block.water_ocean.update();
 			Block.water_river.update();
 			Block.lava.update();
+			entrance.update();
 			break;
 		case MOON:
 			if(isMoon){
@@ -783,6 +814,7 @@ public class Planet {
 				createMoons();
 			}
 		default:
+			entrance.update();
 			break;
 		}
 	}
@@ -859,6 +891,7 @@ public class Planet {
 					}
 				}
 			}
+			entrance.draw(g2d);
 			g2d.setTransform(saveAt);
 			break;
 		case MOON:
@@ -891,6 +924,9 @@ public class Planet {
 			for(int i = 1; i < stations.length; i++){
 				stations[i].draw(g2d);
 			}
+		case DUNGEON:
+			dungeon.draw(g2d);
+			break;
 		default:
 			break;
 		}
