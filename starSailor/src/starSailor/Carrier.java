@@ -34,19 +34,17 @@ public class Carrier extends EnemyShip {
 	public void update(double xChange,double yChange){
 		
 
-		location.setLocation((int)xChange+location.x, (int)yChange+location.y);
+		actualLocation.setLocation(actualLocation.x-xChange, actualLocation.y-yChange) ;
 		switch (fightStyle){
 		case DEFENSIVE:
-			location.setLocation((int)(location.getX()),(int)(location.getY()));
+			actualLocation.setLocation((int)(actualLocation.getX()),(int)(actualLocation.getY()));
 		case AGGRESSIVE:
-			location.setLocation((int)(location.getX()),(int)(location.getY()));
+			actualLocation.setLocation((int)(actualLocation.getX()),(int)(actualLocation.getY()));
 		case TACTICAL:
-			location.setLocation((int)(location.getX()),(int)(location.getY()));
+			actualLocation.setLocation((int)(actualLocation.getX()),(int)(actualLocation.getY()));
 		}
 		getAngle();
 		if(System.currentTimeMillis() >= time){
-			
-			Point2D.Double temp = new Point2D.Double();
 			
 			if(currentFrame == 1){
 				currentFrame = 0;

@@ -17,7 +17,7 @@ public class EnemyShip{
 	protected int currentFrame;
 	protected int death;
 	protected Point2D.Double spaceLocation;
-	protected Point2D.Double location;
+	protected Point2D.Double actualLocation;
 	private double rotation;
 	protected double time;
 	protected double shootTime;
@@ -35,21 +35,21 @@ public class EnemyShip{
 		if(ship == shipClass.FIGHTER){
 			this.health = 100;
 			shipImages = ResourceLoader.getBlockSprites("spaceship/smallFighterSprite.png", 16, 16);
-			location = new Point2D.Double(x,y);
+			actualLocation = new Point2D.Double(x,y);
 			xSize = 16;
 			ySize = 16;
 		}else if(ship == shipClass.CARRIER){
 			this.health = 500;
 			shipImages = ResourceLoader.getBlockSprites("spaceship/enemyCarrierSprite.png", 32, 32);
-			location = new Point2D.Double(x,y);
+			actualLocation = new Point2D.Double(x,y);
 			xSize = 32;
 			ySize = 32;
 		}else if(ship == shipClass.COMMAND){
 			this.health = 2000;
-			shipImages = ResourceLoader.getBlockSprites("spaceship/enemyCarrierSprite.png", 32, 32);
-			location = new Point2D.Double(x,y);
-			xSize = 32;
-			ySize = 128;
+			shipImages = ResourceLoader.getBlockSprites("spaceship/CommandShipSprite.png", 128, 32);
+			actualLocation = new Point2D.Double(x,y);
+			xSize = 128;
+			ySize = 32;
 		}else{
 			health = 100;
 		}
@@ -61,12 +61,17 @@ public class EnemyShip{
 		shootTime = System.currentTimeMillis()+3000 + Main.random.nextInt(500);
 	}
 	
+	public void resetTime(){
+		shootTime = System.currentTimeMillis()+3000 + Main.random.nextInt(500);
+	}
+	
 	public void die(){
 		if(System.currentTimeMillis() >= time + 300){
 			currentFrame++;
 			death--;
 		}
 	}
+	
 	public boolean deadYet(){
 		return death == 0;
 	}
@@ -75,17 +80,19 @@ public class EnemyShip{
 		if(health > 0){
 			return true;
 		}
-		shipImages = ResourceLoader.getBlockSprites("shipExplosions/carrierExSprite.png", 32, 32);
-		currentFrame = 0;
 		return false;
 		
 	}
 	
 	public void getAngle(){
-		rotation = SpaceBattle.getAngle(new Point2D.Double(location.getX()+(location.x/2),location.getY()+(location.y/2)), 
+		rotation = SpaceBattle.getAngle(actualLocation, 
 										new Point2D.Double(Main.width/2,Main.height/2));
 	}
 
+	public Point2D.Double getLocation(){
+		return actualLocation;
+	}
+	
 	public void takeDamage(int damage){
 		this.health -= damage;
 		
@@ -93,10 +100,10 @@ public class EnemyShip{
 	
 	public void shoot(){
 		
-		shots.add(new Line2D.Double(location.x, location.y, location.x, location.y));
+		shots.add(new Line2D.Double(actualLocation.x, actualLocation.y, actualLocation.x, actualLocation.y));
 		double speed = 20.0;
 		
-		trajectories.add(SpaceBattle.getPoint(new Point2D.Double(location.x,location.y),new Point2D.Double(Main.width/2, Main.height/2),speed,0));
+		trajectories.add(SpaceBattle.getPoint(new Point2D.Double(actualLocation.x,actualLocation.y),new Point2D.Double(Main.width/2, Main.height/2),speed,0));
 		
 		shootTime += 300 + Main.random.nextDouble() * 1000;
 		Sound.laser.play();
@@ -105,7 +112,7 @@ public class EnemyShip{
 	public void update(double xChange,double yChange){
 		
 		getAngle();
-		spaceLocation.setLocation(xChange+location.x, yChange+location.y);
+		spaceLocation.setLocation(actualLocation.x-xChange, actualLocation.y-yChange);
 		if(System.currentTimeMillis() >= time){
 			
 			if(currentFrame == 1){
@@ -150,10 +157,10 @@ public class EnemyShip{
 		AffineTransform at;
 		at = new AffineTransform();
 		saveAt = g2d.getTransform();
-		at.rotate(rotation, location.x, location.y);
+		at.rotate(rotation, actualLocation.x, actualLocation.y);
 		g2d.setTransform(at);
-		g2d.drawRect((int)spaceLocation.x-(xSize/2), (int)spaceLocation.y-(ySize/2),xSize,ySize);
-		g2d.drawImage(shipImages[currentFrame],(int)location.x-(xSize/2),(int)location.y-(ySize/2), null);
+		g2d.drawRect((int)actualLocation.x-(xSize/2), (int)actualLocation.y-(ySize/2),xSize,ySize);
+		g2d.drawImage(shipImages[currentFrame],(int)actualLocation.x-(xSize/2),(int)actualLocation.y-(ySize/2), null);
 		g2d.setTransform(saveAt);
 		
 		
@@ -161,6 +168,5 @@ public class EnemyShip{
 			g2d.draw(shots.get(i));
 		}
 	}
-	
 	
 }

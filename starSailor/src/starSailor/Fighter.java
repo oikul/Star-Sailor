@@ -23,8 +23,6 @@ public class Fighter extends EnemyShip {
 		spaceLocation.setLocation(xChange, yChange);
 		if(System.currentTimeMillis() >= time){
 			
-			Point2D.Double temp = new Point2D.Double();
-			
 			if(currentFrame == 1){
 				currentFrame = 0;
 			}else{

@@ -143,8 +143,10 @@ public class Main extends JFrame {
 				    sb.shoot(input.getMousePositionOnScreen());
 				}
 				if(input.isKeyDown(KeyEvent.VK_F)){
-				    state = saveState;
-				    input.artificialKeyReleased(KeyEvent.VK_F);
+					if(sb.finished()){
+						state = saveState;
+						input.artificialKeyReleased(KeyEvent.VK_F);
+					}
 				}
 				if(input.isKeyDown(KeyEvent.VK_W) && input.isKeyDown(KeyEvent.VK_A)){
 					sb.panUL();
@@ -240,6 +242,7 @@ public class Main extends JFrame {
 				input.artificialKeyReleased(KeyEvent.VK_E);
 			}
 			if(input.isKeyDown(KeyEvent.VK_F)){
+				sb.newGame();
 				state = State.SPACEBATTLE;
 			    input.artificialKeyReleased(KeyEvent.VK_F);
 			}

@@ -14,11 +14,9 @@ public class Command extends EnemyShip {
 	@Override
 	public void update(double xChange,double yChange){
 	
-		location.setLocation((int)xChange+location.x, (int)yChange+location.y);
+		actualLocation.setLocation((int)xChange+actualLocation.x, (int)yChange+actualLocation.y);
 		getAngle();
 		if(System.currentTimeMillis() >= time){
-			
-			Point2D.Double temp = new Point2D.Double();
 			
 			if(currentFrame == 1){
 				currentFrame = 0;
