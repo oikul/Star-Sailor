@@ -19,8 +19,7 @@ public class Fighter extends EnemyShip {
 	@Override
 	public void update(double xChange,double yChange){
 		
-		getAngle();
-		spaceLocation.setLocation(xChange, yChange);
+		actualLocation.setLocation(actualLocation.x-xChange, actualLocation.y-yChange) ;
 		if(System.currentTimeMillis() >= time){
 			
 			if(currentFrame == 1){
@@ -31,17 +30,23 @@ public class Fighter extends EnemyShip {
 			time += Main.random.nextInt(500);
 		}
 		
+		getAngle();
 		if(System.currentTimeMillis() >= shootTime){
 			shoot();
 		}
 		
 		for(int i = 0; i < shots.size(); i++){
 			shots.get(i).setLine(shots.get(i).getX1()+trajectories.get(i).x, shots.get(i).getY1()+trajectories.get(i).y, shots.get(i).getX1(), shots.get(i).getY1());
+			if(shots.get(i).intersects(new Rectangle(Main.width/2 - 16, Main.height/2 - 16, 32, 32))){
+				//SpaceBattle.playerDamage(5);
+				shots.remove(i);
+				trajectories.remove(i);
+				i--;
+			}
 		}
 		Rectangle rect = new Rectangle(0,0,Main.width,Main.height);
 		for (int i = 0; i < shots.size(); i++) {
 			if(!rect.contains(new Point2D.Double(shots.get(i).getX1(),shots.get(i).getY1()))){
-				
 				shots.remove(i);
 				trajectories.remove(i);
 				

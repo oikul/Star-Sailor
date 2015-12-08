@@ -217,8 +217,8 @@ public class SpaceBattle {
 		
 		for (int i = 0; i < Main.random.nextInt(5)+5; i++) {
 
-			int x = Main.random.nextInt(300)+50;
-			int y = Main.random.nextInt(Main.height-100)+50;
+			int x = Main.random.nextInt(xSize/2)+xSize/4;
+			int y = Main.random.nextInt(ySize/2)+ySize/4;
 
 			carrierLocations.add(new Rectangle(x,y,32,32));
 			this.carriers.add(new Carrier(x,y));
@@ -237,6 +237,7 @@ public class SpaceBattle {
 		commander = new Command(x,y);
 		commanderLocation = new Rectangle(x, y, 128,32);
 		commander.resetTime();
+		isCommander = true;
 		
 	}
 	
@@ -265,41 +266,47 @@ public class SpaceBattle {
 		for (int i = 0; i < carriers.size(); i++) {
 			if(carriers.get(i).isAlive()){
 				carriers.get(i).update(xChange,yChange);
-				carrierLocations.get(i).setLocation((int)carriers.get(i).getLocation().x,(int)carriers.get(i).getLocation().y);
+				carrierLocations.get(i).setLocation((int)carriers.get(i).getLocation().x-16,(int)carriers.get(i).getLocation().y-16);
 			for (int j = 0; j < shots.size();j++) {
 				if(carrierLocations.get(i).contains(shots.get(j).getP1())||carrierLocations.get(i).contains(shots.get(j).getP2())){
 					carriers.get(i).takeDamage(100);
 					shots.remove(j);
 					trajectories.remove(j);
+					if(!carriers.get(i).isAlive()){
+						carrierLocations.remove(i);
+						carriers.remove(i);
+						Sound.explosion.play();
+						i--;
+					break;
+				}
 				}
 			}
-			}else{
-				carrierLocations.remove(i);
-				carriers.remove(i);
-				Sound.explosion.play();
-				i--;
 			}
 		}
 		
 		for (int i = 0; i < fighters.size(); i++) {
 			if(fighters.get(i).isAlive()){
 				fighters.get(i).update(xChange,yChange);
-				fighterLocations.get(i).setLocation((int)fighters.get(i).getLocation().x,(int)fighters.get(i).getLocation().y);
+				fighterLocations.get(i).setLocation((int)fighters.get(i).getLocation().x-8,(int)fighters.get(i).getLocation().y-8);
 			for (int j = 0; j < shots.size();j++) {
 				if(fighterLocations.get(i).contains(shots.get(j).getP1())||fighterLocations.get(i).contains(shots.get(j).getP2())){
 					fighters.get(i).takeDamage(100);
 					shots.remove(j);
 					trajectories.remove(j);
+					if(!fighters.get(i).isAlive()){
+							fighterLocations.remove(i);
+							fighters.remove(i);
+							Sound.explosion.play();
+							i--;
+						break;
+					}
 				}
 			}
-			}else{
-				fighterLocations.remove(i);
-				fighters.remove(i);
-				Sound.explosion.play();
-				i--;
 			}
 		}
 		if(isCommander){
+			commander.update(xChange, yChange);
+			commanderLocation.setLocation((int)commander.getLocation().x-64,(int)commander.getLocation().y-16);
 			for (int j = 0; j < shots.size();j++) {
 				if(commanderLocation.contains(shots.get(j).getP1())||commanderLocation.contains(shots.get(j).getP2())){
 					commander.takeDamage(100);
@@ -323,10 +330,14 @@ public class SpaceBattle {
 		case SPACEBATTLE:
 
 			g2d.drawImage(background, (int)spaceLocation.x, (int)spaceLocation.y, background.getWidth(null)*3, background.getHeight(null)*3, null);
+			g2d.setColor(Color.orange);
+			g2d.drawRect(Main.width + (int)spaceLocation.x, Main.height + (int)spaceLocation.y, xSize - (2*Main.width) + (int)spaceLocation.x, ySize - (2*Main.height) + (int)spaceLocation.y);
+			// displays health
 			g2d.setColor(Color.red);
 			g2d.fillRect(Main.width/2 - 500, 50, 1000, 20);
 			g2d.setColor(Color.green);
 			g2d.fillRect(Main.width/2 - (Player.HPSTAT - 500), 50, Player.HPSTAT, 20);
+			
 			for(int i = 0; i< shots.size(); i++){
 				g2d.drawLine((int)shots.get(i).getX1(),(int)shots.get(i).getY1(),(int)shots.get(i).getX2(),(int)shots.get(i).getY2());
 			}

@@ -13,8 +13,8 @@ public class Command extends EnemyShip {
 	
 	@Override
 	public void update(double xChange,double yChange){
-	
-		actualLocation.setLocation((int)xChange+actualLocation.x, (int)yChange+actualLocation.y);
+
+		actualLocation.setLocation(actualLocation.x-xChange, actualLocation.y-yChange) ;
 		getAngle();
 		if(System.currentTimeMillis() >= time){
 			
@@ -25,13 +25,19 @@ public class Command extends EnemyShip {
 			}
 			time += Main.random.nextInt(500);
 		}
-		
+		getAngle();
 		if(System.currentTimeMillis() >= shootTime){
 			shoot();
 		}
 		
 		for(int i = 0; i < shots.size(); i++){
 			shots.get(i).setLine(shots.get(i).getX1()+trajectories.get(i).x, shots.get(i).getY1()+trajectories.get(i).y, shots.get(i).getX1(), shots.get(i).getY1());
+			if(shots.get(i).intersects(new Rectangle(Main.width/2 - 16, Main.height/2 - 16, 32, 32))){
+				//SpaceBattle.playerDamage(10);
+				shots.remove(i);
+				trajectories.remove(i);
+				i--;
+			}
 		}
 		Rectangle rect = new Rectangle(0,0,Main.width,Main.height);
 		for (int i = 0; i < shots.size(); i++) {

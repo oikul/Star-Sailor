@@ -65,17 +65,6 @@ public class EnemyShip{
 		shootTime = System.currentTimeMillis()+3000 + Main.random.nextInt(500);
 	}
 	
-	public void die(){
-		if(System.currentTimeMillis() >= time + 300){
-			currentFrame++;
-			death--;
-		}
-	}
-	
-	public boolean deadYet(){
-		return death == 0;
-	}
-	
 	public boolean isAlive(){
 		if(health > 0){
 			return true;
