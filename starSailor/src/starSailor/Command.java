@@ -39,7 +39,7 @@ public class Command extends EnemyShip {
 			}
 			shots.get(i).setLine(shots.get(i).getX1()+trajectories.get(i).x, shots.get(i).getY1()+trajectories.get(i).y, shots.get(i).getX1(), shots.get(i).getY1());
 			if(shots.get(i).intersects(new Rectangle(Main.width/2 - 16, Main.height/2 - 16, 32, 32))){
-				//SpaceBattle.playerDamage(10);
+				SpaceBattle.playerDamage(10);
 				shots.remove(i);
 				trajectories.remove(i);
 				i--;

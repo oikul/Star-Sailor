@@ -190,7 +190,20 @@ public class Planet {
 	}
 
 	public void panUp(){
-		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+		if(Main.state == Main.State.PLANETRY){
+			if(!Player.isShip()){
+				if(!collisionUp()){
+					yDif --;
+					Player.pan(0, 1 * zoomSurface);
+				}
+			}else{
+				yDif --;
+				Player.pan(0, 1 * zoomSurface);
+				if(!collisionUp()){
+					Player.canLeave = true;
+				}
+			}
+		}else if(Main.state == Main.State.SURFACE){
 			if(!Player.isShip()){
 				if(!collisionUp()){
 					yDif --;
@@ -232,7 +245,20 @@ public class Planet {
 	}
 
 	public void panLeft(){
-		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+		if(Main.state == Main.State.PLANETRY){
+			if(!Player.isShip()){
+				if(!collisionLeft()){
+					xDif --;
+					Player.pan(1 * zoomSurface, 0);
+				}
+			}else{
+				xDif --;
+				Player.pan(1 * zoomSurface, 0);
+				if(!collisionLeft()){
+					Player.canLeave = true;
+				}
+			}
+		}else if(Main.state == Main.State.SURFACE){
 			if(!Player.isShip()){
 				if(!collisionLeft()){
 					xDif --;
@@ -274,7 +300,20 @@ public class Planet {
 	}
 
 	public void panDown(){
-		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+		if(Main.state == Main.State.PLANETRY){
+			if(!Player.isShip()){
+				if(!collisionDown()){
+					yDif ++;
+					Player.pan(0, -1 * zoomSurface);
+				}
+			}else{
+				yDif ++;
+				Player.pan(0, -1 * zoomSurface);
+				if(!collisionDown()){
+					Player.canLeave = true;
+				}
+			}
+		}else if(Main.state == Main.State.SURFACE){
 			if(!Player.isShip()){
 				if(!collisionDown()){
 					yDif ++;
@@ -521,7 +560,26 @@ public class Planet {
 	}
 
 	public void panDL(){
-		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+		if(Main.state == Main.State.PLANETRY){
+			if(!Player.isShip()){
+				if(!collisionDown() && !collisionLeft()){
+					xDif -= 1/Main.root2;
+					yDif += 1/Main.root2;
+					Player.pan((1/Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+				}else if(!collisionDown()){
+					panDown();
+				}else if(!collisionLeft()){
+					panLeft();
+				}
+			}else{
+				xDif -= 1/Main.root2;
+				yDif += 1/Main.root2;
+				Player.pan((1/Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+				if(!collisionDown() && !collisionLeft()){
+					Player.canLeave = true;
+				}
+			}
+		}else if(Main.state == Main.State.SURFACE){
 			if(!Player.isShip()){
 				if(!collisionDown() && !collisionLeft()){
 					xDif -= 1/Main.root2;
@@ -714,7 +772,7 @@ public class Planet {
 					if(playerRectUp.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
 						collided = true;
 						Player.canLeave = false;
-						if(decoration[i][j].equals(Block.entrance) && !Player.isShip()){
+						if(decoration[i][j].equals(Block.entrance) && !Player.isShip() && Block.entrance.activateable){
 							Dungeon.saveState = Main.state;
 							Main.state = Main.State.DUNGEON;
 						}
@@ -738,7 +796,7 @@ public class Planet {
 					if(playerRectLeft.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
 						collided = true;
 						Player.canLeave = false;
-						if(decoration[i][j].equals(Block.entrance) && !Player.isShip()){
+						if(decoration[i][j].equals(Block.entrance) && !Player.isShip() && Block.entrance.activateable){
 							Dungeon.saveState = Main.state;
 							Main.state = Main.State.DUNGEON;
 						}
@@ -762,7 +820,7 @@ public class Planet {
 					if(playerRectDown.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
 						collided = true;
 						Player.canLeave = false;
-						if(decoration[i][j].equals(Block.entrance) && !Player.isShip()){
+						if(decoration[i][j].equals(Block.entrance) && !Player.isShip() && Block.entrance.activateable){
 							Dungeon.saveState = Main.state;
 							Main.state = Main.State.DUNGEON;
 						}
@@ -786,7 +844,7 @@ public class Planet {
 					if(playerRectRight.intersects(blockRects[i][j]) && (terrain[i][j].isSolid() || decoration[i][j].isSolid())){
 						collided = true;
 						Player.canLeave = false;
-						if(decoration[i][j].equals(Block.entrance) && !Player.isShip()){
+						if(decoration[i][j].equals(Block.entrance) && !Player.isShip() && Block.entrance.activateable){
 							Dungeon.saveState = Main.state;
 							Main.state = Main.State.DUNGEON;
 						}
@@ -837,9 +895,7 @@ public class Planet {
 				moons[selectedMoon].update();
 			}
 		case SPACESTATION:
-			if(made){
-				
-			}else{
+			if(!made){
 				createMoons();
 			}
 		case DUNGEON:
@@ -848,6 +904,7 @@ public class Planet {
 		default:
 			break;
 		}
+		Block.entrance.activateable = true;
 	}
 
 	public void draw(Graphics g){

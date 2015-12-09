@@ -92,6 +92,7 @@ public class Block {
 	
 	protected Image image;
 	private boolean isSolid;
+	public boolean activateable = true;
 	
 	public Block(String imagePath, boolean isSolid){
 		image = ResourceLoader.getImage(imagePath);

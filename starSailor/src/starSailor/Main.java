@@ -1,5 +1,6 @@
 package starSailor;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -275,6 +276,7 @@ public class Main extends JFrame {
 			Graphics2D g2d = (Graphics2D) g;
 			Image offImage = createImage(width, height);
 			Graphics offGraphics = offImage.getGraphics();
+			offGraphics.setColor(Color.black);
 			offGraphics.fillRect(0, 0, width, height);
 			if(state != State.SHIP && state != State.SPACEBATTLE){
 			galaxy.draw(offGraphics);
@@ -286,6 +288,11 @@ public class Main extends JFrame {
 			sb.draw(offGraphics);
 			}
 			player.draw(offGraphics);
+			offGraphics.setColor(Color.red);
+			offGraphics.drawString("Kills: " + Player.killCount, 50, 50);
+			offGraphics.drawString("Health: " + Player.HPSTAT, 50, 60);
+			offGraphics.drawString("Speed: " + Player.speedSTAT, 50, 70);
+			offGraphics.drawString("Accuracy: " + Player.accuracySTAT, 50, 80);
 			g2d.drawImage(offImage, 0, 0, width, height, null);
 	}
 

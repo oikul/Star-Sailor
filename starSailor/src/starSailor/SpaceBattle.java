@@ -144,33 +144,36 @@ public class SpaceBattle {
 	}
 	
 	public boolean finished(){
-		newGame = true;
-		return (fighters.size() == 0 && carriers.size() == 0 && !isCommander);
+		if(fighters.size() == 0 && carriers.size() == 0 && !isCommander){
+			newGame = true;
+			return true;
+		}
+		return false;
 	}
 	
 	public void panUp(){
 		if(spaceLocation.y < 0){
-			spaceLocation.setLocation(spaceLocation.x, spaceLocation.y + (5+(Player.speedSTAT/4.0)));
-			yChange -= (5+(Player.speedSTAT/4.0));
+			spaceLocation.setLocation(spaceLocation.x, spaceLocation.y + (1+(Player.speedSTAT/4.0)));
+			yChange -= (1+(Player.speedSTAT/4.0));
 		}else{
 		}
 	}
 	public void panDown(){
 		if(spaceLocation.y > Main.height - ySize){
-			spaceLocation.setLocation(spaceLocation.x, spaceLocation.y - (5+(Player.speedSTAT/4.0)));
-			yChange += (5+(Player.speedSTAT/4.0));
+			spaceLocation.setLocation(spaceLocation.x, spaceLocation.y - (1+(Player.speedSTAT/4.0)));
+			yChange += (1+(Player.speedSTAT/4.0));
 		}
 	}
 	public void panLeft(){
 		if(spaceLocation.x < 0){
-			spaceLocation.setLocation(spaceLocation.x + (5+(Player.speedSTAT/4.0)), spaceLocation.y);
-			xChange -= (5+(Player.speedSTAT/4.0));
+			spaceLocation.setLocation(spaceLocation.x + (1+(Player.speedSTAT/4.0)), spaceLocation.y);
+			xChange -= (1+(Player.speedSTAT/4.0));
 		}
 	}
 	public void panRight(){
 		if(spaceLocation.x > Main.width - xSize){
-			spaceLocation.setLocation(spaceLocation.x - (5+(Player.speedSTAT/4.0)), spaceLocation.y);
-			xChange += (5+(Player.speedSTAT/4.0));
+			spaceLocation.setLocation(spaceLocation.x - (1+(Player.speedSTAT/4.0)), spaceLocation.y);
+			xChange += (1+(Player.speedSTAT/4.0));
 		}
 	}
 	public void panUR(){
@@ -180,8 +183,8 @@ public class SpaceBattle {
 			panRight();
 		}else{
 			spaceLocation.setLocation(spaceLocation.x - ((1+(Player.speedSTAT/4.0))*(1/Main.root2)), spaceLocation.y + ((1+(Player.speedSTAT/4.0))*(1/Main.root2)));
-			xChange += (5+(Player.speedSTAT/4.0))*(1/Main.root2);
-			yChange -= (5+(Player.speedSTAT/4.0))*(1/Main.root2);
+			xChange += (1+(Player.speedSTAT/4.0))*(1/Main.root2);
+			yChange -= (1+(Player.speedSTAT/4.0))*(1/Main.root2);
 		}
 	}
 	public void panUL(){
@@ -191,8 +194,8 @@ public class SpaceBattle {
 			panLeft();
 		}else{
 			spaceLocation.setLocation(spaceLocation.x + ((1+(Player.speedSTAT/4.0))*(1/Main.root2)), spaceLocation.y + ((1+(Player.speedSTAT/4.0))*(1/Main.root2)));
-			xChange -= (5+(Player.speedSTAT/4.0))*(1/Main.root2);
-			yChange -= (5+(Player.speedSTAT/4.0))*(1/Main.root2);
+			xChange -= (1+(Player.speedSTAT/4.0))*(1/Main.root2);
+			yChange -= (1+(Player.speedSTAT/4.0))*(1/Main.root2);
 		}
 	}
 	public void panDR(){
@@ -202,8 +205,8 @@ public class SpaceBattle {
 			panRight();
 		}else{
 			spaceLocation.setLocation(spaceLocation.x - ((1+(Player.speedSTAT/4.0))*(1/Main.root2)), spaceLocation.y - ((1+(Player.speedSTAT/4.0))*(1/Main.root2)));
-			xChange += (5+(Player.speedSTAT/4.0))*(1/Main.root2);
-			yChange += (5+(Player.speedSTAT/4.0))*(1/Main.root2);
+			xChange += (1+(Player.speedSTAT/4.0))*(1/Main.root2);
+			yChange += (1+(Player.speedSTAT/4.0))*(1/Main.root2);
 		}
 	}
 	public void panDL(){
@@ -213,8 +216,8 @@ public class SpaceBattle {
 			panLeft();
 		}else{
 			spaceLocation.setLocation(spaceLocation.x + ((1+(Player.speedSTAT/4.0))*(1/Main.root2)), spaceLocation.y - ((1+(Player.speedSTAT/4.0))*(1/Main.root2)));
-			xChange -= (5+(Player.speedSTAT/4.0))*(1/Main.root2);
-			yChange += (5+(Player.speedSTAT/4.0))*(1/Main.root2);
+			xChange -= (1+(Player.speedSTAT/4.0))*(1/Main.root2);
+			yChange += (1+(Player.speedSTAT/4.0))*(1/Main.root2);
 		}
 	}
  		
@@ -275,89 +278,93 @@ public class SpaceBattle {
 		map = new MiniMap(background,0,Main.height-200,spaceLocation);
 		newGame = false;
 	}
-	
+
 	public void update(){
-		
-		if(newGame){
-			newGame();
-			newGame = false;
-		}
-		
-		for(int i = 0; i < shots.size(); i++){
-			
-			shots.get(i).setLine(shots.get(i).getX1()+trajectories.get(i).getX(), shots.get(i).getY1()+trajectories.get(i).getY(),shots.get(i).getX1(), shots.get(i).getY1());
-		}
-		Rectangle rect = new Rectangle(0,0,Main.width,Main.height);
-		for (int i = 0; i < shots.size(); i++) {
+		if(Main.state == Main.State.SPACEBATTLE){
+			if(newGame){
+				newGame();
+				newGame = false;
+			}
+
+			for(int i = 0; i < shots.size(); i++){
+
+				shots.get(i).setLine(shots.get(i).getX1()+trajectories.get(i).getX(), shots.get(i).getY1()+trajectories.get(i).getY(),shots.get(i).getX1(), shots.get(i).getY1());
+			}
+			Rectangle rect = new Rectangle(0,0,Main.width,Main.height);
+			for (int i = 0; i < shots.size(); i++) {
 				if(!rect.contains(shots.get(i).getX2(), shots.get(i).getY2())){
 					shots.remove(i);
 					trajectories.remove(i);
 				}
-			
-		}
-		
-		for (int i = 0; i < carriers.size(); i++) {
-			if(carriers.get(i).isAlive()){
-				carriers.get(i).update(xChange,yChange);
-				carrierLocations.get(i).setLocation((int)carriers.get(i).getLocation().x-16,(int)carriers.get(i).getLocation().y-16);
-			for (int j = 0; j < shots.size();j++) {
-				if(carrierLocations.get(i).contains(shots.get(j).getP1())||carrierLocations.get(i).contains(shots.get(j).getP2())){
-					carriers.get(i).takeDamage(100);
-					shots.remove(j);
-					trajectories.remove(j);
-					if(!carriers.get(i).isAlive()){
-						carrierLocations.remove(i);
-						carriers.remove(i);
-						Sound.explosion.play();
-						i--;
-					break;
-				}
+
+			}
+
+			for (int i = 0; i < carriers.size(); i++) {
+				if(carriers.get(i).isAlive()){
+					carriers.get(i).update(xChange,yChange);
+					carrierLocations.get(i).setLocation((int)carriers.get(i).getLocation().x-16,(int)carriers.get(i).getLocation().y-16);
+					for (int j = 0; j < shots.size();j++) {
+						if(carrierLocations.get(i).contains(shots.get(j).getP1())||carrierLocations.get(i).contains(shots.get(j).getP2())){
+							carriers.get(i).takeDamage(100);
+							shots.remove(j);
+							trajectories.remove(j);
+							if(!carriers.get(i).isAlive()){
+								carrierLocations.remove(i);
+								carriers.remove(i);
+								Sound.explosion.play();
+								Player.killCount ++;
+								i--;
+								break;
+							}
+						}
+					}
 				}
 			}
+
+			for (int i = 0; i < fighters.size(); i++) {
+				if(fighters.get(i).isAlive()){
+					fighters.get(i).update(xChange,yChange);
+					fighterLocations.get(i).setLocation((int)fighters.get(i).getLocation().x-8,(int)fighters.get(i).getLocation().y-8);
+					for (int j = 0; j < shots.size();j++) {
+						if(fighterLocations.get(i).contains(shots.get(j).getP1())||fighterLocations.get(i).contains(shots.get(j).getP2())){
+							fighters.get(i).takeDamage(100);
+							shots.remove(j);
+							trajectories.remove(j);
+							if(!fighters.get(i).isAlive()){
+								fighterLocations.remove(i);
+								fighters.remove(i);
+								Sound.explosion.play();
+								Player.killCount ++;
+								i--;
+								break;
+							}
+						}
+					}
+				}
 			}
-		}
-		
-		for (int i = 0; i < fighters.size(); i++) {
-			if(fighters.get(i).isAlive()){
-				fighters.get(i).update(xChange,yChange);
-				fighterLocations.get(i).setLocation((int)fighters.get(i).getLocation().x-8,(int)fighters.get(i).getLocation().y-8);
-			for (int j = 0; j < shots.size();j++) {
-				if(fighterLocations.get(i).contains(shots.get(j).getP1())||fighterLocations.get(i).contains(shots.get(j).getP2())){
-					fighters.get(i).takeDamage(100);
-					shots.remove(j);
-					trajectories.remove(j);
-					if(!fighters.get(i).isAlive()){
-							fighterLocations.remove(i);
-							fighters.remove(i);
+			if(isCommander){
+				commander.update(xChange, yChange);
+				commanderLocation.setLocation((int)commander.getLocation().x-64,(int)commander.getLocation().y-16);
+				for (int j = 0; j < shots.size();j++) {
+					if(commanderLocation.contains(shots.get(j).getP1())||commanderLocation.contains(shots.get(j).getP2())){
+						commander.takeDamage(100);
+						shots.remove(j);
+						trajectories.remove(j);
+						if(!commander.isAlive()){
+							isCommander = false;
 							Sound.explosion.play();
-							i--;
-						break;
+							Player.killCount ++;
+						}
 					}
 				}
 			}
-			}
+			map.update(xChange,yChange);
+			xChange = 0;
+			yChange = 0;
 		}
-		if(isCommander){
-			commander.update(xChange, yChange);
-			commanderLocation.setLocation((int)commander.getLocation().x-64,(int)commander.getLocation().y-16);
-			for (int j = 0; j < shots.size();j++) {
-				if(commanderLocation.contains(shots.get(j).getP1())||commanderLocation.contains(shots.get(j).getP2())){
-					commander.takeDamage(100);
-					shots.remove(j);
-					trajectories.remove(j);
-					if(!commander.isAlive()){
-						isCommander = false;
-					}
-				}
-			}
-		}
-		map.update(xChange,yChange);
-		xChange = 0;
-		yChange = 0;
-		
-		
+
 	}
-	
+
 	public void draw(Graphics g){
 		Graphics2D g2d = (Graphics2D) g;
 		switch(Main.state){

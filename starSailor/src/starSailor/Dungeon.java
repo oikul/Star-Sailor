@@ -23,7 +23,10 @@ public class Dungeon {
 		for(int i = 0; i < numOfRooms; i++){
 			boolean collided = false;
 			room = new Rectangle(Main.random.nextInt(4096) - 2048, Main.random.nextInt(4096) - 2048, Main.random.nextInt(512) + 128, Main.random.nextInt(512) + 128);
-			enemies.add(new Enemy("enemies/ghost_sprites.png", 16, room.x + Main.random.nextInt(room.width), room.y + Main.random.nextInt(room.height)));
+			double chance = Main.random.nextDouble();
+			if(chance < 0.3){
+				enemies.add(new Enemy("Enemies/ghost_sprites.png", 16, room.x + Main.random.nextInt(room.width), room.y + Main.random.nextInt(room.height)));
+			}
 			for(int j = 0; j < rooms.size(); j++){
 				if(rooms.get(j).intersects(room)){
 					collided = true;
@@ -210,6 +213,7 @@ public class Dungeon {
 			if(leave){
 				xDif = 0;
 				yDif = 0;
+				Block.entrance.activateable = false;
 				Main.state = saveState;
 				leave = false;
 			}
@@ -234,6 +238,10 @@ public class Dungeon {
 			for(int i = 0; i < enemies.size(); i++){
 				enemies.get(i).draw(g);
 			}
+			g.setColor(Color.red);
+			g.fillRect(Main.width/2 - 50, 50, 100, 20);
+			g.setColor(Color.green);
+			g.fillRect(Main.width/2 - (Player.playerHealth - 50), 50, Player.playerHealth, 20);
 		}
 	}
 
