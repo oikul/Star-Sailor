@@ -58,9 +58,10 @@ public class Main extends JFrame {
 			}catch (Exception e){
 				e.printStackTrace();
 			}
-			if(!alive){
+			if(!alive || Player.playerHealth <= 0){
 				dispose();
 				initialise();
+				Player.playerHealth = 100;
 				gameOver();
 			}
 		}
@@ -178,7 +179,21 @@ public class Main extends JFrame {
 				sb.update();
 				break;
 			case SPACESTATION:
-				
+				if(input.isMouseDown(MouseEvent.BUTTON1)){
+					SpaceStation.clicked = true;
+				}else{
+					SpaceStation.clicked = false;
+				}
+				break;
+			case DUNGEON:
+				if(input.getMouseWheelDown()){
+					Dungeon.leave = true;
+					input.stopMouseWheel();
+				}
+				if(input.isKeyDown(KeyEvent.VK_SPACE)){
+					player.attack();
+					input.artificialKeyReleased(KeyEvent.VK_SPACE);
+				}
 				break;
 			default:
 				break;
@@ -270,7 +285,7 @@ public class Main extends JFrame {
 	}
 
 	private void gameOver(){
-		
+		Player.setIsShip(true);
 		Image gameover = ResourceLoader.getImage("background/gameOver.png");
 		
 		Graphics g = getGraphics();

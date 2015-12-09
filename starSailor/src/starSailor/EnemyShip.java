@@ -95,7 +95,6 @@ public class EnemyShip{
 		trajectories.add(SpaceBattle.getPoint(new Point2D.Double(actualLocation.x,actualLocation.y),new Point2D.Double(Main.width/2, Main.height/2),speed,0));
 		
 		shootTime += 300 + Main.random.nextDouble() * 1000;
-		Sound.laser.play();
 	}
 	
 	public void update(double xChange,double yChange){

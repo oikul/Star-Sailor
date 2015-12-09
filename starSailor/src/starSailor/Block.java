@@ -86,6 +86,9 @@ public class Block {
 	public static final Block smallfighter = new Block("spaceship/smallFighterParked.png", true);
 	public static final Block smallfighterf = new Block("spaceship/smallFighterParkedFlip.png", true);
 	public static final Block entrance = new Block("entrance.png", true);
+	public static final BlockButton health = new BlockButton("ship_interior/health_button.png", true, "health");
+	public static final BlockButton speed = new BlockButton("ship_interior/speed_button.png", true, "speed");
+	public static final BlockButton accuracy = new BlockButton("ship_interior/accuracy_button.png", true, "accuracy");
 	
 	protected Image image;
 	private boolean isSolid;

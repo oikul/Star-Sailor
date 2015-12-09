@@ -142,11 +142,23 @@ public class Biome {
 		rainforest.addDecoration(Block.tree_rubber, 0.55, 1.0, 0.2);
 		rainforest.addDecoration(Block.tree_shrub, 0.55, 1.0, 0.03);
 		
+		lava_ocean.addBlock(Block.lava, 0.0, 1.0);
+		
+		lava_islands.addBlock(Block.lava, 0.0, 1.0);
+		lava_islands.addDecoration(Block.stone, 0.6, 0.8, 0.1);
+		lava_islands.addBlock(Block.stone_volcanic, 0.7, 1.0);
+		
+		lava_lakes.addBlock(Block.stone_volcanic, 0.0, 1.0);
+		lava_lakes.addBlock(Block.lava, 0.7, 1.0);
+		
+		igneous_desert.addBlock(Block.stone_volcanic, 0.0, 0.5);
+		igneous_desert.addBlock(Block.stone, 0.5, 1.0);
+		
 		volcanic_mountains.addBlock(Block.stone_volcanic, 0.0, 1.0);
 		volcanic_mountains.addBlock(Block.lava, 0.9, 1.0);
 		volcanic_mountains.addDecoration(Block.rocks, 0.6, 0.9, 0.1);
 		
-		lava_ocean.addBlock(Block.solid, 0.0, 1.0);
+		
 	}
 	
 	public void addBlock(Block block, double start, double end){

@@ -3,6 +3,8 @@ package starSailor;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.Rectangle;
 
 public class SpaceStation {
@@ -12,6 +14,7 @@ public class SpaceStation {
 	private int[] xPoints, yPoints;
 	private double distance, angle;
 	private boolean up = false, selected;
+	public static boolean clicked = false;
 	private double time;
 	
 	public SpaceStation(double distance, double angle){
@@ -28,7 +31,7 @@ public class SpaceStation {
 		char[][] rep = {
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', 'I', 'I', 'I', 'I', 'I', 'I', 'K', ' ', 'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', 'K', ' ', 'I', 'I', 'I', 'I', 'I', ' ', ' ', 'I', 'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', 'K', ' ', 'I', 'a', 'b', 'c', 'I', ' ', ' ', 'I', 'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', 'I', ' ', ' ', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
 				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'W', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'I', 'W', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -132,6 +135,15 @@ public class SpaceStation {
 				case 'f':
 					station[j][i] = Block.smallfighterf;
 					break;
+				case 'a':
+					station[j][i] = Block.health;
+					break;
+				case 'b':
+					station[j][i] = Block.speed;
+					break;
+				case 'c':
+					station[j][i] = Block.accuracy;
+					break;
 				}                                           
 			}
 		}
@@ -214,10 +226,6 @@ public class SpaceStation {
 		this.selected = selected;
 	}
 	
-	public void update(){
-		
-	}
-	
 	public void draw(Graphics g){
 		Graphics2D g2d = (Graphics2D) g;
 		switch (Main.state){
@@ -235,6 +243,15 @@ public class SpaceStation {
 				for(int j = 0; j < station[0].length; j++){
 					if(station[i][j] != null){
 						station[i][j].draw(g2d, i*16 + xDif, j*16 + yDif);
+						if(clicked && station[i][j].equals(Block.accuracy)){
+							Block.accuracy.update(new Point(i*16 + xDif, j*16 + yDif), MouseInfo.getPointerInfo().getLocation());
+						}
+						if(clicked && station[i][j].equals(Block.health)){
+							Block.health.update(new Point(i*16 + xDif, j*16 + yDif), MouseInfo.getPointerInfo().getLocation());
+						}
+						if(clicked && station[i][j].equals(Block.speed)){
+							Block.speed.update(new Point(i*16 + xDif, j*16 + yDif), MouseInfo.getPointerInfo().getLocation());
+						}
 					}
 				}
 			}
