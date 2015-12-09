@@ -355,7 +355,20 @@ public class Planet {
 	}
 
 	public void panRight(){
-		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+		if(Main.state == Main.State.PLANETRY){
+			if(!Player.isShip()){
+				if(!collisionRight()){
+					xDif ++;
+					Player.pan(-1 * zoomSurface, 0);
+				}
+			}else{
+				xDif ++;;
+				Player.pan(-1 * zoomSurface, 0);
+				if(!collisionRight()){
+					Player.canLeave = true;
+				}
+			}
+		}else if(Main.state == Main.State.SURFACE){
 			if(!Player.isShip()){
 				if(!collisionRight()){
 					xDif ++;
@@ -397,7 +410,26 @@ public class Planet {
 	}
 
 	public void panUR(){
-		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+		if(Main.state == Main.State.PLANETRY){
+			if(!Player.isShip()){
+				if(!collisionUp() && !collisionRight()){
+					xDif += 1/Main.root2;
+					yDif -= 1/Main.root2;
+					Player.pan((1/-Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+				}else if(!collisionUp()){
+					panUp();
+				}else if(!collisionRight()){
+					panRight();
+				}
+			}else{
+				xDif += 1/Main.root2;
+				yDif -= 1/Main.root2;
+				Player.pan((1/-Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+				if(!collisionUp() && !collisionRight()){
+					Player.canLeave = true;
+				}
+			}
+		}else if(Main.state == Main.State.SURFACE){
 			if(!Player.isShip()){
 				if(!collisionUp() && !collisionRight()){
 					xDif += 1/Main.root2;
@@ -452,7 +484,26 @@ public class Planet {
 	}
 
 	public void panUL(){
-		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+		if(Main.state == Main.State.PLANETRY){
+			if(!Player.isShip()){
+				if(!collisionUp() && !collisionLeft()){
+					xDif -= 1/Main.root2;
+					yDif -= 1/Main.root2;
+					Player.pan((1/Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+				}else if(!collisionUp()){
+					panUp();
+				}else if(!collisionLeft()){
+					panLeft();
+				}
+			}else{
+				xDif -= 1/Main.root2;
+				yDif -= 1/Main.root2;
+				Player.pan((1/Main.root2) * zoomSurface, (1/Main.root2) * zoomSurface);
+				if(!collisionUp() && !collisionLeft()){
+					Player.canLeave = true;
+				}
+			}
+		}else if(Main.state == Main.State.SURFACE){
 			if(!Player.isShip()){
 				if(!collisionUp() && !collisionLeft()){
 					xDif -= 1/Main.root2;
@@ -506,7 +557,26 @@ public class Planet {
 	}
 
 	public void panDR(){
-		if(Main.state == Main.State.PLANETRY || Main.state == Main.State.SURFACE){
+		if(Main.state == Main.State.PLANETRY){
+			if(!Player.isShip()){
+				if(!collisionDown() && !collisionRight()){
+					xDif += 1/Main.root2;
+					yDif += 1/Main.root2;
+					Player.pan((1/-Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+				}else if(!collisionDown()){
+					panDown();
+				}else if(!collisionRight()){
+					panRight();
+				}
+			}else{
+				xDif += 1/Main.root2;
+				yDif += 1/Main.root2;
+				Player.pan((1/-Main.root2) * zoomSurface, (1/-Main.root2) * zoomSurface);
+				if(!collisionDown() && !collisionRight()){
+					Player.canLeave = true;
+				}
+			}
+		}else if(Main.state == Main.State.SURFACE){
 			if(!Player.isShip()){
 				if(!collisionDown() && !collisionRight()){
 					xDif += 1/Main.root2;
@@ -678,6 +748,8 @@ public class Planet {
 			xDif = 0;
 			yDif = 0;
 		}else{
+			xDif = 0;
+			yDif = 0;
 			if(selectedStation > 0){
 				Main.state = Main.State.SPACESTATION;
 			}else if(selectedMoon >= 0){
@@ -694,6 +766,8 @@ public class Planet {
 			xDif = 0;
 			yDif = 0;
 		}else{
+			xDif = 0;
+			yDif = 0;
 			if(isMoon){
 				Main.state = Main.State.PLANETRY;
 			}else{
