@@ -12,38 +12,33 @@ import java.util.ArrayList;
 
 public class SpaceBattle {
 	
-	private Point2D.Double spaceLocation;
+	private static Point2D.Double spaceLocation;
 	private int xSize;
 	private int ySize;
 	private double xChange;
 	private double yChange;
 	
-	private int playerHealth;
+	private MiniMap map;
 	
 	private ArrayList<Point2D.Double> trajectories;
-	private ArrayList<Rectangle> fighterLocations;
-	private ArrayList<Rectangle> carrierLocations;
-	private Rectangle commanderLocation;
+	private static ArrayList<Rectangle> fighterLocations;
+	private static ArrayList<Rectangle> carrierLocations;
+	private static Rectangle commanderLocation;
 	private ArrayList<Line2D.Double> shots;
 	private ArrayList<Fighter> fighters;
 	private ArrayList<Carrier> carriers;
 	private Command commander;
-	private boolean isCommander;
+	private static boolean isCommander;
 	
-	private Point2D.Double pointer; // displays the pointer location
 	private Image background;
 	public static Main.State saveState = Main.State.GALACTIC;
-	private boolean newBattle = false;
+	private boolean	newGame;
 	
 	public SpaceBattle(){
 		int carriers = 5;
 		int fighters = 5;
 		this.carriers = new ArrayList<Carrier>(carriers);
 		this.fighters = new ArrayList<Fighter>(fighters);
-		int planet = Main.random.nextInt(8);
-		background = ResourceLoader.getImage("background/planet"+planet+".png");
-		xSize = background.getWidth(null)*3;
-		ySize = background.getHeight(null)*3;
 		spaceLocation = new Point2D.Double(0, 0);
 		trajectories = new ArrayList<Point2D.Double>();
 		shots = new ArrayList<Line2D.Double>();
@@ -51,8 +46,7 @@ public class SpaceBattle {
 		carrierLocations = new ArrayList<Rectangle>(carriers);
 		
 		newGame();
-		
-		pointer = new Point2D.Double(0, 0);
+		newGame = true;
 	}
 	
 	public static Point2D.Double getPoint(Point2D.Double p1,Point2D.Double p2,double speed,double accuracy){
@@ -105,6 +99,21 @@ public class SpaceBattle {
 		return 0.0;
 	}
 	
+	public static Point2D.Double moveAngle(Point2D.Double p,double angle,double speed,double accuracy){
+		
+		angle += (Main.random.nextGaussian()*accuracy);
+		
+		double xgain = 0;
+		double ygain = 0;
+		xgain = Math.cos(angle) * speed;
+		ygain = -Math.sin(angle) * speed;
+		
+
+		
+		return new Point2D.Double(xgain,ygain);
+		
+	}
+	
 	public static void playerDamage(int damage){
 		Player.HPSTAT -= damage;
 		if(Player.HPSTAT <= 0){
@@ -112,33 +121,56 @@ public class SpaceBattle {
 		}
 	}
 	
+	public static boolean doesContain(Rectangle rect){
+		rect.setLocation((int)(rect.x+spaceLocation.x),(int)(rect.y+spaceLocation.y));
+		for (Rectangle location : carrierLocations) {
+			if(rect.intersects(location)){
+				return true;
+			}
+		}
+		for (Rectangle location : fighterLocations) {
+			if(rect.contains(location)){
+				return true;
+			}
+		}
+		if(isCommander){
+			if(commanderLocation.intersects(rect)){
+				return true;
+			}
+		}
+		
+		
+		return false;
+	}
+	
 	public boolean finished(){
+		newGame = true;
 		return (fighters.size() == 0 && carriers.size() == 0 && !isCommander);
 	}
 	
 	public void panUp(){
 		if(spaceLocation.y < 0){
-			spaceLocation.setLocation(spaceLocation.x, spaceLocation.y + Player.speedSTAT);
-			yChange -= Player.speedSTAT;
+			spaceLocation.setLocation(spaceLocation.x, spaceLocation.y + (5+(Player.speedSTAT/4.0)));
+			yChange -= (5+(Player.speedSTAT/4.0));
 		}else{
 		}
 	}
 	public void panDown(){
 		if(spaceLocation.y > Main.height - ySize){
-			spaceLocation.setLocation(spaceLocation.x, spaceLocation.y - Player.speedSTAT);
-			yChange += Player.speedSTAT;
+			spaceLocation.setLocation(spaceLocation.x, spaceLocation.y - (5+(Player.speedSTAT/4.0)));
+			yChange += (5+(Player.speedSTAT/4.0));
 		}
 	}
 	public void panLeft(){
 		if(spaceLocation.x < 0){
-			spaceLocation.setLocation(spaceLocation.x + Player.speedSTAT, spaceLocation.y);
-			xChange -= Player.speedSTAT;
+			spaceLocation.setLocation(spaceLocation.x + (5+(Player.speedSTAT/4.0)), spaceLocation.y);
+			xChange -= (5+(Player.speedSTAT/4.0));
 		}
 	}
 	public void panRight(){
 		if(spaceLocation.x > Main.width - xSize){
-			spaceLocation.setLocation(spaceLocation.x - Player.speedSTAT, spaceLocation.y);
-			xChange += Player.speedSTAT;
+			spaceLocation.setLocation(spaceLocation.x - (5+(Player.speedSTAT/4.0)), spaceLocation.y);
+			xChange += (5+(Player.speedSTAT/4.0));
 		}
 	}
 	public void panUR(){
@@ -147,9 +179,9 @@ public class SpaceBattle {
 		}else if(spaceLocation.y >= 0){
 			panRight();
 		}else{
-			spaceLocation.setLocation(spaceLocation.x - (Player.speedSTAT*(1/Main.root2)), spaceLocation.y + (Player.speedSTAT*(1/Main.root2)));
-			xChange += Player.speedSTAT*(1/Main.root2);
-			yChange -= Player.speedSTAT*(1/Main.root2);
+			spaceLocation.setLocation(spaceLocation.x - ((1+(Player.speedSTAT/4.0))*(1/Main.root2)), spaceLocation.y + ((1+(Player.speedSTAT/4.0))*(1/Main.root2)));
+			xChange += (5+(Player.speedSTAT/4.0))*(1/Main.root2);
+			yChange -= (5+(Player.speedSTAT/4.0))*(1/Main.root2);
 		}
 	}
 	public void panUL(){
@@ -158,9 +190,9 @@ public class SpaceBattle {
 		}else if(spaceLocation.y >= 0){
 			panLeft();
 		}else{
-			spaceLocation.setLocation(spaceLocation.x + (Player.speedSTAT*(1/Main.root2)), spaceLocation.y + (Player.speedSTAT*(1/Main.root2)));
-			xChange -= Player.speedSTAT*(1/Main.root2);
-			yChange -= Player.speedSTAT*(1/Main.root2);
+			spaceLocation.setLocation(spaceLocation.x + ((1+(Player.speedSTAT/4.0))*(1/Main.root2)), spaceLocation.y + ((1+(Player.speedSTAT/4.0))*(1/Main.root2)));
+			xChange -= (5+(Player.speedSTAT/4.0))*(1/Main.root2);
+			yChange -= (5+(Player.speedSTAT/4.0))*(1/Main.root2);
 		}
 	}
 	public void panDR(){
@@ -169,9 +201,9 @@ public class SpaceBattle {
 		}else if(spaceLocation.y <= Main.height - ySize){
 			panRight();
 		}else{
-			spaceLocation.setLocation(spaceLocation.x - (Player.speedSTAT*(1/Main.root2)), spaceLocation.y - (Player.speedSTAT*(1/Main.root2)));
-			xChange += Player.speedSTAT*(1/Main.root2);
-			yChange += Player.speedSTAT*(1/Main.root2);
+			spaceLocation.setLocation(spaceLocation.x - ((1+(Player.speedSTAT/4.0))*(1/Main.root2)), spaceLocation.y - ((1+(Player.speedSTAT/4.0))*(1/Main.root2)));
+			xChange += (5+(Player.speedSTAT/4.0))*(1/Main.root2);
+			yChange += (5+(Player.speedSTAT/4.0))*(1/Main.root2);
 		}
 	}
 	public void panDL(){
@@ -180,75 +212,76 @@ public class SpaceBattle {
 		}else if(spaceLocation.y <= Main.height - ySize){
 			panLeft();
 		}else{
-			spaceLocation.setLocation(spaceLocation.x + (Player.speedSTAT*(1/Main.root2)), spaceLocation.y - (Player.speedSTAT*(1/Main.root2)));
-			xChange -= Player.speedSTAT*(1/Main.root2);
-			yChange += Player.speedSTAT*(1/Main.root2);
+			spaceLocation.setLocation(spaceLocation.x + ((1+(Player.speedSTAT/4.0))*(1/Main.root2)), spaceLocation.y - ((1+(Player.speedSTAT/4.0))*(1/Main.root2)));
+			xChange -= (5+(Player.speedSTAT/4.0))*(1/Main.root2);
+			yChange += (5+(Player.speedSTAT/4.0))*(1/Main.root2);
 		}
 	}
  		
 	public void shoot(Point mouseCoord){
 		double accuracy = 1.0 / ((Player.accuracySTAT*3)+30);
 		shots.add(new Line2D.Double(Main.width/2, Main.height/2,Main.width/2, Main.height/2));
-		pointer.setLocation(mouseCoord.getX(),mouseCoord.getY());
 		double speed = 20.0;
 		trajectories.add(getPoint(new Point2D.Double(Main.width/2,Main.height/2),new Point2D.Double(mouseCoord.getX(), mouseCoord.getY()),speed,accuracy));
 		Sound.laser.play();
 			
 	}
 		
-	public void newGame(){
+	private void newGame(){
 		shots.clear();
 		trajectories.clear();
 		carriers.clear();
 		fighters.clear();
 		carrierLocations.clear();
 		fighterLocations.clear();
-		spaceLocation.setLocation(0, 0);
 		xChange = 0;
 		yChange = 0;
 
-		newBattle = true;
-
 		int planet = Main.random.nextInt(8);
 		background = ResourceLoader.getImage("background/planet"+planet+".png");
-
-		xSize = background.getWidth(null)*2;
-		ySize = background.getHeight(null)*2;
+		
+		while(background.equals(null)){
+			background = ResourceLoader.getImage("background/planet"+planet+".png");
+		}
+		
+		xSize = background.getWidth(null)*3;
+		ySize = background.getHeight(null)*3;
 		
 		for (int i = 0; i < Main.random.nextInt(5)+5; i++) {
-
-			int x = Main.random.nextInt(xSize/2)+xSize/4;
-			int y = Main.random.nextInt(ySize/2)+ySize/4;
+			int x = (Main.random.nextInt(xSize-(2*Main.width))+Main.width)-(xSize-(2*Main.width))/2;
+			int y = (Main.random.nextInt(ySize-(2*Main.height))+Main.height)-(ySize-(2*Main.height));
 
 			carrierLocations.add(new Rectangle(x,y,32,32));
 			this.carriers.add(new Carrier(x,y));
 			this.carriers.get(i).resetTime();
 			for (int j = 0; j < Main.random.nextInt(5)+5; j++) {
 
-				int x2 = x + Main.random.nextInt(50)-25;
-				int y2 = y + Main.random.nextInt(50)-25;
+				int x2 = x + Main.random.nextInt(100)-50;
+				int y2 = y + Main.random.nextInt(100)-50;
 				this.fighters.add(new Fighter(x2,y2,this.carriers.get(i)));
 				this.fighters.get(i).resetTime();
 				fighterLocations.add(new Rectangle(x2,y2,16,16));
 			}
 		}
-		int x = Main.random.nextInt(300)+50;
-		int y = Main.random.nextInt(Main.height-100)+50;
+		int x = (Main.random.nextInt(xSize-(2*Main.width))+Main.width)-(xSize-(2*Main.width));
+		int y = (Main.random.nextInt(ySize-(2*Main.height))+Main.height)-(ySize-(2*Main.height));
 		commander = new Command(x,y);
 		commanderLocation = new Rectangle(x, y, 128,32);
 		commander.resetTime();
 		isCommander = true;
 		
+
+		spaceLocation.setLocation((Main.width/2)-(xSize/2),(Main.height/2)-(ySize/2));
+		map = new MiniMap(background,0,Main.height-200,spaceLocation);
+		newGame = false;
 	}
 	
 	public void update(){
 		
-		if(newBattle){
+		if(newGame){
 			newGame();
-			newBattle = false;
-		}else{
-		
-		
+			newGame = false;
+		}
 		
 		for(int i = 0; i < shots.size(); i++){
 			
@@ -318,10 +351,11 @@ public class SpaceBattle {
 				}
 			}
 		}
+		map.update(xChange,yChange);
 		xChange = 0;
 		yChange = 0;
 		
-		}
+		
 	}
 	
 	public void draw(Graphics g){
@@ -329,20 +363,11 @@ public class SpaceBattle {
 		switch(Main.state){
 		case SPACEBATTLE:
 
-			g2d.drawImage(background, (int)spaceLocation.x, (int)spaceLocation.y, background.getWidth(null)*3, background.getHeight(null)*3, null);
-			g2d.setColor(Color.orange);
-			g2d.drawRect(Main.width + (int)spaceLocation.x, Main.height + (int)spaceLocation.y, xSize - (2*Main.width) + (int)spaceLocation.x, ySize - (2*Main.height) + (int)spaceLocation.y);
-			// displays health
-			g2d.setColor(Color.red);
-			g2d.fillRect(Main.width/2 - 500, 50, 1000, 20);
-			g2d.setColor(Color.green);
-			g2d.fillRect(Main.width/2 - (Player.HPSTAT - 500), 50, Player.HPSTAT, 20);
-			
+			g2d.drawImage(background, (int)spaceLocation.x, (int)spaceLocation.y, xSize, ySize, null);
+			g2d.setColor(Color.blue);
 			for(int i = 0; i< shots.size(); i++){
 				g2d.drawLine((int)shots.get(i).getX1(),(int)shots.get(i).getY1(),(int)shots.get(i).getX2(),(int)shots.get(i).getY2());
 			}
-			g2d.drawRect(Main.width/2 - 16, Main.height/2-16, 32, 32);
-			g2d.drawRect((int)pointer.x, (int)pointer.y, 1, 1);
 
 			for (Carrier carrier : carriers) {
 				carrier.draw(g2d);
@@ -353,6 +378,12 @@ public class SpaceBattle {
 			if(isCommander){
 			commander.draw(g2d);
 			}
+			map.draw(g2d);
+			// displays health
+			g2d.setColor(Color.red);
+			g2d.fillRect(Main.width/2 - 500, 50, 1000, 20);
+			g2d.setColor(Color.green);
+			g2d.fillRect(Main.width/2 - (Player.HPSTAT - 500), 50, Player.HPSTAT, 20);
 			break;
 		default:
 			break;

@@ -15,12 +15,9 @@ public class EnemyShip{
 	protected ArrayList<Line2D.Double> shots;
 	private int health;
 	protected int currentFrame;
-	protected int death;
-	protected Point2D.Double spaceLocation;
-	protected Point2D.Double actualLocation;
+	protected Point2D.Double actualLocation,moveAmount;
 	private double rotation;
-	protected double time;
-	protected double shootTime;
+	protected double time,shootTime,moveTime;
 	private Image[] shipImages;
 	private int xSize,ySize;
 	
@@ -31,7 +28,6 @@ public class EnemyShip{
 	public EnemyShip(int x,int y,shipClass ship){
 		
 		time = System.currentTimeMillis();
-		spaceLocation = new Point2D.Double(x,y);
 		if(ship == shipClass.FIGHTER){
 			this.health = 100;
 			shipImages = ResourceLoader.getBlockSprites("spaceship/smallFighterSprite.png", 16, 16);
@@ -56,6 +52,7 @@ public class EnemyShip{
 
 		getAngle();
 		
+		moveAmount = new Point2D.Double(0, 0);
 		trajectories = new ArrayList<Point2D.Double>();
 		shots = new ArrayList<Line2D.Double>();
 		shootTime = System.currentTimeMillis()+3000 + Main.random.nextInt(500);
@@ -92,16 +89,15 @@ public class EnemyShip{
 		shots.add(new Line2D.Double(actualLocation.x, actualLocation.y, actualLocation.x, actualLocation.y));
 		double speed = 20.0;
 		
-		trajectories.add(SpaceBattle.getPoint(new Point2D.Double(actualLocation.x,actualLocation.y),new Point2D.Double(Main.width/2, Main.height/2),speed,0));
+		trajectories.add(SpaceBattle.getPoint(new Point2D.Double(actualLocation.x,actualLocation.y),new Point2D.Double(Main.width/2, Main.height/2),speed,1.0/10));
 		
 		shootTime += 300 + Main.random.nextDouble() * 1000;
-		Sound.laser.play();
 	}
 	
 	public void update(double xChange,double yChange){
 		
 		getAngle();
-		spaceLocation.setLocation(actualLocation.x-xChange, actualLocation.y-yChange);
+		actualLocation.setLocation(actualLocation.x-xChange, actualLocation.y-yChange);
 		if(System.currentTimeMillis() >= time){
 			
 			if(currentFrame == 1){
@@ -148,7 +144,6 @@ public class EnemyShip{
 		saveAt = g2d.getTransform();
 		at.rotate(rotation, actualLocation.x, actualLocation.y);
 		g2d.setTransform(at);
-		g2d.drawRect((int)actualLocation.x-(xSize/2), (int)actualLocation.y-(ySize/2),xSize,ySize);
 		g2d.drawImage(shipImages[currentFrame],(int)actualLocation.x-(xSize/2),(int)actualLocation.y-(ySize/2), null);
 		g2d.setTransform(saveAt);
 		

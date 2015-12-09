@@ -98,7 +98,7 @@ public class Galaxy {
 			zoom += 0.3;
 		}else{
 			double chance = Main.random.nextDouble();
-			if(chance < 0.2){
+			if(chance < 0.1){
 				Main.state = Main.State.SPACEBATTLE;
 				SpaceBattle.saveState = Main.State.SOLAR;
 			}else{

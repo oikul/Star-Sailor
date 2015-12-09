@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
@@ -14,11 +15,11 @@ public class Player {
 	private int iIndex = 0, jIndex = 0, shipIndex = 0;
 	private static Point2D.Double lastLocation;
 	private static boolean isShip = true, isMoving = false;
-	public static boolean canLeave = true;
+	public static boolean canLeave = true, isAttacking = false;
+	public static final Rectangle attackRange = new Rectangle(Main.width/2 - 16, Main.height/2 - 16, 32, 32);
 	private long time;
 	private double rotation, lastRotation;
-	
-	public static int accuracySTAT,speedSTAT,HPSTAT;
+	public static int accuracySTAT,speedSTAT,HPSTAT, playerHealth = 100;
 	public static int killCount;
 
 	public Player(String playerPath, String shipPath){
@@ -63,8 +64,7 @@ public class Player {
 	}
 	
 	public void calculateRotation(Point mouseCoords){
-			
-				rotation = SpaceBattle.getAngle(new Point2D.Double(Main.width/2, Main.height/2),new Point2D.Double(mouseCoords.x,mouseCoords.y));
+		rotation = SpaceBattle.getAngle(new Point2D.Double(Main.width/2, Main.height/2),new Point2D.Double(mouseCoords.x,mouseCoords.y));
 	}
 
 	public void update(Point p){
@@ -102,7 +102,21 @@ public class Player {
 					lastRotation = rotation;
 				}
 			}
+			if(jIndex == 3){
+				jIndex = 0;
+				isAttacking = false;
+			}
+			if(isAttacking){
+				isAttacking = false;
+			}
 			time = newTime;
+		}
+	}
+	
+	public void attack(){
+		if(!isShip){
+			jIndex = 3;
+			isAttacking = true;
 		}
 	}
 

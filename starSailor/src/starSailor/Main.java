@@ -50,7 +50,7 @@ public class Main extends JFrame {
 			draw();
 			long afterTime = System.currentTimeMillis();
 			long diff = afterTime - beforeTime;
-			long waitTime = diff / 60;
+			long waitTime = diff / 45;
 			try{
 				if(waitTime > 0){
 					Thread.sleep(waitTime);
@@ -58,9 +58,10 @@ public class Main extends JFrame {
 			}catch (Exception e){
 				e.printStackTrace();
 			}
-			if(!alive){
+			if(!alive || Player.playerHealth <= 0){
 				dispose();
 				initialise();
+				Player.playerHealth = 100;
 				gameOver();
 			}
 		}
@@ -178,7 +179,21 @@ public class Main extends JFrame {
 				sb.update();
 				break;
 			case SPACESTATION:
-				
+				if(input.isMouseDown(MouseEvent.BUTTON1)){
+					SpaceStation.clicked = true;
+				}else{
+					SpaceStation.clicked = false;
+				}
+				break;
+			case DUNGEON:
+				if(input.getMouseWheelDown()){
+					Dungeon.leave = true;
+					input.stopMouseWheel();
+				}
+				if(input.isKeyDown(KeyEvent.VK_SPACE)){
+					player.attack();
+					input.artificialKeyReleased(KeyEvent.VK_SPACE);
+				}
 				break;
 			default:
 				break;
@@ -242,7 +257,6 @@ public class Main extends JFrame {
 				input.artificialKeyReleased(KeyEvent.VK_E);
 			}
 			if(input.isKeyDown(KeyEvent.VK_F)){
-				sb.newGame();
 				state = State.SPACEBATTLE;
 			    input.artificialKeyReleased(KeyEvent.VK_F);
 			}
@@ -262,15 +276,21 @@ public class Main extends JFrame {
 			Image offImage = createImage(width, height);
 			Graphics offGraphics = offImage.getGraphics();
 			offGraphics.fillRect(0, 0, width, height);
+			if(state != State.SHIP && state != State.SPACEBATTLE){
 			galaxy.draw(offGraphics);
+			}
+			if(state == State.SHIP){
 			ship.draw(offGraphics);
+			}
+			if(state == State.SPACEBATTLE){
 			sb.draw(offGraphics);
+			}
 			player.draw(offGraphics);
 			g2d.drawImage(offImage, 0, 0, width, height, null);
 	}
 
 	private void gameOver(){
-		
+		Player.setIsShip(true);
 		Image gameover = ResourceLoader.getImage("background/gameOver.png");
 		
 		Graphics g = getGraphics();

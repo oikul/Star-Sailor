@@ -9,6 +9,7 @@ public class Dungeon {
 	
 	private ArrayList<Rectangle> rooms;
 	private ArrayList<Rectangle> corridors;
+	private ArrayList<Enemy> enemies;
 	private int xDif, yDif;
 	public static boolean leave = false;
 	public static Main.State saveState = Main.State.SURFACE;
@@ -16,11 +17,13 @@ public class Dungeon {
 	public Dungeon(int numOfRooms){
 		rooms = new ArrayList<Rectangle>();
 		corridors = new ArrayList<Rectangle>();
+		enemies = new ArrayList<Enemy>();
 		Rectangle room = new Rectangle(Main.width/2 - 64, Main.height/2 - 64, 128, 128);
 		rooms.add(room);
 		for(int i = 0; i < numOfRooms; i++){
 			boolean collided = false;
 			room = new Rectangle(Main.random.nextInt(4096) - 2048, Main.random.nextInt(4096) - 2048, Main.random.nextInt(512) + 128, Main.random.nextInt(512) + 128);
+			enemies.add(new Enemy("enemies/ghost_sprites.png", 16, room.x + Main.random.nextInt(room.width), room.y + Main.random.nextInt(room.height)));
 			for(int j = 0; j < rooms.size(); j++){
 				if(rooms.get(j).intersects(room)){
 					collided = true;
@@ -41,24 +44,36 @@ public class Dungeon {
 	public void panUp(){
 		if(canMoveUp()){
 			yDif ++;
+			for(int i = 0; i < enemies.size(); i++){
+				enemies.get(i).panUp();
+			}
 		}
 	}
 
 	public void panLeft(){
 		if(canMoveLeft()){
 			xDif ++;
+			for(int i = 0; i < enemies.size(); i++){
+				enemies.get(i).panLeft();
+			}
 		}
 	}
 
 	public void panDown(){
 		if(canMoveDown()){
 			yDif --;
+			for(int i = 0; i < enemies.size(); i++){
+				enemies.get(i).panDown();
+			}
 		}
 	}
 
 	public void panRight(){
 		if(canMoveRight()){
 			xDif --;
+			for(int i = 0; i < enemies.size(); i++){
+				enemies.get(i).panRight();
+			}
 		}
 	}
 
@@ -66,6 +81,9 @@ public class Dungeon {
 		if(canMoveUp() && canMoveLeft()){
 			yDif ++;
 			xDif ++;
+			for(int i = 0; i < enemies.size(); i++){
+				enemies.get(i).panUL();
+			}
 		}
 	}
 
@@ -73,6 +91,9 @@ public class Dungeon {
 		if(canMoveUp() && canMoveRight()){
 			yDif ++;
 			xDif --;
+			for(int i = 0; i < enemies.size(); i++){
+				enemies.get(i).panUR();
+			}
 		}
 	}
 
@@ -80,6 +101,9 @@ public class Dungeon {
 		if(canMoveDown() && canMoveLeft()){
 			yDif --;
 			xDif ++;
+			for(int i = 0; i < enemies.size(); i++){
+				enemies.get(i).panDL();
+			}
 		}
 	}
 
@@ -87,6 +111,9 @@ public class Dungeon {
 		if(canMoveDown() && canMoveRight()){
 			yDif --;
 			xDif --;
+			for(int i = 0; i < enemies.size(); i++){
+				enemies.get(i).panDR();
+			}
 		}
 	}
 	
@@ -179,11 +206,19 @@ public class Dungeon {
 	}
 	
 	public void update(){
-		if(leave){
-			xDif = 0;
-			yDif = 0;
-			Main.state = saveState;
-			leave = false;
+		if(Main.state == Main.State.DUNGEON){
+			if(leave){
+				xDif = 0;
+				yDif = 0;
+				Main.state = saveState;
+				leave = false;
+			}
+			for(int i = 0; i < enemies.size(); i++){
+				enemies.get(i).update();
+				if(enemies.get(i).dead){
+					enemies.remove(i);
+				}
+			}
 		}
 	}
 	
@@ -195,6 +230,9 @@ public class Dungeon {
 			}
 			for(int i = 0; i < corridors.size(); i++){
 				g.fillRect(corridors.get(i).x + xDif, corridors.get(i).y + yDif, corridors.get(i).width, corridors.get(i).height);
+			}
+			for(int i = 0; i < enemies.size(); i++){
+				enemies.get(i).draw(g);
 			}
 		}
 	}

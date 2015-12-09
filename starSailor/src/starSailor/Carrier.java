@@ -15,7 +15,7 @@ public class Carrier extends EnemyShip {
 	public Carrier(int x, int y) {
 		super(x, y, EnemyShip.shipClass.CARRIER);
 		
-		int num = Main.random.nextInt(3);
+		int num =0;
 		switch (num){
 		case 0:
 			fightStyle = fightingStyle.AGGRESSIVE;
@@ -34,15 +34,25 @@ public class Carrier extends EnemyShip {
 	public void update(double xChange,double yChange){
 		
 
-		actualLocation.setLocation(actualLocation.x-xChange, actualLocation.y-yChange) ;
-		switch (fightStyle){
-		case DEFENSIVE:
-			actualLocation.setLocation((actualLocation.getX()),(actualLocation.getY()));
-		case AGGRESSIVE:
-			actualLocation.setLocation((actualLocation.getX()),(actualLocation.getY()));
-		case TACTICAL:
-			actualLocation.setLocation((actualLocation.getX()),(actualLocation.getY()));
+		actualLocation.setLocation(actualLocation.x-xChange, actualLocation.y-yChange);
+		if(System.currentTimeMillis() >= moveTime){
+			switch (fightStyle){
+			case DEFENSIVE:
+				actualLocation.setLocation((actualLocation.getX()),(actualLocation.getY()));
+				break;
+			case AGGRESSIVE:
+			
+				Point2D.Double move = SpaceBattle.getPoint(actualLocation, new Point2D.Double(Main.width/2, Main.height/2), 1, Math.PI/6);
+				
+			
+				break;
+			case TACTICAL:
+				actualLocation.setLocation((actualLocation.getX()),(actualLocation.getY()));
+				break;
+			}
+			moveTime = System.currentTimeMillis() + 500;
 		}
+		actualLocation.setLocation(actualLocation.x+moveAmount.x,actualLocation.y+moveAmount.y);
 		getAngle();
 		if(System.currentTimeMillis() >= time){
 			
@@ -59,6 +69,12 @@ public class Carrier extends EnemyShip {
 		}
 		
 		for(int i = 0; i < shots.size(); i++){
+			shots.get(i).setLine(shots.get(i).getX1()+trajectories.get(i).x, shots.get(i).getY1()+trajectories.get(i).y, shots.get(i).getX1(), shots.get(i).getY1());
+			if(shots.get(i).getP1() == shots.get(i).getP2()){
+				shots.remove(i);
+				trajectories.remove(i);
+				i--;
+			}
 			shots.get(i).setLine(shots.get(i).getX1()+trajectories.get(i).x, shots.get(i).getY1()+trajectories.get(i).y, shots.get(i).getX1(), shots.get(i).getY1());
 			if(shots.get(i).intersects(new Rectangle(Main.width/2 - 16, Main.height/2 - 16, 32, 32))){
 				//SpaceBattle.playerDamage(20);

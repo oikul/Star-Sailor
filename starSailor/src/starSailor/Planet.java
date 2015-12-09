@@ -124,13 +124,13 @@ public class Planet {
 			}
 		}else if(temperature >= 0.8 && temperature <= 1){
 			if(precipitation >= 0 && precipitation < 0.2){
-				biome = Biome.volcanic_mountains;
+				biome = Biome.lava_ocean;
 			}else if(precipitation >= 0.2 && precipitation < 0.4){
-				biome = Biome.volcanic_mountains;
+				biome = Biome.lava_islands;
 			}else if(precipitation >= 0.4 && precipitation < 0.6){
-				biome = Biome.volcanic_mountains;
+				biome = Biome.lava_lakes;
 			}else if(precipitation >= 0.6 && precipitation < 0.8){
-				biome = Biome.volcanic_mountains;
+				biome = Biome.igneous_desert;
 			}else if(precipitation >= 0.8 && precipitation <= 1){
 				biome = Biome.volcanic_mountains;
 			}
@@ -838,9 +838,7 @@ public class Planet {
 			}
 		case SPACESTATION:
 			if(made){
-				for(int i = 1; i < stations.length; i++){
-					stations[i].update();
-				}
+				
 			}else{
 				createMoons();
 			}
