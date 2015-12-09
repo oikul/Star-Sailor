@@ -15,7 +15,7 @@ public class Carrier extends EnemyShip {
 	public Carrier(int x, int y) {
 		super(x, y, EnemyShip.shipClass.CARRIER);
 		
-		int num =0;
+		int num = Main.random.nextInt(3);
 		switch (num){
 		case 0:
 			fightStyle = fightingStyle.AGGRESSIVE;
@@ -36,18 +36,45 @@ public class Carrier extends EnemyShip {
 
 		actualLocation.setLocation(actualLocation.x-xChange, actualLocation.y-yChange);
 		if(System.currentTimeMillis() >= moveTime){
+		double a,b;
 			switch (fightStyle){
 			case DEFENSIVE:
-				actualLocation.setLocation((actualLocation.getX()),(actualLocation.getY()));
+
+				a = actualLocation.x - Main.width/2;
+				b = actualLocation.y - Main.height/2;
+				
+				if(Math.sqrt((a*a)+(b*b)) < Main.height/2 ){
+					
+					double angle = SpaceBattle.getAngle(actualLocation, new Point2D.Double(Main.width/2,Main.height/2));
+					angle += Math.PI/2;
+					moveAmount = SpaceBattle.moveAngle(actualLocation, angle, 2, Math.PI/6);
+					
+				}else{
+					moveAmount = new Point2D.Double(0,0);
+				}
+				
+				
 				break;
 			case AGGRESSIVE:
 			
-				Point2D.Double move = SpaceBattle.getPoint(actualLocation, new Point2D.Double(Main.width/2, Main.height/2), 1, Math.PI/6);
+				moveAmount = SpaceBattle.getPoint(actualLocation, new Point2D.Double(Main.width/2, Main.height/2), 2, Math.PI/6);
 				
 			
 				break;
 			case TACTICAL:
-				actualLocation.setLocation((actualLocation.getX()),(actualLocation.getY()));
+				a = actualLocation.x - Main.width/2;
+				b = actualLocation.y - Main.height/2;
+				
+				if(Math.sqrt((a*a)+(b*b)) < Main.height/2 ){
+					
+					double angle = SpaceBattle.getAngle(actualLocation, new Point2D.Double(Main.width/2,Main.height/2));
+					angle += Math.PI/2;
+					moveAmount = SpaceBattle.moveAngle(actualLocation, angle, 2, Math.PI/6);
+					
+				}else{
+					moveAmount = SpaceBattle.getPoint(actualLocation, new Point2D.Double(Main.width/2, Main.height/2), 2, Math.PI/6);
+				}
+				
 				break;
 			}
 			moveTime = System.currentTimeMillis() + 500;
@@ -77,7 +104,7 @@ public class Carrier extends EnemyShip {
 			}
 			shots.get(i).setLine(shots.get(i).getX1()+trajectories.get(i).x, shots.get(i).getY1()+trajectories.get(i).y, shots.get(i).getX1(), shots.get(i).getY1());
 			if(shots.get(i).intersects(new Rectangle(Main.width/2 - 16, Main.height/2 - 16, 32, 32))){
-				//SpaceBattle.playerDamage(20);
+				SpaceBattle.playerDamage(20);
 				shots.remove(i);
 				trajectories.remove(i);
 				i--;

@@ -19,13 +19,15 @@ public class Player {
 	public static final Rectangle attackRange = new Rectangle(Main.width/2 - 16, Main.height/2 - 16, 32, 32);
 	private long time;
 	private double rotation, lastRotation;
-	public static int accuracySTAT,speedSTAT,HPSTAT, playerHealth = 100;
+	public static int accuracySTAT,speedSTAT,HPSTAT, HPMAXSTAT, playerHealth = 100;
 	public static int killCount;
 
 	public Player(String playerPath, String shipPath){
 		accuracySTAT = 1;
 		speedSTAT = 1;
-		HPSTAT = 1000;
+		HPMAXSTAT = 1000;
+		HPSTAT = HPMAXSTAT;
+		
 		killCount = 0;
 		playerImages = ResourceLoader.getPlayerSprites(playerPath, 16, 16);
 		shipImages = ResourceLoader.getBlockSprites(shipPath, 32, 32);
@@ -114,10 +116,8 @@ public class Player {
 	}
 	
 	public void attack(){
-		if(!isShip){
-			jIndex = 3;
-			isAttacking = true;
-		}
+		jIndex = 3;
+		isAttacking = true;
 	}
 
 	public void draw(Graphics g){

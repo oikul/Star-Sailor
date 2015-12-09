@@ -68,7 +68,7 @@ public class Fighter extends EnemyShip {
 				i--;
 			}
 			if(shots.get(i).intersects(new Rectangle(Main.width/2 - 16, Main.height/2 - 16, 32, 32))){
-				//SpaceBattle.playerDamage(5);
+				SpaceBattle.playerDamage(5);
 				shots.remove(i);
 				trajectories.remove(i);
 				i--;

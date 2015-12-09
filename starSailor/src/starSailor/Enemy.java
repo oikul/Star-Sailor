@@ -9,7 +9,7 @@ public class Enemy {
 	private Image[][] sprites;
 	private int iIndex, jIndex, x, y;
 	private long time, attackTime;
-	private int health = 10;
+	private int health = 5;
 	public boolean dead = false;
 	
 	public Enemy(String path, int size, int x, int y){
@@ -39,13 +39,13 @@ public class Enemy {
 		if(Player.isAttacking && Player.attackRange.intersects(new Rectangle(x, y, 16, 16))){
 			health --;
 			if(iIndex == 0){
-				y -= 10;
+				y -= 20;
 			}else if(iIndex == 1){
-				y += 10;
+				y += 20;
 			}else if(iIndex == 2){
-				x -= 10;
+				x -= 20;
 			}else if(iIndex == 3){
-				x += 10;
+				x += 20;
 			}
 			Sound.ghostHurt.play();
 			Player.isAttacking = false;

@@ -15,22 +15,21 @@ public class BlockButton extends Block{
 	public void update(Point blockLocation, Point click){
 		if(new Rectangle(blockLocation.x, blockLocation.y, 16, 16).contains(click)){
 			if(stat.equals("health") && Player.killCount >= 50){
-				System.out.println(Player.HPSTAT);
-				Player.HPSTAT ++;
-				System.out.println(Player.HPSTAT);
-				Player.killCount -= 50;
+				if(Player.HPSTAT < Player.HPMAXSTAT){
+					Player.killCount -= 50;
+					Player.HPSTAT = Player.HPMAXSTAT;
+				}else{
+					Player.killCount -= 50;
+					Player.HPMAXSTAT += 10;
+				}
 			}
-			if(stat.equals("speed") && Player.killCount >= 50){
-				System.out.println(Player.speedSTAT);
+			if(stat.equals("speed") && Player.killCount >= 10 + 5 * Player.speedSTAT){
+				Player.killCount -= 10 + 5 * Player.speedSTAT;
 				Player.speedSTAT ++;
-				System.out.println(Player.speedSTAT);
-				Player.killCount -= 50;
 			}
-			if(stat.equals("accuracy") && Player.killCount >= 50){
-				System.out.println(Player.accuracySTAT);
+			if(stat.equals("accuracy") && Player.killCount >= 10 + 5 * Player.accuracySTAT){
+				Player.killCount -= 10 + 5 * Player.accuracySTAT;
 				Player.accuracySTAT ++;
-				System.out.println(Player.accuracySTAT);
-				Player.killCount -= 50;
 			}
 		}
 	}

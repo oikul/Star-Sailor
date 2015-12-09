@@ -244,13 +244,13 @@ public class SpaceStation {
 					if(station[i][j] != null){
 						station[i][j].draw(g2d, i*16 + xDif, j*16 + yDif);
 						if(clicked && station[i][j].equals(Block.accuracy)){
-							Block.accuracy.update(new Point(i*16 + xDif, j*16 + yDif), MouseInfo.getPointerInfo().getLocation());
+							Block.accuracy.update(new Point(i*16 + xDif, j*16 + yDif), new Point(MouseInfo.getPointerInfo().getLocation().x + 16, MouseInfo.getPointerInfo().getLocation().y + 16));
 						}
 						if(clicked && station[i][j].equals(Block.health)){
-							Block.health.update(new Point(i*16 + xDif, j*16 + yDif), MouseInfo.getPointerInfo().getLocation());
+							Block.health.update(new Point(i*16 + xDif, j*16 + yDif), new Point(MouseInfo.getPointerInfo().getLocation().x + 16, MouseInfo.getPointerInfo().getLocation().y + 16));
 						}
 						if(clicked && station[i][j].equals(Block.speed)){
-							Block.speed.update(new Point(i*16 + xDif, j*16 + yDif), MouseInfo.getPointerInfo().getLocation());
+							Block.speed.update(new Point(i*16 + xDif, j*16 + yDif), new Point(MouseInfo.getPointerInfo().getLocation().x + 16, MouseInfo.getPointerInfo().getLocation().y + 16));
 						}
 					}
 				}
