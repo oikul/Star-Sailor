@@ -101,7 +101,7 @@ public class Main extends JFrame {
 		player = new Player("character/character_sprites.png", "spaceship/ship_sprites.png");
 		ship = new ShipInterior();
 		sb = new SpaceBattle();
-		Sound.music.loop();
+		//Sound.music.loop();
 		time = System.currentTimeMillis();
 	}
 	
