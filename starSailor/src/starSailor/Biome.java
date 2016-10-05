@@ -44,6 +44,8 @@ public class Biome {
 	private Color color;
 	private ArrayList<BiomePart> terrain, decoration;
 	
+	//test
+	
 	public Biome(String name, Color color){
 		this.name = name;
 		this.color = color;
