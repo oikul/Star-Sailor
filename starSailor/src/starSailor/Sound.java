@@ -15,7 +15,7 @@ public class Sound {
 	public static final Sound ghostHurt = new Sound("sound/ghost_hurt.wav");
 	public static final Sound ghost = new Sound("sound/ghost.wav");
 	public static final Sound ghostLaughter = new Sound("sound/ghost_laughter.wav");
-	//public static final Sound music = new Sound("sound/some_space_music.wav");
+	//public static final Sound music = new Sound("sound/some_space_music.wav"); sound doesnt work
 	
 	private Clip clip, clip1, clip2;
 	
