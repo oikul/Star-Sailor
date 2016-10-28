@@ -23,7 +23,7 @@ public class Biome {
 	public static Biome steppe = new Biome("steppe", Color.lightGray);
 	public static Biome plains = new Biome("plains", Color.green);
 	public static Biome forest = new Biome("forest", Color.green);
-	public static Biome lakes = new Biome("lakes", Color.gray);
+	public static Biome lakes = new Biome("lakes", Color.BLUE);
 	public static Biome islands = new Biome("islands", Color.blue);
 	
 	//hot biomes
